@@ -29,7 +29,7 @@ public class Mologger {
     private Mologger() {
         int nTrials = Experimenter.get().getNTrials();
         logDB = new List[nTrials + 1]; // Start from 1
-        for (int i = 0; i < nTrials + 1; i ++) {
+        for (int i = 0; i < nTrials + 1; i++) {
             logDB[i] = new ArrayList<MouseEvent>();
         }
         //System.out.println("DAHugo");
@@ -77,9 +77,9 @@ public class Mologger {
         try {
             logFile = new PrintWriter(new FileWriter(
                     Config.LOG_PATH +
-                    Config.LOG_FILE_NAME_EVENTS +
-                    Experimenter.get().getParticipantID() +
-                    ".txt"));
+                            Config.LOG_FILE_NAME_EVENTS +
+                            Experimenter.get().getParticipantID() +
+                            ".txt"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -87,6 +87,7 @@ public class Mologger {
 
     /**
      * Log a MouseEvent
+     *
      * @param e MouseEvent
      */
     public void log(MouseEvent e) {
@@ -120,13 +121,13 @@ public class Mologger {
             // Create file
             String fileName = Config.LOG_PATH +
                     Experimenter.get().getTestType() + "_" +
-                    "Cursor" + (int)toLog.getCursorSizeMM() + "_" +
+                    "Cursor" + (int) toLog.getCursorSizeMM() + "_" +
                     toLog.getParticipantID() +
                     ".txt";
             String s = toLog.toLogString() + "\n";
             Path path = Paths.get(fileName);
 
-            if(!TrialInfo.isHeaderLineIsWritten()){
+            if (!TrialInfo.isHeaderLineIsWritten()) {
                 String headerLine = TrialInfo.getHeaderLine();
                 Files.write(path, headerLine.getBytes(StandardCharsets.UTF_8),
                         StandardOpenOption.CREATE,

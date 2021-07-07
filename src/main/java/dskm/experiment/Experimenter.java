@@ -8,13 +8,14 @@ import io.reactivex.rxjava3.subjects.PublishSubject;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.*;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Experimenter {
     private Constellation testConstellation = Constellation.FITTS_CURSORSIZE_1;
-    private String participantID = "P100"; // Participant's ID (Pa1, Pa2, ...)
+    private String participantID = retNumbLog(); // Participant's ID (Pa1, Pa2, ...)
 
     private static Experimenter self = null; // for singleton
 
@@ -57,7 +58,7 @@ public class Experimenter {
     /***
      * Start the experiment
      */
-    public void startExperiment() {
+    public void startExperiment() throws IOException {
         System.out.println("Experiment started.");
 
         // Generate all the pairs of radius/distance (using Point for int,int)
@@ -463,6 +464,37 @@ public class Experimenter {
 
     public String getTestType(){
         return testConstellation.getTestType();
+    }
+
+    public static String retNumbLog() {
+
+        String retVal = "";
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\ajdin\\Desktop\\DSKMoose-master\\testlogs\\number.txt"));
+            String strLine;
+            //Read File Line By Line
+            while ((strLine = br.readLine()) != null) {
+                // Print the content on the console
+                retVal += strLine;
+            }
+
+            int append = Integer.parseInt(retVal);
+            append++;
+            String appendStr= String.valueOf(append);
+
+            FileWriter writer = new FileWriter("C:\\Users\\ajdin\\Desktop\\DSKMoose-master\\testlogs\\number.txt");
+            BufferedWriter buffer = new BufferedWriter(writer);
+            buffer.write(appendStr);
+            buffer.close();
+
+            //Close the input stream
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return retVal;
     }
 
 }

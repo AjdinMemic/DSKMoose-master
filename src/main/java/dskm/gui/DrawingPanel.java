@@ -13,6 +13,7 @@ import javax.swing.event.MouseInputListener;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.IOException;
 
 import static java.awt.Color.BLACK;
 
@@ -178,10 +179,18 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
     @Override
     public void mouseReleased(MouseEvent e) {
         if(this.currentTrialInfo.getTestType().equals(Config.TEST_TYPE_FITTS)){
-            mouseReleasedFitts(e);
+            try {
+                mouseReleasedFitts(e);
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
         }else{
             // calibration
-            mouseReleasedCalib(e);
+            try {
+                mouseReleasedCalib(e);
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
         }
     }
 
@@ -267,7 +276,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
         }
     }
 
-    public void mouseReleasedFitts(MouseEvent e) {
+    public void mouseReleasedFitts(MouseEvent e) throws IOException {
         boolean isInStart = stCircle.isInside(e.getX(), e.getY());
         boolean isInTarget = tgtCircle.isInside(e.getX(), e.getY());
         if(!trialIsRunning){
@@ -356,7 +365,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
         }
     }
 
-    private void mouseReleasedCalib(MouseEvent e){
+    private void mouseReleasedCalib(MouseEvent e) throws IOException {
         int hit = 0;
         boolean isInStart = stCircle.isInside(e.getX(), e.getY());
         boolean isInTarget = tgtCircle.isInside(e.getX(), e.getY());

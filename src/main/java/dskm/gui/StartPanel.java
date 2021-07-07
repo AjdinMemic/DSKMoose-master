@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 
 public class StartPanel extends JPanel {
 
@@ -27,7 +28,11 @@ public class StartPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Pass the control to the Experimenter
-                Experimenter.get().startExperiment();
+                try {
+                    Experimenter.get().startExperiment();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
             }
         });
 
