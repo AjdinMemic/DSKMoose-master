@@ -2,7 +2,7 @@ package dskm.experiment;
 
 import java.io.*;
 
-public class logChecker {
+public class LogChecker {
 
     // Increments the number.txt file for every start of the application
     public static String retNumbLog() throws IOException {

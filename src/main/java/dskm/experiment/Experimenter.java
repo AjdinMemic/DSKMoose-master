@@ -15,7 +15,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Experimenter {
     private Constellation testConstellation = Constellation.FITTS_CURSORSIZE_1;
-    private String participantID = logChecker.retNumbLog(); // Participant's ID (Pa1, Pa2, ...)
+    private String participantID = LogChecker.retNumbLog(); // Participant's ID (Pa1, Pa2, ...)
 
     private static Experimenter self = null; // for singleton
 
