@@ -21,7 +21,8 @@ public class Experimenter {
     private ArrayList<TrialInfo> trials;
     private ArrayList<ArrayList<TrialInfo>> blocks;
 
-    double pixelSizeMM;;
+    double pixelSizeMM;
+    ;
     ArrayList<CustomCursor> cursors = new ArrayList<CustomCursor>();
 
     public static Method method;
@@ -34,7 +35,7 @@ public class Experimenter {
 
         int monitorPPI = Toolkit.getDefaultToolkit().getScreenResolution();
         //System.out.println(Toolkit.getDefaultToolkit().getScreenSize());
-        pixelSizeMM = 25.4/monitorPPI;
+        pixelSizeMM = 25.4 / monitorPPI;
         trials = new ArrayList<TrialInfo>();
         blocks = new ArrayList<ArrayList<TrialInfo>>();
     }
@@ -43,15 +44,15 @@ public class Experimenter {
      * Start the experiment
      * @param methodType
      */
-    public void startExperiment(AtomicReference<String> methodType) throws IOException {
+    public void startExperiment(String methodType) throws IOException {
         System.out.println("Experiment started.");
 
-        if(methodType.equals("MethodA")){
-            method=new MethodA();
-        }else if(methodType.equals("MethodB")){
-            method=new MethodB();
-        }else {
-            method=new MethodA();
+        if (methodType.equals("MethodA")) {
+            method = new MethodA();
+            System.out.println("Method A");
+        } else if (methodType.equals("MethodB")) {
+            method = new MethodB();
+            System.out.println("Method B");
         }
 
         method.methodSetup();
@@ -60,7 +61,7 @@ public class Experimenter {
         method.createTrial();
 
         // Set up the Mologger
-        Mologger.get().setup(expSubject,method.getnTrials());
+        Mologger.get().setup(expSubject, method.getnTrials());
 
         // Publish the start of the experiment (to every subscriber)
         System.out.println("Should emit " + Constants.MSSG_BEGIN_LOG);
@@ -72,6 +73,7 @@ public class Experimenter {
 
     /**
      * Get the instance
+     *
      * @return the singleton instance
      */
     public static Experimenter get() throws IOException {
@@ -94,13 +96,14 @@ public class Experimenter {
 
     /**
      * Get the participant ID
+     *
      * @return participant's ID
      */
     public String getParticipantID() {
         return method.getParticipantID();
     }
 
-    public String getTestType(){
+    public String getTestType() {
         return testConstellation.getTestType();
     }
 

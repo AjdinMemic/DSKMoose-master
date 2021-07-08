@@ -1,9 +1,14 @@
 package dskm.methods;
 
-public class MethodB extends Method{
-    public void generateRadiusDistancePairs(){}
-    public void generateTrialList(){}
-    public void blockNrLoop(){}
+public class MethodB extends Method {
+    public void generateRadiusDistancePairs() {
+    }
+
+    public void generateTrialList() {
+    }
+
+    public void blockNrLoop() {
+    }
 
     @Override
     public void addBlocks() {

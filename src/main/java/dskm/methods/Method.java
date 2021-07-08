@@ -8,12 +8,18 @@ import java.awt.image.BufferedImage;
 
 public abstract class Method {
     public abstract void generateRadiusDistancePairs();
+
     public abstract void generateTrialList();
+
     public abstract void blockNrLoop();
+
     public abstract void addBlocks();
+
     public abstract void methodSetup();
+
     public abstract void createTrial();
-    void finishTestAndEnd(){
+
+    void finishTestAndEnd() {
         JLabel label =
                 new JLabel("The test is finished. Many thanks " +
                         "for your participation!");
@@ -28,11 +34,14 @@ public abstract class Method {
                         BufferedImage.TYPE_INT_ARGB)),
                 null,
                 null);
-        if(input == JOptionPane.OK_OPTION){
+        if (input == JOptionPane.OK_OPTION) {
             System.exit(0);
         }
     }
 
     public abstract int getnTrials();
-    public String getParticipantID() {return "dummyId";}
+
+    public String getParticipantID() {
+        return "dummyId";
+    }
 }

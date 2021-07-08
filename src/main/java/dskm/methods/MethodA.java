@@ -23,7 +23,7 @@ public class MethodA extends Method {
     private int nTrials;
     private int trialNum;
     private int trialNumInTest = 0;
-    private Circle previousTarget = new Circle(0,0,0);
+    private Circle previousTarget = new Circle(0, 0, 0);
 
     private PublishSubject<String> expSubject;
     private Constellation testConstellation = Constellation.FITTS_CURSORSIZE_1;
@@ -181,8 +181,8 @@ public class MethodA extends Method {
         return (int) (Math.rint(dim / this.pixelSizeMM));
     }
 
-    private double convertPIXtoMM(int dim){
-        return Math.rint(dim*this.pixelSizeMM);
+    private double convertPIXtoMM(int dim) {
+        return Math.rint(dim * this.pixelSizeMM);
     }
 
     public void createTrial() {

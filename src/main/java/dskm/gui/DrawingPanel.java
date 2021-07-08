@@ -53,6 +53,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
 
     /**
      * Return the MotionSubject to any class interested!
+     *
      * @return PublishSubject motionSubject
      */
     public static PublishSubject<MouseEvent> getMouseSubject() {
@@ -77,7 +78,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 RenderingHints.VALUE_ANTIALIAS_ON);
 
         //-- Draw circles
-        if(currentTrialInfo.getTestType().equals(Config.TEST_TYPE_FITTS)) {
+        if (currentTrialInfo.getTestType().equals(Config.TEST_TYPE_FITTS)) {
             // Start circle
             if (!trialIsRunning) {
                 graphics2D.setColor(Config.STACLE_COLOR);
@@ -85,13 +86,13 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 graphics2D.setColor(Config.STACLE_COLOR_CLICKED);
             }
             String startType = Config.START_BUTTON_SHAPE_RECTANGLE;
-            if(startType.equals(Config.START_BUTTON_SHAPE_CIRCLE)) {
+            if (startType.equals(Config.START_BUTTON_SHAPE_CIRCLE)) {
                 graphics2D.fillOval(stCircle.getX(), stCircle.getY(),
                         stCircle.getWidth(), stCircle.getHeight());
                 graphics2D.setColor(Color.cyan);
                 graphics2D.drawOval(stCircle.getX(), stCircle.getY(),
                         stCircle.getWidth(), stCircle.getHeight());
-            }else{
+            } else {
                 //Draw a rectangle as start button
                 graphics2D.fillRect(stCircle.getX(),
                         stCircle.getY(),
@@ -103,19 +104,19 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                         stCircle.getWidth(),
                         stCircle.getHeight());
                 //Draw start label in start button
-                if(!trialIsRunning){
+                if (!trialIsRunning) {
                     graphics2D.setColor(BLACK);
-                }else{
+                } else {
                     graphics2D.setColor(Config.STACLE_COLOR_CLICKED);
                 }
                 graphics2D.setFont(new Font(Config.FONT_STYLE, Font.PLAIN, 14));
-                graphics2D.drawString("Start", stCircle.getX()+3, stCircle.getCenterY()+5);
+                graphics2D.drawString("Start", stCircle.getX() + 3, stCircle.getCenterY() + 5);
             }
         }
         //  Target circle
-        if(!trialIsRunning) {
+        if (!trialIsRunning) {
             graphics2D.setColor(Config.TARCLE_COLOR);
-        }else{
+        } else {
             graphics2D.setColor(Config.TARCLE_COLOR_FREE);
         }
 
@@ -130,7 +131,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
         graphics2D.drawString(textToDraw, winW - Config.TEXT_X, Config.TEXT_Y + 30);
     }
 
-    public void setCurrentTrialInfo(TrialInfo currentTrialInfo){
+    public void setCurrentTrialInfo(TrialInfo currentTrialInfo) {
         this.currentTrialInfo = currentTrialInfo;
         this.setCircles(currentTrialInfo.getStart(),
                 currentTrialInfo.getTarget());
@@ -154,12 +155,13 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
         textToDraw = text;
     }
 
-    public void setBlockInfoToDraw(String text){
+    public void setBlockInfoToDraw(String text) {
         this.blockInfoToDraw = text;
     }
 
     /**
      * Overriding the mouse click
+     *
      * @param e MouseEvent
      */
     @Override
@@ -168,9 +170,9 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if(this.currentTrialInfo.getTestType().equals(Config.TEST_TYPE_FITTS)){
+        if (this.currentTrialInfo.getTestType().equals(Config.TEST_TYPE_FITTS)) {
             mousePressedFitts(e);
-        }else{
+        } else {
             // calibration
             mousePressedCalib(e);
         }
@@ -178,13 +180,13 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if(this.currentTrialInfo.getTestType().equals(Config.TEST_TYPE_FITTS)){
+        if (this.currentTrialInfo.getTestType().equals(Config.TEST_TYPE_FITTS)) {
             try {
                 mouseReleasedFitts(e);
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
-        }else{
+        } else {
             // calibration
             try {
                 mouseReleasedCalib(e);
@@ -194,27 +196,27 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
         }
     }
 
-    private void mousePressedFitts(MouseEvent e){
+    private void mousePressedFitts(MouseEvent e) {
         //System.out.println("mouse pressed: " + e.getX() + ", " + e.getY());
         boolean isInStart = stCircle.isInside(e.getX(), e.getY());
         boolean isInTarget = tgtCircle.isInside(e.getX(), e.getY());
-        if(trialIsRunning){
+        if (trialIsRunning) {
             //Interested in a press anywhere
-            if(isInStart){
+            if (isInStart) {
                 //Press in start
                 pressInStart = true;
                 pressInTarget = false;
                 //System.out.println("Press in Start – Running PAY ATTENTION");
                 currentTrialInfo.setPressPointXStart(e.getX());
                 currentTrialInfo.setPressPointYStart(e.getY());
-            }else if(isInTarget){
+            } else if (isInTarget) {
                 //Press in target
                 pressInTarget = true;
                 pressInStart = false;
                 //System.out.println("Press in Target - Running PAY ATTENTION");
                 currentTrialInfo.setPressPointXTarget(e.getX());
                 currentTrialInfo.setPressPointYTarget(e.getY());
-            }else{
+            } else {
                 //A press elsewhere
                 pressInStart = false;
                 pressInTarget = false;
@@ -222,22 +224,22 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 currentTrialInfo.setPressPointXTarget(e.getX());
                 currentTrialInfo.setPressPointYTarget(e.getY());
             }
-        }else{
+        } else {
             //Only interested in a press inside the start button
-            if(isInStart){
+            if (isInStart) {
                 //Press in start
                 pressInStart = true;
                 pressInTarget = false;
                 //System.out.println("Press in Start – Not running PAY ATTENTION");
                 currentTrialInfo.setPressPointXStart(e.getX());
                 currentTrialInfo.setPressPointYStart(e.getY());
-            }else if(isInTarget){
+            } else if (isInTarget) {
                 //Press in target
                 pressInTarget = true;
                 pressInStart = false;
                 //System.out.println("Press in Target - Not running IGNORE");
                 Toolkit.getDefaultToolkit().beep();
-            }else{
+            } else {
                 //A press elsewhere
                 pressInStart = false;
                 pressInTarget = false;
@@ -247,23 +249,23 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
         }
     }
 
-    private void mousePressedCalib(MouseEvent e){
+    private void mousePressedCalib(MouseEvent e) {
         trialIsRunning = true; //always true in calibration
         boolean isInStart = stCircle.isInside(e.getX(), e.getY());
         boolean isInTarget = tgtCircle.isInside(e.getX(), e.getY());
-        if(trialIsRunning){
+        if (trialIsRunning) {
             //Interested in a press anywhere
-            if(isInStart){
+            if (isInStart) {
                 //Press in start
                 pressInStart = true;
                 pressInTarget = false;
                 //System.out.println("Calib, should not happen Press in Start – Running PAY ATTENTION");
-            }else if(isInTarget){
+            } else if (isInTarget) {
                 //Press in target
                 pressInTarget = true;
                 pressInStart = false;
                 //System.out.println("Calib Press in Target - Running PAY ATTENTION");
-            }else{
+            } else {
                 //A press elsewhere
                 pressInStart = false;
                 pressInTarget = false;
@@ -279,8 +281,8 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
     public void mouseReleasedFitts(MouseEvent e) throws IOException {
         boolean isInStart = stCircle.isInside(e.getX(), e.getY());
         boolean isInTarget = tgtCircle.isInside(e.getX(), e.getY());
-        if(!trialIsRunning){
-            if(pressInStart && isInStart){
+        if (!trialIsRunning) {
+            if (pressInStart && isInStart) {
                 //A match with the previous press in the start
                 trialIsRunning = true;
                 //System.out.println("Release in Start after press in start – START TRIAL");
@@ -297,56 +299,56 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 this.currentTrialInfo.setReleasePointXStart(e.getX());
                 this.currentTrialInfo.setReleasePointYStart(e.getY());
                 this.repaint();
-            }else if(pressInStart && !isInStart){
+            } else if (pressInStart && !isInStart) {
                 //A mismatch with the previous press in start
                 //System.out.println("Release outside Start after press in start – IGNORE");
                 pressInStart = false;
-                try{
+                try {
                     Clip clip = AudioSystem.getClip();
                     clip.open(AudioSystem.getAudioInputStream(new File(Config.SOUND_PATH_ERROR)));
                     clip.start();
-                } catch (Exception exc){
+                } catch (Exception exc) {
                     exc.printStackTrace(System.out);
                 }
-            }else{
+            } else {
                 //The previous press was not in start, ignore this release
                 //System.out.println("Release outside Start after press outside start – IGNORE");
                 pressInStart = false;
                 pressInTarget = false;
             }
-        }else{
+        } else {
             int hit = 0;
-            if(pressInTarget && isInTarget){
+            if (pressInTarget && isInTarget) {
                 //A match with the previous press in the target
-                try{
+                try {
                     Clip clip = AudioSystem.getClip();
                     clip.open(AudioSystem.getAudioInputStream(new File(Config.SOUND_PATH_SUCCESS)));
                     clip.start();
-                } catch (Exception exc){
+                } catch (Exception exc) {
                     exc.printStackTrace(System.out);
                 }
                 //System.out.println("Release in Target after press in target – END TRIAL IN TARGET");
                 pressInTarget = false;
                 hit = 1;
-            }else if(pressInTarget && !isInTarget){
+            } else if (pressInTarget && !isInTarget) {
                 //The previous press was in target, this release outside target, log as miss
                 //System.out.println("Release outside Target after press in target – END TRIAL OUTSIDE TARGET");
                 pressInTarget = false;
-                try{
+                try {
                     Clip clip = AudioSystem.getClip();
                     clip.open(AudioSystem.getAudioInputStream(new File(Config.SOUND_PATH_ERROR)));
                     clip.start();
-                } catch (Exception exc){
+                } catch (Exception exc) {
                     exc.printStackTrace(System.out);
                 }
-            }else{
+            } else {
                 //The previous press was outside target, this release also outside target, log as miss
                 //System.out.println("Release outside Target after press outside target – END TRIAL OUTSIDE TARGET");
-                try{
+                try {
                     Clip clip = AudioSystem.getClip();
                     clip.open(AudioSystem.getAudioInputStream(new File(Config.SOUND_PATH_ERROR)));
                     clip.start();
-                } catch (Exception exc){
+                } catch (Exception exc) {
                     exc.printStackTrace(System.out);
                 }
             }
@@ -370,37 +372,37 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
         int hit = 0;
         boolean isInStart = stCircle.isInside(e.getX(), e.getY());
         boolean isInTarget = tgtCircle.isInside(e.getX(), e.getY());
-        if(pressInTarget && isInTarget){
+        if (pressInTarget && isInTarget) {
             //A match with the previous press in the target
-            try{
+            try {
                 Clip clip = AudioSystem.getClip();
                 clip.open(AudioSystem.getAudioInputStream(new File(Config.SOUND_PATH_SUCCESS)));
                 clip.start();
-            } catch (Exception exc){
+            } catch (Exception exc) {
                 exc.printStackTrace(System.out);
             }
             //System.out.println("Calib Release in Target after press in target – END TRIAL IN TARGET");
             pressInTarget = false;
             hit = 1;
-        }else if(pressInTarget && !isInTarget){
+        } else if (pressInTarget && !isInTarget) {
             //The previous press was in target, this release outside target, log as miss
             //System.out.println("Calib Release outside Target after press in target – END TRIAL OUTSIDE TARGET");
             pressInTarget = false;
-            try{
+            try {
                 Clip clip = AudioSystem.getClip();
                 clip.open(AudioSystem.getAudioInputStream(new File(Config.SOUND_PATH_ERROR)));
                 clip.start();
-            } catch (Exception exc){
+            } catch (Exception exc) {
                 exc.printStackTrace(System.out);
             }
-        }else{
+        } else {
             //The previous press was outside target, this release also outside target, log as miss
             //System.out.println("Release outside Target after press outside target – END TRIAL OUTSIDE TARGET");
-            try{
+            try {
                 Clip clip = AudioSystem.getClip();
                 clip.open(AudioSystem.getAudioInputStream(new File(Config.SOUND_PATH_ERROR)));
                 clip.start();
-            } catch (Exception exc){
+            } catch (Exception exc) {
                 exc.printStackTrace(System.out);
             }
         }

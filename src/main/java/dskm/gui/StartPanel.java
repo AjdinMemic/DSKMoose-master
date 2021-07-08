@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class StartPanel extends JPanel {
 
     StartPanel() {
-        AtomicReference<String> methodType= new AtomicReference<>("");
+        final String[] methodType = {""};
 
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
@@ -32,7 +32,7 @@ public class StartPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 // Pass the control to the Experimenter
                 try {
-                    Experimenter.get().startExperiment(methodType);
+                    Experimenter.get().startExperiment(methodType[0]);
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
@@ -49,10 +49,20 @@ public class StartPanel extends JPanel {
         RBmethodB.setActionCommand("Method B");
 
         //Register a listener for the radio buttons.
-        RBmethodA.addActionListener((e)->{
-            methodType.set("MethodA"); startButton.setEnabled(true);});
-        RBmethodB.addActionListener((e)->{
-            methodType.set("MethodB"); startButton.setEnabled(true);});
+        RBmethodA.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                methodType[0] ="MethodA";
+                startButton.setEnabled(true);
+            }
+        });
+        RBmethodB.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                methodType[0] ="MethodB";
+                startButton.setEnabled(true);
+            }
+        });
 
         //Group the radio buttons.
         ButtonGroup buttonGroup = new ButtonGroup();
