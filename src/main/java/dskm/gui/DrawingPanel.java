@@ -438,7 +438,11 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
         if (trialIsRunning) {
             // Publish the movement
 //            mouseSubject.onNext(e);
-            Mologger.get().log(e);
+            try {
+                Mologger.get().log(e);
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
         }
     }
 

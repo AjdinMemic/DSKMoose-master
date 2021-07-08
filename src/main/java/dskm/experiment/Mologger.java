@@ -26,7 +26,7 @@ public class Mologger {
     /***
      * Constructor
      */
-    private Mologger() {
+    private Mologger() throws IOException {
         int nTrials = Experimenter.get().getNTrials();
         logDB = new List[nTrials + 1]; // Start from 1
         for (int i = 0; i < nTrials + 1; i++) {
@@ -40,7 +40,7 @@ public class Mologger {
      * Singleton get instance
      * @return self
      */
-    public static Mologger get() {
+    public static Mologger get() throws IOException {
         if (self == null) self = new Mologger();
         return self;
     }

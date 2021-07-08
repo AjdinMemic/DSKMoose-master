@@ -42,7 +42,7 @@ public class Experimenter {
     /**
      * Constructor
      */
-    private Experimenter() {
+    private Experimenter() throws IOException {
         expSubject = PublishSubject.create();
 
         int monitorPPI = Toolkit.getDefaultToolkit().getScreenResolution();
@@ -432,7 +432,7 @@ public class Experimenter {
      * Get the instance
      * @return the singleton instance
      */
-    public static Experimenter get() {
+    public static Experimenter get() throws IOException {
         if (self == null) self = new Experimenter();
         return self;
     }
@@ -466,12 +466,16 @@ public class Experimenter {
         return testConstellation.getTestType();
     }
 
-    public static String retNumbLog() {
+    public static String retNumbLog() throws IOException {
+
+        if(logList().length==1) {
+            checkIflogEmpty();
+        }
 
         String retVal = "";
 
         try {
-            BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\ajdin\\Desktop\\DSKMoose-master\\testlogs\\number.txt"));
+            BufferedReader br = new BufferedReader(new FileReader("..\\DSKMoose-master\\testlogs\\number.txt"));
             String strLine;
             //Read File Line By Line
             while ((strLine = br.readLine()) != null) {
@@ -483,8 +487,9 @@ public class Experimenter {
             append++;
             String appendStr= String.valueOf(append);
 
-            FileWriter writer = new FileWriter("C:\\Users\\ajdin\\Desktop\\DSKMoose-master\\testlogs\\number.txt");
+            FileWriter writer = new FileWriter("..\\DSKMoose-master\\testlogs\\number.txt");
             BufferedWriter buffer = new BufferedWriter(writer);
+
             buffer.write(appendStr);
             buffer.close();
 
@@ -497,4 +502,25 @@ public class Experimenter {
         return retVal;
     }
 
+    public static String[] logList(){
+        //Creating a File object for directory
+        File directoryPath = new File("..\\DSKMoose-master\\testlogs");
+        //List of all files and directories
+        String contents[] = directoryPath.list();
+
+        return contents;
+    }
+
+    public static void checkIflogEmpty() throws IOException {
+        String[] lengthOfLogsFold=logList();
+        FileWriter fileWriter = new FileWriter("..\\DSKMoose-master\\testlogs\\number.txt");
+        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+        String numb="0";
+        if(lengthOfLogsFold.length==1){
+
+            bufferedWriter.write(numb);
+        }
+        bufferedWriter.close();
+        fileWriter.close();
+    }
 }
