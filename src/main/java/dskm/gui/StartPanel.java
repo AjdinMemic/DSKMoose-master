@@ -8,10 +8,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class StartPanel extends JPanel {
 
     StartPanel() {
+        AtomicReference<String> methodType= new AtomicReference<>("");
+
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
         // Start button
@@ -29,13 +32,12 @@ public class StartPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 // Pass the control to the Experimenter
                 try {
-                    Experimenter.get().startExperiment();
+                    Experimenter.get().startExperiment(methodType);
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
             }
         });
-
         // Radio buttons
 
         JRadioButton RBmethodA = new JRadioButton("Method A");
@@ -47,8 +49,10 @@ public class StartPanel extends JPanel {
         RBmethodB.setActionCommand("Method B");
 
         //Register a listener for the radio buttons.
-        RBmethodA.addActionListener((e)->{startButton.setEnabled(true);});
-        RBmethodB.addActionListener((e)->{startButton.setEnabled(true);});
+        RBmethodA.addActionListener((e)->{
+            methodType.set("MethodA"); startButton.setEnabled(true);});
+        RBmethodB.addActionListener((e)->{
+            methodType.set("MethodB"); startButton.setEnabled(true);});
 
         //Group the radio buttons.
         ButtonGroup buttonGroup = new ButtonGroup();

@@ -361,7 +361,8 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
 
             Mologger.get().writeLogToFile(this.currentTrialInfo);
             // Go to the next experiment
-            Experimenter.get().createTrial();
+            Experimenter.method.createTrial();
+
         }
     }
 
@@ -415,7 +416,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
 
         Mologger.get().writeLogToFile(this.currentTrialInfo);
         // Go to the next experiment
-        Experimenter.get().createTrial();
+        Experimenter.method.createTrial();
     }
 
     @Override
