@@ -25,6 +25,7 @@ public class TrialInfo {
 
     private double pixelSizeMM = 0;
 
+    private Circle startAsCircle=null;
     private Circle target = null;
     private StartRectangle start = null;
 
@@ -54,11 +55,20 @@ public class TrialInfo {
 
     private String testType;
 
+    public Circle getStartAsCircle() {
+        return startAsCircle;
+    }
+
+    public void setStartAsCircle(Circle startAsCircle) {
+        this.startAsCircle = startAsCircle;
+    }
+
     public TrialInfo(int blockNumber,
                      int trialInBlock,
                      int distancePix,
                      int widthPix,
                      double pixelSizeMM,
+                     Circle startAsCircle,
                      Circle target,
                      StartRectangle start,
                      double cursorSizeMM,
@@ -88,6 +98,7 @@ public class TrialInfo {
                 this.distancePix,
                 this.widthPix,
                 this.pixelSizeMM,
+                this.startAsCircle,
                 this.target,
                 this.start,
                 this.cursorSizeMM,

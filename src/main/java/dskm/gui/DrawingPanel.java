@@ -22,6 +22,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
 
     // Two circles to draw
     private StartRectangle stCircle;
+    private Circle stCircle2;
     private Color stCircleColor = Config.STACLE_COLOR;
     private Circle tgtCircle;
 
@@ -39,6 +40,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
 
     TrialInfo currentTrialInfo = null;
     boolean trialIsRunning = false;
+    String method = "";
 
     // Publishing all the movements
     private static PublishSubject<MouseEvent> mouseSubject;
@@ -56,10 +58,11 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
     /***
      * Constructor
      */
-    public DrawingPanel(int n) {
+    public DrawingPanel(int n, String method) {
         addMouseListener(this);
         addMouseMotionListener(this);
         mouseSubject = PublishSubject.create();
+        this.method = method;
         setN(n);
     }
 
@@ -137,26 +140,53 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
             graphics2D.fillOval(tgtCircle.getX(), tgtCircle.getY(),
                     tgtCircle.getSide(), tgtCircle.getSide());
         }
+
+
         //Method B
         if (Experimenter.methodType.equals("MethodB")) {
 
             graphics2D.setRenderingHint(
                     RenderingHints.KEY_ANTIALIASING,
                     RenderingHints.VALUE_ANTIALIAS_ON);
-            graphics2D.setColor(new Color(0, 0, 0, 0));
+            graphics2D.setColor(new Color(255, 100, 1000, 50));
+
             int a = getWidth() / 2;
             int b = getHeight() / 2;
             int m = Math.min(a, b);
             int r = 4 * m / 5;
             int r2 = Math.abs(m - r) / 2;
 
-            graphics2D.drawOval(a - r, b - r, 2 * r, 2 * r);
             graphics2D.setColor(Config.TARCLE_COLOR);
+
             for (int i = 0; i < getN(); i++) {
+                if (!trialIsRunning) {
+                    graphics2D.setColor(Config.STACLE_COLOR);
+                } else {
+                    graphics2D.setColor(Config.STACLE_COLOR_CLICKED);
+                }
+
                 double t = 2 * Math.PI * i / getN();
                 int x = (int) Math.round(a + r * Math.cos(t));
                 int y = (int) Math.round(b + r * Math.sin(t));
                 graphics2D.fillOval(x - r2, y - r2, tgtCircle.radius, tgtCircle.radius);
+
+                if (!trialIsRunning) {
+                    graphics2D.setColor(BLACK);
+                } else {
+                    graphics2D.setColor(Config.STACLE_COLOR_CLICKED);
+                }
+
+                graphics2D.setFont(new Font(Config.FONT_STYLE, Font.PLAIN, 14));
+                graphics2D.drawString("Start", stCircle2.getX() + 10, stCircle2.getCenterY() + 10);
+
+                if (!trialIsRunning) {
+                    graphics2D.setColor(Config.TARCLE_COLOR);
+                } else {
+                    graphics2D.setColor(Config.TARCLE_COLOR_FREE);
+                }
+
+                graphics2D.fillOval(tgtCircle.getX(), tgtCircle.getY(),
+                        tgtCircle.getSide() / 2, tgtCircle.getSide() / 2);
             }
         }
 
@@ -172,8 +202,13 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
 
     public void setCurrentTrialInfo(TrialInfo currentTrialInfo) {
         this.currentTrialInfo = currentTrialInfo;
-        this.setCircles(currentTrialInfo.getStart(),
-                currentTrialInfo.getTarget());
+        if (method.equals("MethodA")) {
+            this.setCircles(currentTrialInfo.getStart(),
+                    currentTrialInfo.getTarget());
+        } else if (method.equals("MethodB")) {
+            this.setCircles2(currentTrialInfo.getStartAsCircle(),
+                    currentTrialInfo.getTarget());
+        }
     }
 
     /***
@@ -183,6 +218,11 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
      */
     public void setCircles(StartRectangle c1, Circle c2) {
         stCircle = c1;
+        tgtCircle = c2;
+    }
+
+    public void setCircles2(Circle c1, Circle c2) {
+        stCircle2 = c1;
         tgtCircle = c2;
     }
 
@@ -237,8 +277,16 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
 
     private void mousePressedFitts(MouseEvent e) {
         //System.out.println("mouse pressed: " + e.getX() + ", " + e.getY());
-        boolean isInStart = stCircle.isInside(e.getX(), e.getY());
+        boolean isInStart;
+
+        if (method.equals("MethodA")) {
+            isInStart = stCircle.isInside(e.getX(), e.getY());
+        } else {
+            isInStart = stCircle2.isInside(e.getX(), e.getY());
+        }
+
         boolean isInTarget = tgtCircle.isInside(e.getX(), e.getY());
+
         if (trialIsRunning) {
             //Interested in a press anywhere
             if (isInStart) {
@@ -318,7 +366,13 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
     }
 
     public void mouseReleasedFitts(MouseEvent e) throws IOException {
-        boolean isInStart = stCircle.isInside(e.getX(), e.getY());
+        boolean isInStart;
+        if (method.equals("MethodA")) {
+            isInStart = stCircle.isInside(e.getX(), e.getY());
+        } else {
+            isInStart = stCircle2.isInside(e.getX(), e.getY());
+        }
+
         boolean isInTarget = tgtCircle.isInside(e.getX(), e.getY());
         if (!trialIsRunning) {
             if (pressInStart && isInStart) {
@@ -333,7 +387,11 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 mouseSubject.onNext(e);
 
                 // change the color of the start circle
-                stCircle.setColor(Config.STACLE_COLOR_CLICKED);
+                if (method.equals("MethodA")) {
+                    stCircle.setColor(Config.STACLE_COLOR_CLICKED);
+                } else {
+                    stCircle2.setColor(Config.STACLE_COLOR_CLICKED);
+                }
                 tgtCircle.setColor(Config.TARCLE_COLOR_FREE);
                 this.currentTrialInfo.setReleasePointXStart(e.getX());
                 this.currentTrialInfo.setReleasePointYStart(e.getY());
