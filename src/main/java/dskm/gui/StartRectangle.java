@@ -2,8 +2,6 @@ package dskm.gui;
 
 import java.awt.*;
 
-import static java.lang.Math.sqrt;
-
 public class StartRectangle {
     int width;
     int height;

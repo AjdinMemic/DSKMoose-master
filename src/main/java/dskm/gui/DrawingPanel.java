@@ -4,6 +4,7 @@ import dskm.Config;
 import dskm.experiment.Experimenter;
 import dskm.experiment.Mologger;
 import dskm.experiment.TrialInfo;
+import dskm.methods.Method;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 
 import javax.sound.sampled.AudioSystem;
@@ -42,13 +43,24 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
     // Publishing all the movements
     private static PublishSubject<MouseEvent> mouseSubject;
 
+    private int n; //n Circles
+
+    public int getN() {
+        return n;
+    }
+
+    public void setN(int n) {
+        this.n = n;
+    }
+
     /***
      * Constructor
      */
-    public DrawingPanel() {
+    public DrawingPanel(int n) {
         addMouseListener(this);
         addMouseMotionListener(this);
         mouseSubject = PublishSubject.create();
+        setN(n);
     }
 
     /**
@@ -77,51 +89,78 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
 
-        //-- Draw circles
-        if (currentTrialInfo.getTestType().equals(Config.TEST_TYPE_FITTS)) {
-            // Start circle
-            if (!trialIsRunning) {
-                graphics2D.setColor(Config.STACLE_COLOR);
-            } else {
-                graphics2D.setColor(Config.STACLE_COLOR_CLICKED);
-            }
-            String startType = Config.START_BUTTON_SHAPE_RECTANGLE;
-            if (startType.equals(Config.START_BUTTON_SHAPE_CIRCLE)) {
-                graphics2D.fillOval(stCircle.getX(), stCircle.getY(),
-                        stCircle.getWidth(), stCircle.getHeight());
-                graphics2D.setColor(Color.cyan);
-                graphics2D.drawOval(stCircle.getX(), stCircle.getY(),
-                        stCircle.getWidth(), stCircle.getHeight());
-            } else {
-                //Draw a rectangle as start button
-                graphics2D.fillRect(stCircle.getX(),
-                        stCircle.getY(),
-                        stCircle.getWidth(),
-                        stCircle.getHeight());
-                //graphics2D.setColor(Color.cyan);
-                graphics2D.drawRect(stCircle.getX(),
-                        stCircle.getY(),
-                        stCircle.getWidth(),
-                        stCircle.getHeight());
-                //Draw start label in start button
+        if (Experimenter.methodType.equals("MethodA")) {
+
+            //-- Draw circles
+            if (currentTrialInfo.getTestType().equals(Config.TEST_TYPE_FITTS)) {
+                // Start circle
                 if (!trialIsRunning) {
-                    graphics2D.setColor(BLACK);
+                    graphics2D.setColor(Config.STACLE_COLOR);
                 } else {
                     graphics2D.setColor(Config.STACLE_COLOR_CLICKED);
                 }
-                graphics2D.setFont(new Font(Config.FONT_STYLE, Font.PLAIN, 14));
-                graphics2D.drawString("Start", stCircle.getX() + 3, stCircle.getCenterY() + 5);
+                String startType = Config.START_BUTTON_SHAPE_RECTANGLE;
+                if (startType.equals(Config.START_BUTTON_SHAPE_CIRCLE)) {
+                    graphics2D.fillOval(stCircle.getX(), stCircle.getY(),
+                            stCircle.getWidth(), stCircle.getHeight());
+                    graphics2D.setColor(Color.cyan);
+                    graphics2D.drawOval(stCircle.getX(), stCircle.getY(),
+                            stCircle.getWidth(), stCircle.getHeight());
+                } else {
+                    //Draw a rectangle as start button
+                    graphics2D.fillRect(stCircle.getX(),
+                            stCircle.getY(),
+                            stCircle.getWidth(),
+                            stCircle.getHeight());
+                    //graphics2D.setColor(Color.cyan);
+                    graphics2D.drawRect(stCircle.getX(),
+                            stCircle.getY(),
+                            stCircle.getWidth(),
+                            stCircle.getHeight());
+                    //Draw start label in start button
+                    if (!trialIsRunning) {
+                        graphics2D.setColor(BLACK);
+                    } else {
+                        graphics2D.setColor(Config.STACLE_COLOR_CLICKED);
+                    }
+                    graphics2D.setFont(new Font(Config.FONT_STYLE, Font.PLAIN, 14));
+                    graphics2D.drawString("Start", stCircle.getX() + 3, stCircle.getCenterY() + 5);
+                }
+            }
+            //  Target circle
+            if (!trialIsRunning) {
+                graphics2D.setColor(Config.TARCLE_COLOR);
+            } else {
+                graphics2D.setColor(Config.TARCLE_COLOR_FREE);
+            }
+
+            graphics2D.fillOval(tgtCircle.getX(), tgtCircle.getY(),
+                    tgtCircle.getSide(), tgtCircle.getSide());
+        }
+        //Method B
+        if (Experimenter.methodType.equals("MethodB")) {
+
+            graphics2D.setRenderingHint(
+                    RenderingHints.KEY_ANTIALIASING,
+                    RenderingHints.VALUE_ANTIALIAS_ON);
+            graphics2D.setColor(new Color(0, 0, 0, 0));
+            int a = getWidth() / 2;
+            int b = getHeight() / 2;
+            int m = Math.min(a, b);
+            int r = 4 * m / 5;
+            int r2 = Math.abs(m - r) / 2;
+
+            graphics2D.drawOval(a - r, b - r, 2 * r, 2 * r);
+            graphics2D.setColor(Config.TARCLE_COLOR);
+            for (int i = 0; i < getN(); i++) {
+                double t = 2 * Math.PI * i / getN();
+                int x = (int) Math.round(a + r * Math.cos(t));
+                int y = (int) Math.round(b + r * Math.sin(t));
+                graphics2D.fillOval(x - r2, y - r2, tgtCircle.radius, tgtCircle.radius);
             }
         }
-        //  Target circle
-        if (!trialIsRunning) {
-            graphics2D.setColor(Config.TARCLE_COLOR);
-        } else {
-            graphics2D.setColor(Config.TARCLE_COLOR_FREE);
-        }
 
-        graphics2D.fillOval(tgtCircle.getX(), tgtCircle.getY(),
-                tgtCircle.getSide(), tgtCircle.getSide());
+
         //System.out.println("Target position Draw: " + tgtCircle.getCenterX() + ", " + tgtCircle.getCenterY());
 
         //-- Draw text

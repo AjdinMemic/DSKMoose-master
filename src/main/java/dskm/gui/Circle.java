@@ -13,6 +13,38 @@ public class Circle {
 
     Color color;
 
+    public void setRadius(int radius) {
+        this.radius = radius;
+    }
+
+    public int getTlX() {
+        return tlX;
+    }
+
+    public void setTlX(int tlX) {
+        this.tlX = tlX;
+    }
+
+    public int getTlY() {
+        return tlY;
+    }
+
+    public void setTlY(int tlY) {
+        this.tlY = tlY;
+    }
+
+    public void setSide(int side) {
+        this.side = side;
+    }
+
+    public void setCenterX(int centerX) {
+        this.centerX = centerX;
+    }
+
+    public void setCenterY(int centerY) {
+        this.centerY = centerY;
+    }
+
     /***
      * Constructor
      * @param centerX Center X

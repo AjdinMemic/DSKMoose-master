@@ -1,7 +1,6 @@
 package dskm.experiment;
 
 import dskm.Constants;
-import dskm.gui.Circle;
 import dskm.gui.CustomCursor;
 import dskm.methods.Method;
 import dskm.methods.MethodA;
@@ -11,7 +10,6 @@ import io.reactivex.rxjava3.subjects.PublishSubject;
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class Experimenter {
     private Constellation testConstellation = Constellation.FITTS_CURSORSIZE_1;
@@ -26,6 +24,7 @@ public class Experimenter {
     ArrayList<CustomCursor> cursors = new ArrayList<CustomCursor>();
 
     public static Method method;
+    public static String methodType;
 
     /**
      * Constructor
@@ -45,13 +44,14 @@ public class Experimenter {
      * @param methodType
      */
     public void startExperiment(String methodType) throws IOException {
+        this.methodType=methodType;
         System.out.println("Experiment started.");
 
         if (methodType.equals("MethodA")) {
             method = new MethodA();
             System.out.println("Method A");
         } else if (methodType.equals("MethodB")) {
-            method = new MethodB();
+            method = new MethodB(8);
             System.out.println("Method B");
         }
 

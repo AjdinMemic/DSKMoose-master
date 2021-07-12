@@ -210,7 +210,7 @@ public class MethodA extends Method {
             expSubject.onNext(Constants.MSSG_END_LOG);
             finishTestAndEnd();
         } else {// Create and send the panel to be drawn
-            DrawingPanel exPanel = new DrawingPanel();
+            DrawingPanel exPanel = new DrawingPanel(0);
             trialNum++;
             TrialInfo trialInfo = blocks.get(0).remove(0);
             for (CustomCursor cc : cursors) {
