@@ -49,7 +49,9 @@ public class MethodB extends Method {
 
     public static int radius=0;
 
-    public MethodB(int n,int radius) throws IOException {
+    public boolean flag;
+
+    public MethodB(int n,int radius,boolean flag) throws IOException {
         expSubject = PublishSubject.create();
         int monitorPPI = Toolkit.getDefaultToolkit().getScreenResolution();
         //System.out.println(Toolkit.getDefaultToolkit().getScreenSize());
@@ -59,6 +61,7 @@ public class MethodB extends Method {
         cursorList = testConstellation.getCursorList();
         this.n=n;
         this.radius=radius;
+        this.flag=flag;
     }
 
     public String getParticipantID() {
@@ -107,7 +110,7 @@ public class MethodB extends Method {
             expSubject.onNext(Constants.MSSG_END_LOG);
             finishTestAndEnd();
         } else {// Create and send the panel to be drawn
-            DrawingPanel exPanel = new DrawingPanel(getN(),"MethodB");
+            DrawingPanel exPanel = new DrawingPanel(getN(),"MethodB",flag);
             trialNum++;
             TrialInfo trialInfo = blocks.get(0).remove(0);
 

@@ -4,8 +4,6 @@ import dskm.Config;
 import dskm.experiment.Experimenter;
 import dskm.experiment.Mologger;
 import dskm.experiment.TrialInfo;
-import dskm.methods.Method;
-import dskm.methods.MethodB;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 
 import javax.sound.sampled.AudioSystem;
@@ -18,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 
 import static java.awt.Color.BLACK;
+import static java.awt.Color.MAGENTA;
 
 public class DrawingPanel extends JPanel implements MouseInputListener {
 
@@ -37,7 +36,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
     //private boolean startClicked = false;
     private boolean pressInStart = false;
     private boolean pressInTarget = false;
-
+    private boolean drawCircles = false;
 
     TrialInfo currentTrialInfo = null;
     boolean trialIsRunning = false;
@@ -59,13 +58,13 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
     /***
      * Constructor
      */
-    public DrawingPanel(int n, String method) {
+    public DrawingPanel(int n, String method,boolean drawCircles) {
         addMouseListener(this);
         addMouseMotionListener(this);
         mouseSubject = PublishSubject.create();
         this.method = method;
         setN(n);
-
+        this.drawCircles=drawCircles;
     }
 
     /**
@@ -85,6 +84,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
         super.paintComponent(graphics);
 
         int winW = this.getWidth();
+        int winH = this.getHeight();
         graphics2D = (Graphics2D) graphics;
 
         this.setBackground(Config.TASK_BACKGROUND_COLOR);
@@ -93,6 +93,25 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
         graphics2D.setRenderingHint(
                 RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
+
+        if(Experimenter.methodType.equals("MethodB")){
+            if(drawCircles){
+            int a = MainFrame.getFrame().getWidth()/2;
+            int b = MainFrame.getFrame().getHeight()/2;
+            int m = Math.min(a, b);
+            int r = 4 * m / 5;
+            int r2 = Math.abs(m - r) / 2;
+            System.out.println("****************");
+            for (int i = 0; i < getN(); i++) {
+                double t = 2 * Math.PI * i / getN();
+                int x = (int) Math.round(a + r * Math.cos(t));
+                int y = (int) Math.round(b + r * Math.sin(t));
+                System.out.println(i+1+" posX: "+x);
+                System.out.println(i+1+" posY: "+y);
+                graphics2D.setColor(MAGENTA);
+                graphics2D.drawOval(x-r2-stCircle2.getRadius(), y-r2-stCircle2.getRadius(),
+                        stCircle2.getRadius()*2, stCircle2.getRadius()*2);
+            }   System.out.println("****************");}}
 
         if (Experimenter.methodType.equals("MethodB") || Experimenter.methodType.equals("MethodA")) {
 
