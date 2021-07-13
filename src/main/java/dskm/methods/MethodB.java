@@ -45,17 +45,9 @@ public class MethodB extends Method {
 
     private int count=0;
 
-    private Point point;
+    public static int radius=0;
 
-    public int getN() {
-        return n;
-    }
-
-    public void setN(int n) {
-        this.n = n;
-    }
-
-    public MethodB(int n) throws IOException {
+    public MethodB(int n,int radius) throws IOException {
         expSubject = PublishSubject.create();
         int monitorPPI = Toolkit.getDefaultToolkit().getScreenResolution();
         //System.out.println(Toolkit.getDefaultToolkit().getScreenSize());
@@ -64,6 +56,7 @@ public class MethodB extends Method {
         blocks = new ArrayList<ArrayList<TrialInfo>>();
         cursorList = testConstellation.getCursorList();
         this.n=n;
+        this.radius=radius;
     }
 
     public String getParticipantID() {
@@ -115,12 +108,13 @@ public class MethodB extends Method {
             DrawingPanel exPanel = new DrawingPanel(getN(),"MethodB");
             trialNum++;
             TrialInfo trialInfo = blocks.get(0).remove(0);
-            for (CustomCursor cc : cursors) {
+
+            /*for (CustomCursor cc : cursors) {
                 if (cc.getSizeMM() == trialInfo.getCursorSizeMM()) {
                     exPanel.setCursor(cc.getCursor());
                     break;
                 }
-            }
+            }*/
 
             //Find out where to put target and the start.
             Circle startCircle = null;
@@ -144,7 +138,7 @@ public class MethodB extends Method {
 
             trialInfo.setTarget(new Circle(targetCircle.getCenterX(),
                     targetCircle.getCenterY(),
-                    trialInfo.getWidthPix() / 2));
+                    getRadius()));
 
             trialNumInTest++;
             trialInfo.setTrialNumInTest(trialNumInTest);
@@ -200,13 +194,13 @@ public class MethodB extends Method {
             System.out.println(i+1+" posX: "+posX);
             int posY = (int) radDistList.get(i).getY();
             System.out.println(i+1+" posY: "+posY);
-            startAsCircle = new Circle(posX, posY, 20);
+            startAsCircle = new Circle(posX, posY, getRadius());
             int targetIndex=0;
 
-            if((i+radDistList.size()/2+1)>radDistList.size()){
+            /*if((i+radDistList.size()/2+1)>radDistList.size()){
                 targetIndex=(i+radDistList.size()/2+1)-radDistList.size(); // z.B. size=8, i=4, targetIndex = 4 + 5 > 8 true -> targetIndex= 9 - 8 = 1
-            }
-            target = new Circle((int) radDistList.get(targetIndex).getX(), (int) radDistList.get(targetIndex).getY(), 20);
+            }*/ targetIndex++;
+            target = new Circle((int) radDistList.get(targetIndex).getX(), (int) radDistList.get(targetIndex).getY(), getRadius());
 
             if (cursorSize == 1.0) {
                 //Fake a CustomCursor for the default cursor!
@@ -259,11 +253,28 @@ public class MethodB extends Method {
     }
 
     private Circle determineTargetPositionFitts(TrialInfo trialInfo) {
-
-        trialInfo.setStartAsCircle(new Circle((int) radDistList.get(0 + count).getX(), (int) radDistList.get(0 + count).getY(),
-                (int) trialInfo.getCursorSizePix() + 10));
-        return new Circle((int) radDistList.get(count++).getX(), (int) radDistList.get(count).getY(), 5);
+        if(count==getN()){
+            count=0;
+        }
+        trialInfo.setStartAsCircle(new Circle((int) radDistList.get(n-1).getX(), (int) radDistList.get(n-1).getY(),
+                (int) getRadius()));
+        return new Circle((int) radDistList.get(6).getX(), (int) radDistList.get(6).getY(), getRadius());
 
     }
 
+    public int getN() {
+        return n;
+    }
+
+    public void setN(int n) {
+        this.n = n;
+    }
+
+    public int getRadius() {
+        return radius;
+    }
+
+    public void setRadius(int radius) {
+        this.radius = radius;
+    }
 }
