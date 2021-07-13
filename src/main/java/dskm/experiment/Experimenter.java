@@ -2,6 +2,7 @@ package dskm.experiment;
 
 import dskm.Constants;
 import dskm.gui.CustomCursor;
+import dskm.gui.MainFrame;
 import dskm.methods.Method;
 import dskm.methods.MethodA;
 import dskm.methods.MethodB;
@@ -35,8 +36,11 @@ public class Experimenter {
         int monitorPPI = Toolkit.getDefaultToolkit().getScreenResolution();
         //System.out.println(Toolkit.getDefaultToolkit().getScreenSize());
         pixelSizeMM = 25.4 / monitorPPI;
+        System.out.println("monitorPPI: "+monitorPPI);
+        System.out.println("pixelSizeMM: "+ pixelSizeMM);
         trials = new ArrayList<TrialInfo>();
         blocks = new ArrayList<ArrayList<TrialInfo>>();
+        System.out.println(MainFrame.getFrame().getWidth());
     }
 
     /***
@@ -51,7 +55,7 @@ public class Experimenter {
             method = new MethodA();
             System.out.println("Method A");
         } else if (methodType.equals("MethodB")) {
-            method = new MethodB(8,10);
+            method = new MethodB(20,10);
             System.out.println("Method B");
         }
 
