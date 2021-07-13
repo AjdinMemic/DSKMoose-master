@@ -43,11 +43,13 @@ public class MethodB extends Method {
 
     private int n;
 
-    private int count=0;
+    private int pos = 1;
 
-    public static int radius=0;
+    private int count = 0;
 
-    public MethodB(int n,int radius) throws IOException {
+    public static int radius = 0;
+
+    public MethodB(int n, int radius) throws IOException {
         expSubject = PublishSubject.create();
         int monitorPPI = Toolkit.getDefaultToolkit().getScreenResolution();
         //System.out.println(Toolkit.getDefaultToolkit().getScreenSize());
@@ -55,8 +57,8 @@ public class MethodB extends Method {
         trials = new ArrayList<TrialInfo>();
         blocks = new ArrayList<ArrayList<TrialInfo>>();
         cursorList = testConstellation.getCursorList();
-        this.n=n;
-        this.radius=radius;
+        this.n = n;
+        this.radius = radius;
     }
 
     public String getParticipantID() {
@@ -77,9 +79,9 @@ public class MethodB extends Method {
 
     @Override
     public void createTrial() {
-        for(int i=0;i<radDistList.size();i++) {
-            System.out.println((i+1)+" x: "+radDistList.get(i).x);
-            System.out.println((i+1)+" y: "+radDistList.get(i).y);
+        for (int i = 0; i < radDistList.size(); i++) {
+            System.out.println((i + 1) + " x: " + radDistList.get(i).x);
+            System.out.println((i + 1) + " y: " + radDistList.get(i).y);
         }
         if (blocks.get(0).size() == 0) {
             //The running block was just finished
@@ -105,7 +107,7 @@ public class MethodB extends Method {
             expSubject.onNext(Constants.MSSG_END_LOG);
             finishTestAndEnd();
         } else {// Create and send the panel to be drawn
-            DrawingPanel exPanel = new DrawingPanel(getN(),"MethodB");
+            DrawingPanel exPanel = new DrawingPanel(getN(), "MethodB");
             trialNum++;
             TrialInfo trialInfo = blocks.get(0).remove(0);
 
@@ -162,7 +164,6 @@ public class MethodB extends Method {
     }
 
 
-
     public void generateRadiusDistancePairs() {
         // Generate all the pairs of radius/distance (using Point for int,int)
         int a = MainFrame.getFrame().getWidth() / 2;
@@ -171,35 +172,36 @@ public class MethodB extends Method {
         int r = 4 * m / 5;
         int r2 = Math.abs(m - r) / 2;
 
-         for (int i = 0; i < getN(); i++) {
+        for (int i = 0; i < getN(); i++) {
             double t = 2 * Math.PI * i / getN();
             int x = (int) Math.round(a + r * Math.cos(t));
             int y = (int) Math.round(b + r * Math.sin(t));
 
-            radDistList.add(new Point2D.Double(x-r2,y-r2));
+            radDistList.add(new Point2D.Double(x - r2, y - r2));
         }
     }
 
     @Override
     public void generateTrialList() {
 
-        StartRectangle start=new StartRectangle(0,0,0,0);
+        StartRectangle start = new StartRectangle(0, 0, 0, 0);
 
-        Circle startAsCircle  = null;
+        Circle startAsCircle = null;
         Circle target = null;
-        Double cursorSize=1.0;
+        Double cursorSize = 1.0;
 
-        for(int i=0;i<radDistList.size();i++) {
+        for (int i = 0; i < radDistList.size(); i++) {
             int posX = (int) radDistList.get(i).getX();
-            System.out.println(i+1+" posX: "+posX);
+            System.out.println(i + 1 + " posX: " + posX);
             int posY = (int) radDistList.get(i).getY();
-            System.out.println(i+1+" posY: "+posY);
+            System.out.println(i + 1 + " posY: " + posY);
             startAsCircle = new Circle(posX, posY, getRadius());
-            int targetIndex=0;
+            int targetIndex = 0;
 
             /*if((i+radDistList.size()/2+1)>radDistList.size()){
                 targetIndex=(i+radDistList.size()/2+1)-radDistList.size(); // z.B. size=8, i=4, targetIndex = 4 + 5 > 8 true -> targetIndex= 9 - 8 = 1
-            }*/ targetIndex++;
+            }*/
+            targetIndex++;
             target = new Circle((int) radDistList.get(targetIndex).getX(), (int) radDistList.get(targetIndex).getY(), getRadius());
 
             if (cursorSize == 1.0) {
@@ -252,13 +254,36 @@ public class MethodB extends Method {
         }
     }
 
+    int i = 0;
+    int getOldX;
+    int getOldY;
+
     private Circle determineTargetPositionFitts(TrialInfo trialInfo) {
-        if(count==getN()){
-            count=0;
+        if (i == 0) {
+            trialInfo.setStartAsCircle(new Circle((int) radDistList.get(0).getX(), (int) radDistList.get(0).getY(),
+                    getRadius()));
+        } else {
+            trialInfo.setStartAsCircle(new Circle(getOldX, getOldY,
+                    getRadius()));
+        }System.out.println(1+i+". Start " + trialInfo.getStartAsCircle().toString());
+
+        if (i % 2 == 0) {
+            if (i + radDistList.size() / 2 < radDistList.size()) {
+                pos = i + radDistList.size() / 2; // z.B. i=1 size=9, pos=5
+            } else {
+                pos = (i + radDistList.size() / 2) - radDistList.size();
+            }
+        } else {
+            pos = pos - radDistList.size() / 2;
+
         }
-        trialInfo.setStartAsCircle(new Circle((int) radDistList.get(n-1).getX(), (int) radDistList.get(n-1).getY(),
-                (int) getRadius()));
-        return new Circle((int) radDistList.get(6).getX(), (int) radDistList.get(6).getY(), getRadius());
+
+        getOldX = (int) radDistList.get(pos).getX();
+        getOldY = (int) radDistList.get(pos).getY();
+
+        i++;
+
+        return new Circle((int) radDistList.get(pos).getX(), (int) radDistList.get(pos).getY(), getRadius());
 
     }
 
