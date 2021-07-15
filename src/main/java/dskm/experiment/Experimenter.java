@@ -55,7 +55,7 @@ public class Experimenter {
             method = new MethodA();
             System.out.println("Method A");
         } else if (methodType.equals("MethodB")) {
-            method = new MethodB(80,10,true);
+            method = new MethodB(20,10,true);
             System.out.println("Method B");
         }
 

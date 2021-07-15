@@ -109,7 +109,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                     System.out.println(i + 1 + " posX: " + x);
                     System.out.println(i + 1 + " posY: " + y);
                     graphics2D.setColor(MAGENTA);
-                    graphics2D.drawOval(x - r2 - stCircle2.getRadius(), y - r2 - stCircle2.getRadius(),
+                    graphics2D.drawOval(x - stCircle2.getRadius(), y  - stCircle2.getRadius(),
                             stCircle2.getRadius(), stCircle2.getRadius());
                 }
                 System.out.println("****************");

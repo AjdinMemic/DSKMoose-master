@@ -181,7 +181,7 @@ public class MethodB extends Method {
             int x = (int) Math.round(a + r * Math.cos(t));
             int y = (int) Math.round(b + r * Math.sin(t));
 
-            radDistList.add(new Point2D.Double(x-r2,y-r2));
+            radDistList.add(new Point2D.Double(x,y));
         }
     }
 
