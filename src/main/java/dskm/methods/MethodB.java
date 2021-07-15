@@ -65,8 +65,8 @@ public class MethodB extends Method {
         cursorList = testConstellation.getCursorList();
         this.n=n;
         this.radius=radius;
-        this.distBetCircle=distBetCircle;
-        this.distBetCirclemm=convertMMtoPIX(distBetCircle);
+        this.distBetCircle=distBetCircle/2;
+        this.distBetCirclemm=convertMMtoPIX(this.distBetCircle);
         this.flag=flag;
     }
 
