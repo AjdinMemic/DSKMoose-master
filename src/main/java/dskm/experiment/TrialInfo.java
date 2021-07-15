@@ -434,4 +434,8 @@ public class TrialInfo {
                 ", trialTime=" + trialTime +
                 '}';
     }
+
+    public void setWidthPix(int widthPix) {
+        this.widthPix = widthPix;
+    }
 }

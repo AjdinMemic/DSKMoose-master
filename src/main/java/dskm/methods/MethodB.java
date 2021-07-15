@@ -45,7 +45,7 @@ public class MethodB extends Method {
 
     private int pos=0;
 
-    private int count=0;
+    private int countOfCirclesClicked=0;
 
     public static int radius=0;
 
@@ -54,6 +54,9 @@ public class MethodB extends Method {
     public static int distBetCirclemm;
 
     public boolean flag;
+
+    public int[]radList={10,25,5};
+    public int[]distList={125,250,62};
 
     public MethodB(int n,int radius,int distBetCircle,boolean flag) throws IOException {
         expSubject = PublishSubject.create();
@@ -89,8 +92,8 @@ public class MethodB extends Method {
     @Override
     public void createTrial() {
         for(int i=0;i<radDistList.size();i++) {
-            System.out.println((i+1)+" x: "+radDistList.get(i).x);
-            System.out.println((i+1)+" y: "+radDistList.get(i).y);
+           // System.out.println((i+1)+" x: "+radDistList.get(i).x);
+           // System.out.println((i+1)+" y: "+radDistList.get(i).y);
         }
         if (blocks.get(0).size() == 0) {
             //The running block was just finished
@@ -147,9 +150,11 @@ public class MethodB extends Method {
                     targetCircle.getCenterY(),
                     trialInfo.getWidthPix() / 2);
 
+            System.out.println("trialInfo.getWidthPix(): "+trialInfo.getWidthPix());
+
             trialInfo.setTarget(new Circle(targetCircle.getCenterX(),
                     targetCircle.getCenterY(),
-                    convertMMtoPIX(getRadius())));
+                    convertMMtoPIX(trialInfo.getWidthPix())));
 
             trialNumInTest++;
             trialInfo.setTrialNumInTest(trialNumInTest);
@@ -200,47 +205,52 @@ public class MethodB extends Method {
         Circle target = null;
         Double cursorSize=1.0;
 
-        for(int i=0;i<radDistList.size();i++) {
-            int posX = (int) radDistList.get(i).getX();
-            System.out.println(i+1+" posX: "+posX);
-            int posY = (int) radDistList.get(i).getY();
-            System.out.println(i+1+" posY: "+posY);
-            System.out.println("================");
-            System.out.println("getRadius: "+getRadius());
-            System.out.println("toPixel  : "+convertMMtoPIX(getRadius()));
-            System.out.println("================");
-            startAsCircle = new Circle(posX, posY, convertMMtoPIX(getRadius()));
-            int targetIndex=0;
+        int widthPix = 100;
+        int distancePix = 0;
 
-            targetIndex++;
-            target = new Circle((int) radDistList.get(targetIndex).getX(), (int) radDistList.get(targetIndex).getY(), convertMMtoPIX(getRadius()));
+        for(int j=0;j<radList.length;j++) {
+            setRadius(radList[j]);
+            for (int i = 0; i < radDistList.size(); i++) {
+                widthPix=getRadius();
+                System.out.println(1+i+"."+" widthPix: "+widthPix);
+                int posX = (int) radDistList.get(i).getX();
+                //System.out.println(i + 1 + " posX: " + posX);
+                int posY = (int) radDistList.get(i).getY();
+                /*System.out.println(i + 1 + " posY: " + posY);
+                System.out.println("================");
+                System.out.println("getRadius: " + getRadius());
+                System.out.println("toPixel  : " + convertMMtoPIX(getRadius()));
+                System.out.println("================");*/
+                startAsCircle = new Circle(posX, posY, convertMMtoPIX(getRadius()));
+                int targetIndex = 0;
 
-            if (cursorSize == 1.0) {
-                //Fake a CustomCursor for the default cursor!
-                //cursors.add(new CustomCursor(51, this.pixelSizeMM));
-            } else {
-                cursors.add(new CustomCursor(cursorSize, this.pixelSizeMM));
+                targetIndex++;
+                target = new Circle((int) radDistList.get(targetIndex).getX(), (int) radDistList.get(targetIndex).getY(), convertMMtoPIX(getRadius()));
+
+                if (cursorSize == 1.0) {
+                    //Fake a CustomCursor for the default cursor!
+                    //cursors.add(new CustomCursor(51, this.pixelSizeMM));
+                } else {
+                    cursors.add(new CustomCursor(cursorSize, this.pixelSizeMM));
+                }
+
+                TrialInfo trial = new TrialInfo(
+                        1, //block number, will be updated later
+                        1, //trial in block, will be updated later
+                        distancePix, //distance pix
+                        widthPix, //width pix
+                        this.pixelSizeMM,
+                        startAsCircle,
+                        target,
+                        start,
+                        cursorSize,
+                        this.participantID,
+                        testConstellation.getTestType(),
+                        "fakeMovementDirection"
+                );
+
+                trials.add(trial);
             }
-
-            int widthPix = 100;
-            int distancePix = 0;
-
-            TrialInfo trial = new TrialInfo(
-                    1, //block number, will be updated later
-                    1, //trial in block, will be updated later
-                    distancePix, //distance pix
-                    widthPix, //width pix
-                    this.pixelSizeMM,
-                    startAsCircle,
-                    target,
-                    start,
-                    cursorSize,
-                    this.participantID,
-                    testConstellation.getTestType(),
-                    "fakeMovementDirection"
-            );
-
-            trials.add(trial);
         }
     }
 
@@ -266,11 +276,22 @@ public class MethodB extends Method {
     }
 
     int i=0;
+    int j=0;
     int getOldX;
     int getOldY;
 
     private Circle determineTargetPositionFitts(TrialInfo trialInfo) {
-        System.out.println("i."+i);
+        if(countOfCirclesClicked==getN()){
+            countOfCirclesClicked=0;
+            j++;
+        }
+            trialInfo.setWidthPix(radList[j]);
+
+        countOfCirclesClicked++;
+
+        System.out.println("j=="+j);
+        System.out.println("Sta bi trebo dobit: "+trialInfo.getWidthPix());
+        //System.out.println("i."+i);
         if(i%2==0){
 
             if(pos+radDistList.size()/2+1<=radDistList.size()){
@@ -287,18 +308,17 @@ public class MethodB extends Method {
 
         if(i==0) {
             trialInfo.setStartAsCircle(new Circle((int) radDistList.get(0).getX(), (int) radDistList.get(0).getY(),
-                    (int) convertMMtoPIX(getRadius())));
+                    (int) convertMMtoPIX(trialInfo.getWidthPix())));
         }else {
             trialInfo.setStartAsCircle(new Circle(getOldX, getOldY,
-                    (int) convertMMtoPIX(getRadius())));
+                    (int) convertMMtoPIX(trialInfo.getWidthPix())));
         }
 
         getOldX= (int) radDistList.get(pos).getX();
         getOldY= (int) radDistList.get(pos).getY();
 
         i++;
-
-        return new Circle((int) radDistList.get(pos).getX(), (int) radDistList.get(pos).getY(), convertMMtoPIX(getRadius()));
+        return new Circle((int) radDistList.get(pos).getX(), (int) radDistList.get(pos).getY(), convertMMtoPIX(trialInfo.getWidthPix()));
 
     }
 
