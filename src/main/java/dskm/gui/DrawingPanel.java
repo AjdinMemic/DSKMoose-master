@@ -94,24 +94,27 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
 
-        if(Experimenter.methodType.equals("MethodB")){
-            if(drawCircles){
-            int a = MainFrame.getFrame().getWidth()/2;
-            int b = MainFrame.getFrame().getHeight()/2;
-            int m = Math.min(a, b);
-            int r = 4 * m / 5;
-            int r2 = Math.abs(m - r) / 2;
-            System.out.println("****************");
-            for (int i = 0; i < getN(); i++) {
-                double t = 2 * Math.PI * i / getN();
-                int x = (int) Math.round(a + r * Math.cos(t));
-                int y = (int) Math.round(b + r * Math.sin(t));
-                System.out.println(i+1+" posX: "+x);
-                System.out.println(i+1+" posY: "+y);
-                graphics2D.setColor(MAGENTA);
-                graphics2D.drawOval(x-r2-stCircle2.getRadius(), y-r2-stCircle2.getRadius(),
-                        stCircle2.getRadius()*2, stCircle2.getRadius()*2);
-            }   System.out.println("****************");}}
+        if (Experimenter.methodType.equals("MethodB")) {
+            if (drawCircles) {
+                int a = MainFrame.getFrame().getWidth() / 2;
+                int b = MainFrame.getFrame().getHeight() / 2;
+                int m = Math.min(a, b);
+                int r = 4 * m / 5;
+                int r2 = Math.abs(m - r) / 2;
+                System.out.println("****************");
+                for (int i = 0; i < getN(); i++) {
+                    double t = 2 * Math.PI * i / getN();
+                    int x = (int) Math.round(a + r * Math.cos(t));
+                    int y = (int) Math.round(b + r * Math.sin(t));
+                    System.out.println(i + 1 + " posX: " + x);
+                    System.out.println(i + 1 + " posY: " + y);
+                    graphics2D.setColor(MAGENTA);
+                    graphics2D.drawOval(x - r2 - stCircle2.getRadius(), y - r2 - stCircle2.getRadius(),
+                            stCircle2.getRadius(), stCircle2.getRadius());
+                }
+                System.out.println("****************");
+            }
+        }
 
         if (Experimenter.methodType.equals("MethodB") || Experimenter.methodType.equals("MethodA")) {
 
@@ -123,16 +126,18 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 } else {
                     graphics2D.setColor(Config.STACLE_COLOR_CLICKED);
                 }
-                String startType="";
+                String startType = "";
 
-                if(Experimenter.methodType.equals("MethodB")){ startType = Config.START_BUTTON_SHAPE_CIRCLE;}
-               // stCircle2.setRadius(MethodB.radius*2);
+                if (Experimenter.methodType.equals("MethodB")) {
+                    startType = Config.START_BUTTON_SHAPE_CIRCLE;
+                }
+                // stCircle2.setRadius(MethodB.radius*2);
                 if (startType.equals(Config.START_BUTTON_SHAPE_CIRCLE)) {
                     graphics2D.fillOval(stCircle2.getX(), stCircle2.getY(),
-                            stCircle2.getRadius()*2, stCircle2.getRadius()*2);
+                            stCircle2.getRadius(), stCircle2.getRadius());
                     graphics2D.setColor(Color.cyan);
                     graphics2D.drawOval(stCircle2.getX(), stCircle2.getY(),
-                            stCircle2.getRadius()*2, stCircle2.getRadius()*2);
+                            stCircle2.getRadius(), stCircle2.getRadius());
                 } else {
                     //Draw a rectangle as start button
                     graphics2D.fillRect(stCircle.getX(),
@@ -160,9 +165,13 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
             } else {
                 graphics2D.setColor(Config.TARCLE_COLOR_FREE);
             }
-
-            graphics2D.fillOval(tgtCircle.getX(), tgtCircle.getY(),
-                    tgtCircle.getSide(), tgtCircle.getSide());
+            if (Experimenter.methodType.equals("MethodA")) {
+                graphics2D.fillOval(tgtCircle.getX(), tgtCircle.getY(),
+                        tgtCircle.getSide(), tgtCircle.getSide());
+            } else {
+                graphics2D.fillOval(tgtCircle.getX(), tgtCircle.getY(),
+                        tgtCircle.getRadius(), tgtCircle.getRadius());
+            }
         }
         //System.out.println("Target position Draw: " + tgtCircle.getCenterX() + ", " + tgtCircle.getCenterY());
 

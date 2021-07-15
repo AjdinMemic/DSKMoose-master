@@ -143,7 +143,7 @@ public class MethodB extends Method {
 
             trialInfo.setTarget(new Circle(targetCircle.getCenterX(),
                     targetCircle.getCenterY(),
-                    getRadius()));
+                    convertMMtoPIX(getRadius())));
 
             trialNumInTest++;
             trialInfo.setTrialNumInTest(trialNumInTest);
@@ -199,13 +199,15 @@ public class MethodB extends Method {
             System.out.println(i+1+" posX: "+posX);
             int posY = (int) radDistList.get(i).getY();
             System.out.println(i+1+" posY: "+posY);
-            startAsCircle = new Circle(posX, posY, getRadius());
+            System.out.println("================");
+            System.out.println("getRadius: "+getRadius());
+            System.out.println("toPixel  : "+convertMMtoPIX(getRadius()));
+            System.out.println("================");
+            startAsCircle = new Circle(posX, posY, convertMMtoPIX(getRadius()));
             int targetIndex=0;
 
-            /*if((i+radDistList.size()/2+1)>radDistList.size()){
-                targetIndex=(i+radDistList.size()/2+1)-radDistList.size(); // z.B. size=8, i=4, targetIndex = 4 + 5 > 8 true -> targetIndex= 9 - 8 = 1
-            }*/ targetIndex++;
-            target = new Circle((int) radDistList.get(targetIndex).getX(), (int) radDistList.get(targetIndex).getY(), getRadius());
+            targetIndex++;
+            target = new Circle((int) radDistList.get(targetIndex).getX(), (int) radDistList.get(targetIndex).getY(), convertMMtoPIX(getRadius()));
 
             if (cursorSize == 1.0) {
                 //Fake a CustomCursor for the default cursor!
@@ -279,10 +281,10 @@ public class MethodB extends Method {
 
         if(i==0) {
             trialInfo.setStartAsCircle(new Circle((int) radDistList.get(0).getX(), (int) radDistList.get(0).getY(),
-                    (int) getRadius()));
+                    (int) convertMMtoPIX(getRadius())));
         }else {
             trialInfo.setStartAsCircle(new Circle(getOldX, getOldY,
-                    (int) getRadius()));
+                    (int) convertMMtoPIX(getRadius())));
         }
 
         getOldX= (int) radDistList.get(pos).getX();
@@ -290,7 +292,7 @@ public class MethodB extends Method {
 
         i++;
 
-        return new Circle((int) radDistList.get(pos).getX(), (int) radDistList.get(pos).getY(), getRadius());
+        return new Circle((int) radDistList.get(pos).getX(), (int) radDistList.get(pos).getY(), convertMMtoPIX(getRadius()));
 
     }
 
@@ -308,5 +310,9 @@ public class MethodB extends Method {
 
     public void setRadius(int radius) {
         this.radius = radius;
+    }
+
+    private int convertMMtoPIX(double dim) {
+        return (int) (Math.rint(dim / this.pixelSizeMM));
     }
 }
