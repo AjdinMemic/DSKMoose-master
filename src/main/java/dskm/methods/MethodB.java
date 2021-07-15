@@ -49,9 +49,13 @@ public class MethodB extends Method {
 
     public static int radius=0;
 
+    public int distBetCircle;
+
+    public static int distBetCirclemm;
+
     public boolean flag;
 
-    public MethodB(int n,int radius,boolean flag) throws IOException {
+    public MethodB(int n,int radius,int distBetCircle,boolean flag) throws IOException {
         expSubject = PublishSubject.create();
         int monitorPPI = Toolkit.getDefaultToolkit().getScreenResolution();
         //System.out.println(Toolkit.getDefaultToolkit().getScreenSize());
@@ -61,6 +65,8 @@ public class MethodB extends Method {
         cursorList = testConstellation.getCursorList();
         this.n=n;
         this.radius=radius;
+        this.distBetCircle=distBetCircle;
+        this.distBetCirclemm=convertMMtoPIX(distBetCircle);
         this.flag=flag;
     }
 
@@ -169,11 +175,11 @@ public class MethodB extends Method {
 
 
     public void generateRadiusDistancePairs() {
-        // Generate all the pairs of radius/distance (using Point for int,int)
+
         int a = MainFrame.getFrame().getWidth() / 2;
         int b = MainFrame.getFrame().getHeight() / 2;
         int m = Math.min(a, b);
-        int r = 4 * m / 5;
+        int r = convertMMtoPIX(distBetCircle);
         int r2 = Math.abs(m - r) / 2;
 
          for (int i = 0; i < getN(); i++) {

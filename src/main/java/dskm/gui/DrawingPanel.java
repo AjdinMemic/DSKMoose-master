@@ -4,6 +4,7 @@ import dskm.Config;
 import dskm.experiment.Experimenter;
 import dskm.experiment.Mologger;
 import dskm.experiment.TrialInfo;
+import dskm.methods.MethodB;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 
 import javax.sound.sampled.AudioSystem;
@@ -99,7 +100,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 int a = MainFrame.getFrame().getWidth() / 2;
                 int b = MainFrame.getFrame().getHeight() / 2;
                 int m = Math.min(a, b);
-                int r = 4 * m / 5;
+                int r = MethodB.distBetCirclemm;
                 int r2 = Math.abs(m - r) / 2;
                 System.out.println("****************");
                 for (int i = 0; i < getN(); i++) {
