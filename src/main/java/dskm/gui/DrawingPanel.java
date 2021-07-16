@@ -102,8 +102,17 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 int m = Math.min(a, b);
                 int r = MethodB.distBetCirclemm;
                 int r2 = Math.abs(m - r) / 2;
+                int index=0;
+                int counter=0;
+
                 //System.out.println("****************");
-                for (int i = 0; i < getN(); i++) {
+                for (int i = 0; i < getN()*MethodB.distList.length; i++) {
+                    if(counter==getN()){
+                        index++;
+                        counter=0;
+                        r=convertMMtoPIX(MethodB.distList[index]/2);
+                    }
+                    counter++;
                     double t = 2 * Math.PI * i / getN();
                     int x = (int) Math.round(a + r * Math.cos(t));
                     int y = (int) Math.round(b + r * Math.sin(t));
@@ -529,4 +538,9 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
         }
     }
 
+    double pixelSizeMM = 25.4 / 96;
+
+    private int convertMMtoPIX(double dim) {
+        return (int) (Math.rint(dim / this.pixelSizeMM));
+    }
 }

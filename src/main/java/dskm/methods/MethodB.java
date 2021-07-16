@@ -56,7 +56,7 @@ public class MethodB extends Method {
     public boolean flag;
 
     public int[]radList={10,25,5};
-    public int[]distList={125,250,62};
+    public static int[]distList={125,250,62};
 
     public MethodB(int n,int radius,int distBetCircle,boolean flag) throws IOException {
         expSubject = PublishSubject.create();
@@ -186,8 +186,17 @@ public class MethodB extends Method {
         int m = Math.min(a, b);
         int r = convertMMtoPIX(distBetCircle);
         int r2 = Math.abs(m - r) / 2;
+        int counter=0;
+        int index=0;
 
-         for (int i = 0; i < getN(); i++) {
+         for (int i = 0; i < getN()*distList.length; i++) {
+          /*   if(counter==getN()){
+                 index++;
+                 counter=0;
+                 if(index==distList.length){index=0;}
+                 r=convertMMtoPIX(MethodB.distList[index]/2);
+             }
+             counter++;*/
             double t = 2 * Math.PI * i / getN();
             int x = (int) Math.round(a + r * Math.cos(t));
             int y = (int) Math.round(b + r * Math.sin(t));
@@ -281,9 +290,14 @@ public class MethodB extends Method {
     int getOldY;
 
     private Circle determineTargetPositionFitts(TrialInfo trialInfo) {
+
         if(countOfCirclesClicked==getN()){
             countOfCirclesClicked=0;
             j++;
+        }
+
+        if(j==radList.length){
+            j=0;
         }
             trialInfo.setWidthPix(radList[j]);
 
@@ -292,6 +306,7 @@ public class MethodB extends Method {
         System.out.println("j=="+j);
         System.out.println("Sta bi trebo dobit: "+trialInfo.getWidthPix());
         //System.out.println("i."+i);
+        if(pos+radDistList.size()/2+1==radDistList.size()){   pos=pos-radDistList.size()/2+1;}
         if(i%2==0){
 
             if(pos+radDistList.size()/2+1<=radDistList.size()){
