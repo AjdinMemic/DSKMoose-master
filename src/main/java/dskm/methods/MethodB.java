@@ -306,7 +306,7 @@ public class MethodB extends Method {
         System.out.println("j=="+j);
         System.out.println("Sta bi trebo dobit: "+trialInfo.getWidthPix());
         //System.out.println("i."+i);
-        if(pos+radDistList.size()/2+1==radDistList.size()){   pos=pos-radDistList.size()/2+1;}
+        if(pos+radDistList.size()/2+1==radDistList.size()){   pos=pos-radDistList.size()/2+2;}
         if(i%2==0){
 
             if(pos+radDistList.size()/2+1<=radDistList.size()){
