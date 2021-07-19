@@ -15,29 +15,23 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 public class MethodB extends Method {
-    private java.util.List<Point.Double> radDistList = new ArrayList<>();
+    private final java.util.List<Point.Double> radDistList = new ArrayList<>();
     private int nTrials;
-    private int trialNum;
     private int trialNumInTest = 0;
 
-    private PublishSubject<String> expSubject;
-    private Constellation testConstellation = Constellation.FITTS_CURSORSIZE_1;
-    private String participantID = LogChecker.retNumbLog();
+    private final PublishSubject<String> expSubject;
+    private final Constellation testConstellation = Constellation.FITTS_CURSORSIZE_1;
+    private final String participantID = LogChecker.retNumbLog();
 
     private int blockNumber = 1;
-    private ArrayList<TrialInfo> trials;
-    private ArrayList<ArrayList<TrialInfo>> blocks;
+    private final ArrayList<TrialInfo> trials;
+    private final ArrayList<ArrayList<TrialInfo>> blocks;
 
     double pixelSizeMM;
-    ;
-    ArrayList<CustomCursor> cursors = new ArrayList<CustomCursor>();
 
-    private List<Double> cursorList;
-
-    private int n;
+    private final int n;
 
     private int pos=0;
 
@@ -59,13 +53,12 @@ public class MethodB extends Method {
         int monitorPPI = Toolkit.getDefaultToolkit().getScreenResolution();
         //System.out.println(Toolkit.getDefaultToolkit().getScreenSize());
         pixelSizeMM = 25.4 / monitorPPI;
-        trials = new ArrayList<TrialInfo>();
-        blocks = new ArrayList<ArrayList<TrialInfo>>();
-        cursorList = testConstellation.getCursorList();
+        trials = new ArrayList<>();
+        blocks = new ArrayList<>();
         this.n=n;
-        this.radius=radius;
+        MethodB.radius =radius;
         this.distBetCircle=distBetCircle/2;
-        this.distBetCirclemm=convertMMtoPIX(this.distBetCircle);
+        distBetCirclemm=convertMMtoPIX(this.distBetCircle);
         this.flag=flag;
     }
 
@@ -112,20 +105,12 @@ public class MethodB extends Method {
             finishTestAndEnd();
         } else {// Create and send the panel to be drawn
             DrawingPanel exPanel = new DrawingPanel(getN(),"MethodB",flag);
-            trialNum++;
             TrialInfo trialInfo = blocks.get(0).remove(0);
 
             //Find out where to put target and the start.
-            Circle startCircle = null;
             Circle targetCircle;
 
-            if (testConstellation.getTestType().equals(Config.TEST_TYPE_FITTS)) {
-                //For the Fitts task we need to consider both the
-                //position of the target and the position of the start.
-                targetCircle = determineTargetPositionFitts(trialInfo);
-            } else {
-                targetCircle = determineTargetPositionFitts(trialInfo);
-            }
+            targetCircle = determineTargetPositionFitts(trialInfo);
 
             Circle previousTarget = new Circle(targetCircle.getCenterX(),
                     targetCircle.getCenterY(),
@@ -167,7 +152,6 @@ public class MethodB extends Method {
 
         int a = MainFrame.getFrame().getWidth() / 2;
         int b = MainFrame.getFrame().getHeight() / 2;
-        int m = Math.min(a, b);
         if(genIndex==distList.length){genIndex=0;}
         int r = convertMMtoPIX(distList[genIndex]/2);
         distBetCirclemm=r;
@@ -187,18 +171,18 @@ public class MethodB extends Method {
 
         StartRectangle start=new StartRectangle(0,0,0,0);
 
-        Circle startAsCircle  = null;
-        Circle target = null;
-        Double cursorSize=1.0;
+        Circle startAsCircle;
+        Circle target;
+        double cursorSize=1.0;
 
-        int widthPix = 100;
+        int widthPix;
         int distancePix = 0;
 
-        for(int j=0;j<radList.length;j++) {
-            setRadius(radList[j]);
+        for (int k : radList) {
+            setRadius(k);
             for (int i = 0; i < radDistList.size(); i++) {
-                widthPix=getRadius();
-                System.out.println(1+i+"."+" widthPix: "+widthPix);
+                widthPix = getRadius();
+                System.out.println(1 + i + "." + " widthPix: " + widthPix);
                 int posX = (int) radDistList.get(i).getX();
                 int posY = (int) radDistList.get(i).getY();
                 startAsCircle = new Circle(posX, posY, convertMMtoPIX(getRadius()));
@@ -207,12 +191,8 @@ public class MethodB extends Method {
                 targetIndex++;
                 target = new Circle((int) radDistList.get(targetIndex).getX(), (int) radDistList.get(targetIndex).getY(), convertMMtoPIX(getRadius()));
 
-                if (cursorSize == 1.0) {
-                    //Fake a CustomCursor for the default cursor!
-                    //cursors.add(new CustomCursor(51, this.pixelSizeMM));
-                } else {
-                    cursors.add(new CustomCursor(cursorSize, this.pixelSizeMM));
-                }
+                //Fake a CustomCursor for the default cursor!
+                //cursors.add(new CustomCursor(51, this.pixelSizeMM));
 
                 TrialInfo trial = new TrialInfo(
                         1, //block number, will be updated later
@@ -236,7 +216,7 @@ public class MethodB extends Method {
 
     public void addBlocks() {
         for (int i = 0; i < testConstellation.getNrBlocks(); i++) {
-            blocks.add(new ArrayList<TrialInfo>());
+            blocks.add(new ArrayList<>());
         }
     }
 
@@ -326,7 +306,7 @@ public class MethodB extends Method {
     }
 
     public void setRadius(int radius) {
-        this.radius = radius;
+        MethodB.radius = radius;
     }
 
     private int convertMMtoPIX(double dim) {

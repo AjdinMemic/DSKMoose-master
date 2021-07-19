@@ -99,13 +99,10 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
             if (drawCircles) {
                 int a = MainFrame.getFrame().getWidth() / 2;
                 int b = MainFrame.getFrame().getHeight() / 2;
-                int m = Math.min(a, b);
                 int r = MethodB.distBetCirclemm;
-                int r2 = Math.abs(m - r) / 2;
                 int index=0;
                 int counter=0;
 
-                //System.out.println("****************");
                 for (int i = 0; i < getN(); i++) {
                     if(counter==getN()){
                         index++;
@@ -116,13 +113,10 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                     double t = 2 * Math.PI * i / getN();
                     int x = (int) Math.round(a + r * Math.cos(t));
                     int y = (int) Math.round(b + r * Math.sin(t));
-                    //System.out.println(i + 1 + " posX: " + x);
-                    //System.out.println(i + 1 + " posY: " + y);
                     graphics2D.setColor(MAGENTA);
                     graphics2D.drawOval(x - stCircle2.getRadius(), y  - stCircle2.getRadius(),
                             stCircle2.getRadius()*2, stCircle2.getRadius()*2);
                 }
-                //System.out.println("****************");
             }
         }
 
@@ -183,7 +177,6 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                         tgtCircle.getRadius()*2, tgtCircle.getRadius()*2);
             }
         }
-        //System.out.println("Target position Draw: " + tgtCircle.getCenterX() + ", " + tgtCircle.getCenterY());
 
         //-- Draw text
         graphics2D.setColor(Config.TEXT_COLOR);
