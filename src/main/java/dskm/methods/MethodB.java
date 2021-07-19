@@ -189,6 +189,7 @@ public class MethodB extends Method {
         int m = Math.min(a, b);
         if(genIndex==distList.length){genIndex=0;}
         int r = convertMMtoPIX(distList[genIndex]/2);
+        distBetCirclemm=r;
         int r2 = Math.abs(m - r) / 2;
         int counter=0;
         int index=0;

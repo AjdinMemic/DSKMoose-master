@@ -106,7 +106,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 int counter=0;
 
                 //System.out.println("****************");
-                for (int i = 0; i < getN()*MethodB.distList.length; i++) {
+                for (int i = 0; i < getN(); i++) {
                     if(counter==getN()){
                         index++;
                         counter=0;
