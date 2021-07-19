@@ -6,7 +6,7 @@ import dskm.Config;
 import java.util.List;
 
 public enum Constellation {
-    FITTS_CURSORSIZE_1 (Config.TEST_TYPE_FITTS, 1.0, 3, 1),
+    FITTS_CURSORSIZE_1 (Config.TEST_TYPE_FITTS, 1.0, 1, 1),
     FITTS_CURSORSIZE_25 (Config.TEST_TYPE_FITTS, 25.0, 3, 1),
     FITTS_CURSORSIZE_30 (Config.TEST_TYPE_FITTS, 30.0, 3, 1),
     FITTS_CURSORSIZE_35 (Config.TEST_TYPE_FITTS, 35.0, 3, 1),

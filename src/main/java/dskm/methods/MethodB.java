@@ -294,6 +294,7 @@ public class MethodB extends Method {
     int j=0;
     int getOldX;
     int getOldY;
+    int countIndex=0;
 
     private Circle determineTargetPositionFitts(TrialInfo trialInfo) {
 
@@ -301,8 +302,13 @@ public class MethodB extends Method {
             i = 0;
             pos = 0;
             countOfCirclesClicked=0;
-            j++;
             generateRadiusDistancePairs();
+            countIndex++;
+        }
+
+        if(countIndex==radList.length){
+            j++;
+            countIndex=0;
         }
 
         if(j==radList.length){
