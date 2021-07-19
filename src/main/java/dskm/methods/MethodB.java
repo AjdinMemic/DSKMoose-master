@@ -1,6 +1,5 @@
 package dskm.methods;
 
-import com.google.common.collect.ImmutableList;
 import dskm.Config;
 import dskm.Constants;
 import dskm.experiment.Constellation;
@@ -8,7 +7,6 @@ import dskm.experiment.LogChecker;
 import dskm.experiment.TrialInfo;
 import dskm.gui.*;
 import io.reactivex.rxjava3.subjects.PublishSubject;
-import org.checkerframework.checker.units.qual.C;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,14 +16,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class MethodB extends Method {
     private java.util.List<Point.Double> radDistList = new ArrayList<>();
     private int nTrials;
     private int trialNum;
     private int trialNumInTest = 0;
-    private Circle previousTarget = new Circle(0, 0, 0);
 
     private PublishSubject<String> expSubject;
     private Constellation testConstellation = Constellation.FITTS_CURSORSIZE_1;
@@ -91,10 +87,6 @@ public class MethodB extends Method {
 
     @Override
     public void createTrial() {
-        for(int i=0;i<radDistList.size();i++) {
-           // System.out.println((i+1)+" x: "+radDistList.get(i).x);
-           // System.out.println((i+1)+" y: "+radDistList.get(i).y);
-        }
         if (blocks.get(0).size() == 0) {
             //The running block was just finished
             blocks.remove(0);
@@ -123,13 +115,6 @@ public class MethodB extends Method {
             trialNum++;
             TrialInfo trialInfo = blocks.get(0).remove(0);
 
-            /*for (CustomCursor cc : cursors) {
-                if (cc.getSizeMM() == trialInfo.getCursorSizeMM()) {
-                    exPanel.setCursor(cc.getCursor());
-                    break;
-                }
-            }*/
-
             //Find out where to put target and the start.
             Circle startCircle = null;
             Circle targetCircle;
@@ -142,11 +127,7 @@ public class MethodB extends Method {
                 targetCircle = determineTargetPositionFitts(trialInfo);
             }
 
-            //Target position and start position are determined.
-            //In case it is a calibration task, the start is fake.
-
-            //Update previousTarget to the newly set new target.
-            previousTarget = new Circle(targetCircle.getCenterX(),
+            Circle previousTarget = new Circle(targetCircle.getCenterX(),
                     targetCircle.getCenterY(),
                     trialInfo.getWidthPix() / 2);
 
@@ -190,18 +171,8 @@ public class MethodB extends Method {
         if(genIndex==distList.length){genIndex=0;}
         int r = convertMMtoPIX(distList[genIndex]/2);
         distBetCirclemm=r;
-        int r2 = Math.abs(m - r) / 2;
-        int counter=0;
-        int index=0;
 
          for (int i = 0; i < getN()*distList.length; i++) {
-          /*   if(counter==getN()){
-                 index++;
-                 counter=0;
-                 if(index==distList.length){index=0;}
-                 r=convertMMtoPIX(MethodB.distList[index]/2);
-             }
-             counter++;*/
             double t = 2 * Math.PI * i / getN();
             int x = (int) Math.round(a + r * Math.cos(t));
             int y = (int) Math.round(b + r * Math.sin(t));
@@ -229,13 +200,7 @@ public class MethodB extends Method {
                 widthPix=getRadius();
                 System.out.println(1+i+"."+" widthPix: "+widthPix);
                 int posX = (int) radDistList.get(i).getX();
-                //System.out.println(i + 1 + " posX: " + posX);
                 int posY = (int) radDistList.get(i).getY();
-                /*System.out.println(i + 1 + " posY: " + posY);
-                System.out.println("================");
-                System.out.println("getRadius: " + getRadius());
-                System.out.println("toPixel  : " + convertMMtoPIX(getRadius()));
-                System.out.println("================");*/
                 startAsCircle = new Circle(posX, posY, convertMMtoPIX(getRadius()));
                 int targetIndex = 0;
 
@@ -338,10 +303,10 @@ public class MethodB extends Method {
 
         if(i==0) {
             trialInfo.setStartAsCircle(new Circle((int) radDistList.get(0).getX(), (int) radDistList.get(0).getY(),
-                    (int) convertMMtoPIX(trialInfo.getWidthPix())));
+                    convertMMtoPIX(trialInfo.getWidthPix())));
         }else {
             trialInfo.setStartAsCircle(new Circle(getOldX, getOldY,
-                    (int) convertMMtoPIX(trialInfo.getWidthPix())));
+                    convertMMtoPIX(trialInfo.getWidthPix())));
         }
 
         getOldX= (int) radDistList.get(pos).getX();
@@ -354,10 +319,6 @@ public class MethodB extends Method {
 
     public int getN() {
         return n;
-    }
-
-    public void setN(int n) {
-        this.n = n;
     }
 
     public int getRadius() {
