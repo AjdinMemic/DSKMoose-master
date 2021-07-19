@@ -120,7 +120,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                     //System.out.println(i + 1 + " posY: " + y);
                     graphics2D.setColor(MAGENTA);
                     graphics2D.drawOval(x - stCircle2.getRadius(), y  - stCircle2.getRadius(),
-                            stCircle2.getRadius(), stCircle2.getRadius());
+                            stCircle2.getRadius()*2, stCircle2.getRadius()*2);
                 }
                 //System.out.println("****************");
             }
@@ -144,10 +144,10 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 // stCircle2.setRadius(MethodB.radius*2);
                 if (startType.equals(Config.START_BUTTON_SHAPE_CIRCLE)) {
                     graphics2D.fillOval(stCircle2.getX(), stCircle2.getY(),
-                            stCircle2.getRadius(), stCircle2.getRadius());
+                            stCircle2.getSide(), stCircle2.getSide());
                     graphics2D.setColor(Color.cyan);
                     graphics2D.drawOval(stCircle2.getX(), stCircle2.getY(),
-                            stCircle2.getRadius(), stCircle2.getRadius());
+                            stCircle2.getSide(), stCircle2.getSide());
                 } else {
                     //Draw a rectangle as start button
                     graphics2D.fillRect(stCircle.getX(),
@@ -180,7 +180,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                         tgtCircle.getSide(), tgtCircle.getSide());
             } else {
                 graphics2D.fillOval(tgtCircle.getX(), tgtCircle.getY(),
-                        tgtCircle.getRadius(), tgtCircle.getRadius());
+                        tgtCircle.getRadius()*2, tgtCircle.getRadius()*2);
             }
         }
         //System.out.println("Target position Draw: " + tgtCircle.getCenterX() + ", " + tgtCircle.getCenterY());

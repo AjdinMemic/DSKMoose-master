@@ -299,7 +299,7 @@ public class MethodB extends Method {
         if(j==radList.length){
             j=0;
         }
-            trialInfo.setWidthPix(radList[j]);
+            trialInfo.setWidthPix(radList[j]/2);
 
         countOfCirclesClicked++;
 
