@@ -194,7 +194,7 @@ public class MethodB extends Method {
         int counter=0;
         int index=0;
 
-         for (int i = 0; i < getN()*radList.length; i++) {
+         for (int i = 0; i < getN()*distList.length; i++) {
           /*   if(counter==getN()){
                  index++;
                  counter=0;
