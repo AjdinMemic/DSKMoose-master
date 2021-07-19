@@ -178,18 +178,22 @@ public class MethodB extends Method {
     }
 
 
+    static int genIndex=0;
 
     public void generateRadiusDistancePairs() {
+
+        radDistList.clear();
 
         int a = MainFrame.getFrame().getWidth() / 2;
         int b = MainFrame.getFrame().getHeight() / 2;
         int m = Math.min(a, b);
-        int r = convertMMtoPIX(distBetCircle);
+        if(genIndex==distList.length){genIndex=0;}
+        int r = convertMMtoPIX(distList[genIndex]/2);
         int r2 = Math.abs(m - r) / 2;
         int counter=0;
         int index=0;
 
-         for (int i = 0; i < getN()*distList.length; i++) {
+         for (int i = 0; i < getN()*radList.length; i++) {
           /*   if(counter==getN()){
                  index++;
                  counter=0;
@@ -203,6 +207,7 @@ public class MethodB extends Method {
 
             radDistList.add(new Point2D.Double(x,y));
         }
+        genIndex++;
     }
 
     @Override
@@ -292,8 +297,11 @@ public class MethodB extends Method {
     private Circle determineTargetPositionFitts(TrialInfo trialInfo) {
 
         if(countOfCirclesClicked==getN()){
+            i = 0;
+            pos = 0;
             countOfCirclesClicked=0;
             j++;
+            generateRadiusDistancePairs();
         }
 
         if(j==radList.length){
