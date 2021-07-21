@@ -56,6 +56,9 @@ public class TrialInfo {
 
     private String testType;
     private String methodType;
+    private Boolean AllCirclesFlag;
+    private int numberOfCircles;
+    private int  distBetCirclemm;
 
     public Circle getStartAsCircle() {
         return startAsCircle;
@@ -66,6 +69,9 @@ public class TrialInfo {
     }
 
     public TrialInfo(String method,
+                     Boolean AllCircleFlag,
+                     int numberOfCircles,
+                     int distBetCirclemm,
                      int blockNumber,
                      int trialInBlock,
                      int distancePix,
@@ -79,6 +85,9 @@ public class TrialInfo {
                      String testType,
                      String movementDirection) {
         this.methodType =method;
+        this.AllCirclesFlag=AllCircleFlag;
+        this.numberOfCircles=numberOfCircles;
+        this.distBetCirclemm=distBetCirclemm;
         this.blockNumber = blockNumber;
         this.trialInBlock = trialInBlock;
         this.distancePix = distancePix;
@@ -99,6 +108,9 @@ public class TrialInfo {
     public TrialInfo copyTrialInfo(){
         TrialInfo copy = new TrialInfo(
                 this.methodType,
+                this.AllCirclesFlag,
+                this.numberOfCircles,
+                this.distBetCirclemm,
                 this.blockNumber,
                 this.trialInBlock,
                 this.distancePix,
@@ -301,6 +313,9 @@ public class TrialInfo {
                 start.getCenterY() + ";" +
                 start.getWidth() + ";" +
                 start.getHeight() + ";" +
+                numberOfCircles + ";" +
+                distBetCirclemm + ";" +
+                AllCirclesFlag + ";" +
                 startAsCircle.getX()+";"+
                 startAsCircle.getY()+";"+
                 startAsCircle.getCenterX()+";"+
@@ -388,6 +403,9 @@ public class TrialInfo {
                         "startCenterY" + ";" +
                         "startWidthPix" + ";" +
                         "startHeightPix" + ";" +
+                        "numberOfCircles"+ ";" +
+                        "distBetCircleMM"+ ";" +
+                        "allCircleFlag"  + ";" +
                         "startAsCirclePosX" + ";" +
                         "startAsCirclePosY" + ";" +
                         "startAsCircleCenterX" + ";" +
