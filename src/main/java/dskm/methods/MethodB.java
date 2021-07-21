@@ -48,7 +48,7 @@ public class MethodB extends Method {
     public int[]radList={10,25,5};
     public static int[]distList={125,250,62};
 
-    public MethodB(int n,int radius,int distBetCircle,boolean flag) throws IOException {
+    public MethodB(int n,boolean flag) throws IOException {
         expSubject = PublishSubject.create();
         int monitorPPI = Toolkit.getDefaultToolkit().getScreenResolution();
         //System.out.println(Toolkit.getDefaultToolkit().getScreenSize());
