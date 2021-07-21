@@ -251,7 +251,7 @@ public class MethodB extends Method {
             countIndex++;
         }
 
-        if(countIndex==radList.length){
+        if(countIndex==distList.length){
             j++;
             countIndex=0;
         }
