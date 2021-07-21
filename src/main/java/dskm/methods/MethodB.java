@@ -194,7 +194,7 @@ public class MethodB extends Method {
                 //Fake a CustomCursor for the default cursor!
                 //cursors.add(new CustomCursor(51, this.pixelSizeMM));
 
-                TrialInfo trial = new TrialInfo(
+                TrialInfo trial = new TrialInfo("Method B",
                         1, //block number, will be updated later
                         1, //trial in block, will be updated later
                         distancePix, //distance pix
@@ -259,6 +259,7 @@ public class MethodB extends Method {
         if(j==radList.length){
             j=0;
         }
+        trialInfo.setRealWidthPix(radList[j]);
             trialInfo.setWidthPix(radList[j]/2);
 
         countOfCirclesClicked++;

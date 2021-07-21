@@ -17,6 +17,7 @@ public class TrialInfo {
 
     private int distancePix = 0;
     private int widthPix = 0;
+    private int widthMethodB=0;
 
     private double distanceMM = 0;
     private double widthMM = 0;
@@ -54,6 +55,7 @@ public class TrialInfo {
     private int trialNumInTest = 0;
 
     private String testType;
+    private String methodType;
 
     public Circle getStartAsCircle() {
         return startAsCircle;
@@ -63,7 +65,8 @@ public class TrialInfo {
         this.startAsCircle = startAsCircle;
     }
 
-    public TrialInfo(int blockNumber,
+    public TrialInfo(String method,
+                     int blockNumber,
                      int trialInBlock,
                      int distancePix,
                      int widthPix,
@@ -75,6 +78,7 @@ public class TrialInfo {
                      String participantID,
                      String testType,
                      String movementDirection) {
+        this.methodType =method;
         this.blockNumber = blockNumber;
         this.trialInBlock = trialInBlock;
         this.distancePix = distancePix;
@@ -82,6 +86,7 @@ public class TrialInfo {
         this.pixelSizeMM = pixelSizeMM;
         this.distanceMM = distancePix * pixelSizeMM;
         this.widthMM = widthPix * pixelSizeMM;
+        this.startAsCircle=startAsCircle;
         this.target = target;
         this.start = start;
         this.cursorSizeMM = cursorSizeMM;
@@ -93,6 +98,7 @@ public class TrialInfo {
 
     public TrialInfo copyTrialInfo(){
         TrialInfo copy = new TrialInfo(
+                this.methodType,
                 this.blockNumber,
                 this.trialInBlock,
                 this.distancePix,
@@ -275,6 +281,7 @@ public class TrialInfo {
 
     public String toLogString(){
         return "" +
+                methodType + ";"+
                 pixelSizeMM + ";" +
                 testType + ";" +
                 participantID + ";" +
@@ -294,6 +301,12 @@ public class TrialInfo {
                 start.getCenterY() + ";" +
                 start.getWidth() + ";" +
                 start.getHeight() + ";" +
+                startAsCircle.getX()+";"+
+                startAsCircle.getY()+";"+
+                startAsCircle.getCenterX()+";"+
+                startAsCircle.getCenterY()+";"+
+                widthMethodB+";"+
+                convertMMtoPIX(widthMethodB)+";"+
                 target.getX() + ";" +
                 target.getY() + ";" +
                 target.getCenterX() + ";" +
@@ -355,6 +368,7 @@ public class TrialInfo {
 
     public static String getHeaderLine(){
         String headerLine =
+                "method" + ";" +
                 "pixelSizeMM" + ";" +
                         "testType" + ";" +
                         "part" + ";" +
@@ -374,6 +388,12 @@ public class TrialInfo {
                         "startCenterY" + ";" +
                         "startWidthPix" + ";" +
                         "startHeightPix" + ";" +
+                        "startAsCirclePosX" + ";" +
+                        "startAsCirclePosY" + ";" +
+                        "startAsCircleCenterX" + ";" +
+                        "startAsCircleCenterY" + ";" +
+                        "startAsCircleRadiusMM" + ";" +
+                        "startAsCircleRadiusPix" + ";" +
                         "targetPosX" + ";" +
                         "targetPosY" + ";" +
                         "targetCenterX" + ";" +
@@ -438,4 +458,13 @@ public class TrialInfo {
     public void setWidthPix(int widthPix) {
         this.widthPix = widthPix;
     }
+
+    private int convertMMtoPIX(double dim) {
+        return (int) (Math.rint(dim / this.pixelSizeMM));
+    }
+
+    public void setRealWidthPix(int widthPix){
+        this.widthMethodB=widthPix;
+    }
+
 }
