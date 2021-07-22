@@ -28,7 +28,7 @@ public class TrialInfo {
 
     private Circle startAsCircle=null;
     private Circle target = null;
-    private StartRectangle start = null;
+    private Circle start = null;
 
     private double cursorSizeMM = 0;
     private double cursorSizePix = 0;
@@ -79,7 +79,7 @@ public class TrialInfo {
                      double pixelSizeMM,
                      Circle startAsCircle,
                      Circle target,
-                     StartRectangle start,
+                     Circle start,
                      double cursorSizeMM,
                      String participantID,
                      String testType,
@@ -157,7 +157,7 @@ public class TrialInfo {
         return target;
     }
 
-    public StartRectangle getStart() {
+    public Circle getStart() {
         return start;
     }
 
@@ -287,7 +287,7 @@ public class TrialInfo {
         this.movementDirection = movementDirection;
     }
 
-    public void setStart(StartRectangle start) {
+    public void setStart(Circle start) {
         this.start = start;
     }
 
@@ -316,8 +316,7 @@ public class TrialInfo {
                 start.getY() + ";" +
                 start.getCenterX() + ";" +
                 start.getCenterY() + ";" +
-                start.getWidth() + ";" +
-                start.getHeight() + ";" +
+                start.getRadius() + ";" +
                 numberOfCircles + ";" +
                 distBetCirclemm + ";" +
                 AllCirclesFlag + ";" +
@@ -406,8 +405,7 @@ public class TrialInfo {
                         "startPosY" + ";" +
                         "startCenterX" + ";" +
                         "startCenterY" + ";" +
-                        "startWidthPix" + ";" +
-                        "startHeightPix" + ";" +
+                        "startRadius" + ";" +
                         "numberOfCircles"+ ";" +
                         "distBetCircleMM"+ ";" +
                         "allCircleFlag"  + ";" +

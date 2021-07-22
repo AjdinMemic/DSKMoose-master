@@ -169,7 +169,7 @@ public class MethodB extends Method {
     @Override
     public void generateTrialList() {
 
-        StartRectangle start=new StartRectangle(0,0,0,0);
+        Circle start=new Circle(0,0,0);
 
         Circle startAsCircle;
         Circle target;

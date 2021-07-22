@@ -94,13 +94,12 @@ public class MethodA extends Method {
                     // Generate the trial list
                     int widthPix = convertMMtoPIX(p.x);
                     int distancePix = convertMMtoPIX(p.y);
-                    StartRectangle start = null;
+                    Circle start = null;
                     Circle target = null;
                     if (testConstellation.getTestType().equals(Config.TEST_TYPE_FITTS)) {
-                        start = new StartRectangle(Config.STACLE_X,
+                        start = new Circle(Config.STACLE_X,
                                 Config.STACLE_Y,
-                                Config.STAREC_WIDTH,
-                                (int) cursorSize + 20);
+                                Config.STAREC_WIDTH/2);
                         start.setColor(Config.STACLE_COLOR);
                         target = new Circle(Config.STACLE_X + distancePix,
                                 Config.STACLE_Y,
@@ -109,8 +108,7 @@ public class MethodA extends Method {
                     } else {
                         //Calibration
                         //Set start circle to a fake one...
-                        start = new StartRectangle(0,
-                                0,
+                        start = new Circle(0,
                                 0,
                                 0);
 
@@ -332,9 +330,8 @@ public class MethodA extends Method {
 
         //Now we have a suitable x and y for the start circle.
         //Set the start for the trial.
-        trialInfo.setStart(new StartRectangle(xPos, yPos,
-                Config.STAREC_WIDTH,
-                (int) trialInfo.getCursorSizePix() + 20));
+        trialInfo.setStart(new Circle(xPos, yPos,
+                Config.STAREC_WIDTH/2));
         //fitta
 
         //Now we need to calculate the corresponding target position

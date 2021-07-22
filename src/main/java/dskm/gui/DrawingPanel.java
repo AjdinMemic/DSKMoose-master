@@ -132,7 +132,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 }
                 String startType = "";
 
-                if (Experimenter.methodType.equals("MethodB")) {
+                if (Experimenter.methodType.equals("MethodB") || Experimenter.methodType.equals("MethodA")) {
                     startType = Config.START_BUTTON_SHAPE_CIRCLE;
                 }
                 // stCircle2.setRadius(MethodB.radius*2);
@@ -188,7 +188,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
     public void setCurrentTrialInfo(TrialInfo currentTrialInfo) {
         this.currentTrialInfo = currentTrialInfo;
         if (method.equals("MethodA")) {
-            this.setCircles(currentTrialInfo.getStart(),
+            this.setCircles2(currentTrialInfo.getStart(),
                     currentTrialInfo.getTarget());
         } else if (method.equals("MethodB")) {
             this.setCircles2(currentTrialInfo.getStartAsCircle(),
@@ -265,7 +265,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
         boolean isInStart;
 
         if (method.equals("MethodA")) {
-            isInStart = stCircle.isInside(e.getX(), e.getY());
+            isInStart = stCircle2.isInside(e.getX(), e.getY());
         } else {
             isInStart = stCircle2.isInside(e.getX(), e.getY());
         }
@@ -353,7 +353,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
     public void mouseReleasedFitts(MouseEvent e) throws IOException {
         boolean isInStart;
         if (method.equals("MethodA")) {
-            isInStart = stCircle.isInside(e.getX(), e.getY());
+            isInStart = stCircle2.isInside(e.getX(), e.getY());
         } else {
             isInStart = stCircle2.isInside(e.getX(), e.getY());
         }
@@ -373,7 +373,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
 
                 // change the color of the start circle
                 if (method.equals("MethodA")) {
-                    stCircle.setColor(Config.STACLE_COLOR_CLICKED);
+                    stCircle2.setColor(Config.STACLE_COLOR_CLICKED);
                 } else {
                     stCircle2.setColor(Config.STACLE_COLOR_CLICKED);
                 }
