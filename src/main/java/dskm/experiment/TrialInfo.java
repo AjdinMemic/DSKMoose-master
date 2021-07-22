@@ -295,6 +295,7 @@ public class TrialInfo {
         if(methodType.equals("Method B")){
             this.widthMM=widthMethodB;//widthMethodB;
             this.widthPix=convertMMtoPIX(widthMM);
+            this.start=startAsCircle;
         }
 
         return "" +
@@ -320,12 +321,6 @@ public class TrialInfo {
                 numberOfCircles + ";" +
                 distBetCirclemm + ";" +
                 AllCirclesFlag + ";" +
-                startAsCircle.getX()+";"+
-                startAsCircle.getY()+";"+
-                startAsCircle.getCenterX()+";"+
-                startAsCircle.getCenterY()+";"+
-                widthMethodB+";"+
-                convertMMtoPIX(widthMethodB)+";"+
                 target.getX() + ";" +
                 target.getY() + ";" +
                 target.getCenterX() + ";" +
@@ -409,12 +404,6 @@ public class TrialInfo {
                         "numberOfCircles"+ ";" +
                         "distBetCircleMM"+ ";" +
                         "allCircleFlag"  + ";" +
-                        "startAsCirclePosX" + ";" +
-                        "startAsCirclePosY" + ";" +
-                        "startAsCircleCenterX" + ";" +
-                        "startAsCircleCenterY" + ";" +
-                        "startAsCircleRadiusMM" + ";" +
-                        "startAsCircleRadiusPix" + ";" +
                         "targetPosX" + ";" +
                         "targetPosY" + ";" +
                         "targetCenterX" + ";" +
