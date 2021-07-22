@@ -43,6 +43,8 @@ public class MethodB extends Method {
 
     public static int distBetCirclemm;
 
+    public static int distGlobal;
+
     public boolean flag;
 
     public int[]radList={10,25,5};
@@ -145,7 +147,7 @@ public class MethodB extends Method {
 
 
     static int genIndex=0;
-
+           int localIndex=0;
     public void generateRadiusDistancePairs() {
 
         radDistList.clear();
@@ -153,17 +155,21 @@ public class MethodB extends Method {
         int a = MainFrame.getFrame().getWidth() / 2;
         int b = MainFrame.getFrame().getHeight() / 2;
         if(genIndex==distList.length){genIndex=0;}
+        if(localIndex==distList.length){localIndex=0;}
         int r = convertMMtoPIX(distList[genIndex]/2);
+        distGlobal=distList[localIndex]/2;
         distBetCirclemm=r;
-
+        System.out.println("***---***");
          for (int i = 0; i < getN()*distList.length; i++) {
             double t = 2 * Math.PI * i / getN();
             int x = (int) Math.round(a + r * Math.cos(t));
             int y = (int) Math.round(b + r * Math.sin(t));
-
+             System.out.println(i+". "+"x:"+x+" "+"y:"+y);
             radDistList.add(new Point2D.Double(x,y));
         }
+        System.out.println("***---***");
         genIndex++;
+        localIndex++;
     }
 
     @Override
@@ -240,16 +246,24 @@ public class MethodB extends Method {
     int getOldX;
     int getOldY;
     int countIndex=0;
+    int countDistance=0;
 
     private Circle determineTargetPositionFitts(TrialInfo trialInfo) {
-
         if(countOfCirclesClicked==getN()){
             i = 0;
             pos = 0;
             countOfCirclesClicked=0;
             generateRadiusDistancePairs();
+            System.out.println("****-------****");
             countIndex++;
+            countDistance++;
+            if(countDistance==distList.length){
+                countDistance=0;
+            }
         }
+
+        trialInfo.setDistanceMM(distList[countDistance]);
+        trialInfo.setDistancePix(convertMMtoPIX(distList[countDistance]));
 
         if(countIndex==distList.length){
             j++;
@@ -313,5 +327,9 @@ public class MethodB extends Method {
 
     private int convertMMtoPIX(double dim) {
         return (int) (Math.rint(dim / this.pixelSizeMM));
+    }
+
+    private double convertPIXtoMM(int dim) {
+        return Math.rint(dim * this.pixelSizeMM);
     }
 }

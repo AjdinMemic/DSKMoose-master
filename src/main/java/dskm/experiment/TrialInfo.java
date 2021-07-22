@@ -469,6 +469,14 @@ public class TrialInfo {
         this.widthPix = widthPix;
     }
 
+    public void setDistancePix(int distancePix) {
+        this.distancePix = distancePix;
+    }
+
+    public void setDistanceMM(double distanceMM) {
+        this.distanceMM = distanceMM;
+    }
+
     private int convertMMtoPIX(double dim) {
         return (int) (Math.rint(dim / this.pixelSizeMM));
     }
