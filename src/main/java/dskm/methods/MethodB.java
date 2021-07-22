@@ -22,7 +22,7 @@ public class MethodB extends Method {
     private int trialNumInTest = 0;
 
     private final PublishSubject<String> expSubject;
-    private final Constellation testConstellation = Constellation.FITTS_CURSORSIZE_1;
+    private final Constellation testConstellation = Constellation.FITTS_CURSORSIZE_2;
     private final String participantID = LogChecker.retNumbLog();
 
     private int blockNumber = 1;
@@ -260,7 +260,7 @@ public class MethodB extends Method {
             j=0;
         }
 
-        trialInfo.setRealWidthPix(radList[j]);
+            trialInfo.setRealWidthPix(radList[j]);
             trialInfo.setWidthPix(radList[j]/2);
 
         countOfCirclesClicked++;

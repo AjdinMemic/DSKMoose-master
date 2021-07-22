@@ -292,6 +292,11 @@ public class TrialInfo {
     }
 
     public String toLogString(){
+        if(methodType.equals("Method B")){
+            this.widthMM=widthMethodB;//widthMethodB;
+            this.widthPix=convertMMtoPIX(widthMM);
+        }
+
         return "" +
                 methodType + ";"+
                 pixelSizeMM + ";" +
