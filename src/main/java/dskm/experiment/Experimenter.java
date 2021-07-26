@@ -6,6 +6,7 @@ import dskm.gui.MainFrame;
 import dskm.methods.Method;
 import dskm.methods.MethodA;
 import dskm.methods.MethodB;
+import dskm.methods.MethodC;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 
 import java.awt.*;
@@ -57,6 +58,9 @@ public class Experimenter {
         } else if (methodType.equals("MethodB")) {
             method = new MethodB(9,true); // radius and distBetCircle in mm! // distBetCirle = distance from center of c[N] to center c[N+length/2]
             System.out.println("Method B");
+        }else if (methodType.equals("MethodC")){
+            method = new MethodC();
+            System.out.println("Method C");
         }
 
         method.methodSetup();
