@@ -416,13 +416,13 @@ public class MethodC extends Method {
 
         //Now we need to calculate the corresponding target position
         //based on the start position.
-        if(count%2==0) {
+        if(trialInfo.getQuartile().equals("HOR")) {
             if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_DIRECTION_RIGTH)) {
                 xPos = xPos + trialInfo.getDistancePix();
             } else if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_DIRECTION_LEFT)) {
                 xPos = xPos - trialInfo.getDistancePix();
             }
-        }else {  if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_DIRECTION_RIGTH)) {
+        }else if(trialInfo.getQuartile().equals("VER")) {  if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_DIRECTION_RIGTH)) {
             yPos = yPos + trialInfo.getDistancePix();
         } else if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_DIRECTION_LEFT)) {
             yPos = yPos - trialInfo.getDistancePix();
