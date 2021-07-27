@@ -281,10 +281,10 @@ public class MethodC extends Method {
                 (trialInfo.getWidthPix() / 2);
         //System.out.println("max: "+max);
 
-        top = (-windowRec.y + windowRec.height + 0 + convertMMtoPIX(trialInfo.getCursorSizeMM()/2) + (trialInfo.getWidthPix()/2));
+        top = windowRec.y + windowRec.height - 20 - convertMMtoPIX(trialInfo.getCursorSizeMM()/2) - (trialInfo.getWidthPix()/2);
         System.out.println("windowRec.y: "+windowRec.y);
         System.out.println("top: "+top);
-        bot = windowRec.y + 20 - convertMMtoPIX(trialInfo.getCursorSizeMM()/2) - (trialInfo.getWidthPix()/2);
+        bot = windowRec.y + 20 + convertMMtoPIX(trialInfo.getCursorSizeMM()/2) + (trialInfo.getWidthPix()/2);
         System.out.println("bot: "+bot);
         int xTop=generateRandomPosition(bot,top);
         //System.out.println("xTop: "+xTop);
