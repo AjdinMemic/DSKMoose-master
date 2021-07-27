@@ -115,7 +115,7 @@ public class MethodA extends Method {
                         target = new Circle(0, 0, 0);
                     }
 
-                    TrialInfo trial = new TrialInfo("Method A",null,1,distancePix,
+                    TrialInfo trial = new TrialInfo("Method A",null,null,1,distancePix,
                             1, //block number, will be updated later
                             1, //trial in block, will be updated later
                             distancePix, //distance pix

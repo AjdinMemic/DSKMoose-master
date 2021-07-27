@@ -41,6 +41,8 @@ public class MethodC extends Method {
     private java.util.List<Double> distList;
     private List<Double> cursorList;
 
+    private String[] quartiles={"HOR","VER"};
+
     public MethodC() throws IOException {
         expSubject = PublishSubject.create();
         int monitorPPI = Toolkit.getDefaultToolkit().getScreenResolution();
@@ -90,66 +92,68 @@ public class MethodC extends Method {
     public void generateTrialList() {
         for (int i = 0; i < testConstellation.getNrRepetitions(); i++) {
             for (double cursorSize : cursorList) {
-                for (Point.Double p : radDistList) {
-                    // Generate the trial list
-                    int widthPix = convertMMtoPIX(p.x);
-                    int distancePix = convertMMtoPIX(p.y);
-                    Circle start = null;
-                    Circle target = null;
-                    if (testConstellation.getTestType().equals(Config.TEST_TYPE_FITTS)) {
-                        start = new Circle(Config.STACLE_X,
-                                Config.STACLE_Y,
-                                Config.STAREC_WIDTH/2);
-                        start.setColor(Config.STACLE_COLOR);
-                        target = new Circle(Config.STACLE_X + distancePix,
-                                Config.STACLE_Y,
-                                widthPix / 2);
-                        target.setColor(Config.TARCLE_COLOR);
+                for (String q : quartiles) {
+                    for (Point.Double p : radDistList) {
+                        // Generate the trial list
+                        int widthPix = convertMMtoPIX(p.x);
+                        int distancePix = convertMMtoPIX(p.y);
+                        Circle start = null;
+                        Circle target = null;
+                        if (testConstellation.getTestType().equals(Config.TEST_TYPE_FITTS)) {
+                            start = new Circle(Config.STACLE_X,
+                                    Config.STACLE_Y,
+                                    Config.STAREC_WIDTH / 2);
+                            start.setColor(Config.STACLE_COLOR);
+                            target = new Circle(Config.STACLE_X + distancePix,
+                                    Config.STACLE_Y,
+                                    widthPix / 2);
+                            target.setColor(Config.TARCLE_COLOR);
+                        } else {
+                            //Calibration
+                            //Set start circle to a fake one...
+                            start = new Circle(0,
+                                    0,
+                                    0);
+
+                            target = new Circle(0, 0, 0);
+                        }
+
+                        TrialInfo trial = new TrialInfo("Method C",q,null, 1, distancePix,
+                                1, //block number, will be updated later
+                                1, //trial in block, will be updated later
+                                distancePix, //distance pix
+                                widthPix, //width pix
+                                this.pixelSizeMM,
+                                new Circle(0, 0, 0),
+                                target,
+                                start,
+                                cursorSize,
+                                this.participantID,
+                                testConstellation.getTestType(),
+                                "fakeMovementDirection"
+                        );
+
+                        //For Fitts, we need to duplicate each trial,
+                        //so that we have one trial to the right, one
+                        //to the right.
+                        if (testConstellation.getTestType().equals(Config.TEST_TYPE_FITTS)) {
+                            trial.setMovementDirection(
+                                    Config.MOVEMENT_DIRECTION_RIGTH
+                            );
+                            TrialInfo directionCopy = trial.copyTrialInfo();
+                            directionCopy.setMovementDirection(
+                                    Config.MOVEMENT_DIRECTION_LEFT
+                            );
+                            trials.add(directionCopy);
+                        }
+                        trials.add(trial);
+                    }
+                    if (cursorSize == 1.0) {
+                        //Fake a CustomCursor for the default cursor!
+                        //cursors.add(new CustomCursor(51, this.pixelSizeMM));
                     } else {
-                        //Calibration
-                        //Set start circle to a fake one...
-                        start = new Circle(0,
-                                0,
-                                0);
-
-                        target = new Circle(0, 0, 0);
+                        cursors.add(new CustomCursor(cursorSize, this.pixelSizeMM));
                     }
-
-                    TrialInfo trial = new TrialInfo("Method C",null,1,distancePix,
-                            1, //block number, will be updated later
-                            1, //trial in block, will be updated later
-                            distancePix, //distance pix
-                            widthPix, //width pix
-                            this.pixelSizeMM,
-                            new Circle(0,0,0),
-                            target,
-                            start,
-                            cursorSize,
-                            this.participantID,
-                            testConstellation.getTestType(),
-                            "fakeMovementDirection"
-                    );
-
-                    //For Fitts, we need to duplicate each trial,
-                    //so that we have one trial to the right, one
-                    //to the right.
-                    if (testConstellation.getTestType().equals(Config.TEST_TYPE_FITTS)) {
-                        trial.setMovementDirection(
-                                Config.MOVEMENT_DIRECTION_RIGTH
-                        );
-                        TrialInfo directionCopy = trial.copyTrialInfo();
-                        directionCopy.setMovementDirection(
-                                Config.MOVEMENT_DIRECTION_LEFT
-                        );
-                        trials.add(directionCopy);
-                    }
-                    trials.add(trial);
-                }
-                if (cursorSize == 1.0) {
-                    //Fake a CustomCursor for the default cursor!
-                    //cursors.add(new CustomCursor(51, this.pixelSizeMM));
-                } else {
-                    cursors.add(new CustomCursor(cursorSize, this.pixelSizeMM));
                 }
             }
         }
@@ -293,7 +297,7 @@ public class MethodC extends Method {
         //Make sure the selected xPos is more than cursor size away
         //from the xPosition of the previous target, otherwise the
         //new start position might be under the cursor position.
-        if(count%2==0) {
+        if(trialInfo.getQuartile().equals("HOR")) {
             while (!posOK) {
                 xPos = generateRandomPosition(min, max);
                 //System.out.println("xPos: "+xPos);
@@ -348,7 +352,7 @@ public class MethodC extends Method {
             }
             }
         /*************************************************************************/
-             else {
+             else if(trialInfo.getQuartile().equals("VER")){
             while (!posOK) {
                 yPos = generateRandomPosition(bot, top);
                 int distanceToPrevious = (int) trialInfo.calculateEucDistance("pix",

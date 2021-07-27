@@ -1,7 +1,6 @@
 package dskm.experiment;
 
 import dskm.gui.Circle;
-import dskm.gui.StartRectangle;
 
 import java.awt.*;
 import static java.lang.Math.sqrt;
@@ -60,6 +59,8 @@ public class TrialInfo {
     private int numberOfCircles;
     private int  distBetCirclemm;
 
+    private String quartile;
+
     public Circle getStartAsCircle() {
         return startAsCircle;
     }
@@ -69,6 +70,7 @@ public class TrialInfo {
     }
 
     public TrialInfo(String method,
+                     String quartile,
                      Boolean AllCircleFlag,
                      int numberOfCircles,
                      int distBetCirclemm,
@@ -84,6 +86,7 @@ public class TrialInfo {
                      String participantID,
                      String testType,
                      String movementDirection) {
+        this.quartile = quartile;
         this.methodType =method;
         this.AllCirclesFlag=AllCircleFlag;
         this.numberOfCircles=numberOfCircles;
@@ -108,6 +111,7 @@ public class TrialInfo {
     public TrialInfo copyTrialInfo(){
         TrialInfo copy = new TrialInfo(
                 this.methodType,
+                this.quartile,
                 this.AllCirclesFlag,
                 this.numberOfCircles,
                 this.distBetCirclemm,
@@ -485,4 +489,11 @@ public class TrialInfo {
         this.widthMethodB=widthPix;
     }
 
+    public String getQuartile() {
+        return quartile;
+    }
+
+    public void setQuartile(String quartile) {
+        this.quartile = quartile;
+    }
 }
