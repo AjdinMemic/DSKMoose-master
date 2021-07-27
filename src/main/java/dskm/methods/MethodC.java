@@ -41,7 +41,7 @@ public class MethodC extends Method {
     private java.util.List<Double> distList;
     private List<Double> cursorList;
 
-    private String[] quartiles={"HOR","VER"};
+    private String[] quartiles={"HOR","VER","NO","NW","SO","SW"};
 
     public MethodC() throws IOException {
         expSubject = PublishSubject.create();
@@ -136,15 +136,17 @@ public class MethodC extends Method {
                         //For Fitts, we need to duplicate each trial,
                         //so that we have one trial to the right, one
                         //to the right.
-                        if (testConstellation.getTestType().equals(Config.TEST_TYPE_FITTS)) {
-                            trial.setMovementDirection(
-                                    Config.MOVEMENT_DIRECTION_RIGTH
-                            );
-                            TrialInfo directionCopy = trial.copyTrialInfo();
-                            directionCopy.setMovementDirection(
-                                    Config.MOVEMENT_DIRECTION_LEFT
-                            );
-                            trials.add(directionCopy);
+                        if(trial.getQuartile().equals("HOR") || trial.getQuartile().equals("VER")) {
+                            if (testConstellation.getTestType().equals(Config.TEST_TYPE_FITTS)) {
+                                trial.setMovementDirection(
+                                        Config.MOVEMENT_DIRECTION_RIGTH
+                                );
+                                TrialInfo directionCopy = trial.copyTrialInfo();
+                                directionCopy.setMovementDirection(
+                                        Config.MOVEMENT_DIRECTION_LEFT
+                                );
+                                trials.add(directionCopy);
+                            }
                         }
                         trials.add(trial);
                     }
@@ -261,6 +263,9 @@ public class MethodC extends Method {
      * Create the drawing panel for the trial
      */
     int count=0;
+    int horCount=0;
+    int verCount=0;
+
     private Circle determineTargetPositionFitts(TrialInfo trialInfo) {
         //In case the window title bar is showing
         int windowTitleBarHeight = MainFrame.getFrame().getInsets().top;
@@ -271,6 +276,13 @@ public class MethodC extends Method {
         int xPos = 0;
         int yPos = 0;
         boolean posOK = false;
+        if(trialInfo.getQuartile().equals("HOR")){
+            System.out.println("!!! HOR");
+        System.out.println("HOR count:"+ ++horCount);
+        }else if(trialInfo.getQuartile().equals("VER")){
+            System.out.println("!!! VER");
+            System.out.println("VER count:"+ ++verCount);
+        }
 
         //Start to determine the start position.
         Rectangle windowRec = MainFrame.getFrame().getBounds();
