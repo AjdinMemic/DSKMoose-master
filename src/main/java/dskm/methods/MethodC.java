@@ -41,7 +41,7 @@ public class MethodC extends Method {
     private java.util.List<Double> distList;
     private List<Double> cursorList;
 
-    private String[] quartiles = {"NO"}; //"HOR", "VER",
+    private String[] quartiles = {"NW"}; //"HOR", "VER",
   //private String[] quartiles = {"HOR", "VER", "NO", "NW", "SO", "SW"};
     public MethodC() throws IOException {
         expSubject = PublishSubject.create();
@@ -138,6 +138,8 @@ public class MethodC extends Method {
                         //to the right.
                         if(trial.getQuartile().equals("NO")){
                             trial.setMovementDirection(Config.MOVEMENT_DIRECTION_RIGTH);
+                        }else if(trial.getQuartile().equals("NW")){
+                            trial.setMovementDirection(Config.MOVEMENT_DIRECTION_LEFT);
                         }
                         if (trial.getQuartile().equals("HOR") || trial.getQuartile().equals("VER")) {
                             if (testConstellation.getTestType().equals(Config.TEST_TYPE_FITTS)) {
@@ -321,7 +323,7 @@ public class MethodC extends Method {
         //Make sure the selected xPos is more than cursor size away
         //from the xPosition of the previous target, otherwise the
         //new start position might be under the cursor position.
-        if (trialInfo.getQuartile().equals("HOR") || trialInfo.getQuartile().equals("NO")) {
+        if (trialInfo.getQuartile().equals("HOR") || trialInfo.getQuartile().equals("NO") || trialInfo.getQuartile().equals("NW")) {
             while (!posOK) {
                 xPos = generateRandomPosition(min, max);
                 //System.out.println("xPos: "+xPos);
@@ -370,7 +372,7 @@ public class MethodC extends Method {
                         new Point(previousTarget.getCenterX(), yPos),
                         new Point(previousTarget.getCenterX(),
                                 previousTarget.getCenterY()));
-                if(trialInfo.getQuartile().equals("NO")){
+                if(trialInfo.getQuartile().equals("NO") || trialInfo.getQuartile().equals("NW")){
                 if (distanceToPrevious > (20 + trialInfo.getCursorSizePix()) && yPos+trialInfo.getDistancePix()>top) {
                     posOK = true;
                 }}else {
@@ -459,6 +461,26 @@ public class MethodC extends Method {
             }
         }else if (trialInfo.getQuartile().equals("NO")) {
             double randomNum = ThreadLocalRandom.current().nextInt(-90, 0-1);
+            double angle=randomNum;
+            System.out.println(Math.toRadians(angle));
+            int startX=xPos;
+            int startY=yPos;
+            int length=trialInfo.getDistancePix();
+
+            double endX=startX + Math.cos(Math.toRadians(
+                    angle
+            ))*length;
+            System.out.println(".............");
+            System.out.println("endX: "+endX);
+            double endY = (startY + Math.sin(Math.toRadians(angle)) * length);
+            System.out.println("endY: "+endY);
+            xPos = (int) endX;
+            yPos = (int) endY;
+            System.out.println("xPOS: "+xPos);
+            System.out.println("yPOS: "+yPos);
+            System.out.println(".............");
+        }else if (trialInfo.getQuartile().equals("NW")) {
+            double randomNum = ThreadLocalRandom.current().nextInt(-180, -90);
             double angle=randomNum;
             System.out.println(Math.toRadians(angle));
             int startX=xPos;
