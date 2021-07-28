@@ -41,7 +41,7 @@ public class MethodC extends Method {
     private java.util.List<Double> distList;
     private List<Double> cursorList;
 
-    private String[] quartiles = {"NO"}; //"HOR", "VER",
+    private String[] quartiles = {"NO",}; //"HOR", "VER",
   //private String[] quartiles = {"HOR", "VER", "NO", "NW", "SO", "SW"};
     public MethodC() throws IOException {
         expSubject = PublishSubject.create();
@@ -370,8 +370,13 @@ public class MethodC extends Method {
                         new Point(previousTarget.getCenterX(), yPos),
                         new Point(previousTarget.getCenterX(),
                                 previousTarget.getCenterY()));
-                if (distanceToPrevious > (20 + trialInfo.getCursorSizePix())) {
+                if(trialInfo.getQuartile().equals("NO")){
+                if (distanceToPrevious > (20 + trialInfo.getCursorSizePix()) && yPos+trialInfo.getDistancePix()>top) {
                     posOK = true;
+                }}else {
+                    if (distanceToPrevious > (20 + trialInfo.getCursorSizePix())) {
+                        posOK = true;
+                    }
                 }
             }
         }
@@ -472,41 +477,6 @@ public class MethodC extends Method {
             System.out.println("xPOS: "+xPos);
             System.out.println("yPOS: "+yPos);
             System.out.println(".............");
-           // xPos = xPos + trialInfo.getDistancePix();
-
-            /*int px =  xPos + trialInfo.getDistancePix();
-            int py = trialInfo.getTarget().getY();
-            float angle=  -90;
-            int cx=trialInfo.getStart().getX();
-            int cy=trialInfo.getStart().getY();
-
-            float absangl=Math.abs(angle);
-            float s = (float) Math.sin(  Math.toRadians(absangl));
-            float c = (float) Math.cos(Math.toRadians(absangl));
-
-            // translate point back to origin:
-             px -= cx;
-             py -= cy;
-
-            // rotate point
-            float xnew;
-            float ynew;
-            if (angle > 0) {
-                xnew = px * c - py * s;
-                ynew = px * s + py * c;
-            }
-            else {
-                xnew = px * c + py * s;
-                ynew = -px * s + py * c;
-            }
-
-            // translate point back:
-            px = (int) (xnew + cx);
-            py = (int) (ynew + cy);
-
-            xPos = px;
-            yPos = py;*/
-
         }
         //The yPos should be the same as for the start.
         //Accordingly, no need to find a new yPos.
