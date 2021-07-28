@@ -41,7 +41,7 @@ public class MethodC extends Method {
     private java.util.List<Double> distList;
     private List<Double> cursorList;
 
-    private String[] quartiles = {"SW"}; //"HOR", "VER",
+    private String[] quartiles = {"HOR", "VER", "NO", "NW", "SO", "SW"}; //"HOR", "VER",
   //private String[] quartiles = {"HOR", "VER", "NO", "NW", "SO", "SW"};
     public MethodC() throws IOException {
         expSubject = PublishSubject.create();
@@ -295,7 +295,7 @@ public class MethodC extends Method {
         } else if (trialInfo.getQuartile().equals("SO")) {
             System.out.println("!!! SO");
         } else if (trialInfo.getQuartile().equals("SW")) {
-            System.out.println("!!! NW");
+            System.out.println("!!! SW");
         }
 
         //Start to determine the start position.
@@ -468,7 +468,7 @@ public class MethodC extends Method {
         }else if (trialInfo.getQuartile().equals("NO")) {
             double randomNum = ThreadLocalRandom.current().nextInt(-90, 0-1);
             double angle=randomNum;
-            System.out.println(Math.toRadians(angle));
+
             int startX=xPos;
             int startY=yPos;
             int length=trialInfo.getDistancePix();
@@ -476,19 +476,16 @@ public class MethodC extends Method {
             double endX=startX + Math.cos(Math.toRadians(
                     angle
             ))*length;
-            System.out.println(".............");
-            System.out.println("endX: "+endX);
+
             double endY = (startY + Math.sin(Math.toRadians(angle)) * length);
-            System.out.println("endY: "+endY);
+
             xPos = (int) endX;
             yPos = (int) endY;
-            System.out.println("xPOS: "+xPos);
-            System.out.println("yPOS: "+yPos);
-            System.out.println(".............");
+
         }else if (trialInfo.getQuartile().equals("NW")) {
             double randomNum = ThreadLocalRandom.current().nextInt(-180, -90);
             double angle=randomNum;
-            System.out.println(Math.toRadians(angle));
+
             int startX=xPos;
             int startY=yPos;
             int length=trialInfo.getDistancePix();
@@ -496,19 +493,16 @@ public class MethodC extends Method {
             double endX=startX + Math.cos(Math.toRadians(
                     angle
             ))*length;
-            System.out.println(".............");
-            System.out.println("endX: "+endX);
+
             double endY = (startY + Math.sin(Math.toRadians(angle)) * length);
-            System.out.println("endY: "+endY);
+
             xPos = (int) endX;
             yPos = (int) endY;
-            System.out.println("xPOS: "+xPos);
-            System.out.println("yPOS: "+yPos);
-            System.out.println(".............");
+
         }else if (trialInfo.getQuartile().equals("SO")) {
             double randomNum = ThreadLocalRandom.current().nextInt(-360, -270);
             double angle=randomNum;
-            System.out.println(Math.toRadians(angle));
+
             int startX=xPos;
             int startY=yPos;
             int length=trialInfo.getDistancePix();
@@ -516,19 +510,16 @@ public class MethodC extends Method {
             double endX=startX + Math.cos(Math.toRadians(
                     angle
             ))*length;
-            System.out.println(".............");
-            System.out.println("endX: "+endX);
+
             double endY = (startY + Math.sin(Math.toRadians(angle)) * length);
-            System.out.println("endY: "+endY);
+
             xPos = (int) endX;
             yPos = (int) endY;
-            System.out.println("xPOS: "+xPos);
-            System.out.println("yPOS: "+yPos);
-            System.out.println(".............");
+
         }else if (trialInfo.getQuartile().equals("SW")) {
             double randomNum = ThreadLocalRandom.current().nextInt(-270, -180);
             double angle=randomNum;
-            System.out.println(Math.toRadians(angle));
+
             int startX=xPos;
             int startY=yPos;
             int length=trialInfo.getDistancePix();
@@ -536,15 +527,11 @@ public class MethodC extends Method {
             double endX=startX + Math.cos(Math.toRadians(
                     angle
             ))*length;
-            System.out.println(".............");
-            System.out.println("endX: "+endX);
+
             double endY = (startY + Math.sin(Math.toRadians(angle)) * length);
-            System.out.println("endY: "+endY);
+
             xPos = (int) endX;
             yPos = (int) endY;
-            System.out.println("xPOS: "+xPos);
-            System.out.println("yPOS: "+yPos);
-            System.out.println(".............");
         }
         //The yPos should be the same as for the start.
         //Accordingly, no need to find a new yPos.
