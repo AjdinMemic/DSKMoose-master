@@ -41,7 +41,7 @@ public class MethodC extends Method {
     private java.util.List<Double> distList;
     private List<Double> cursorList;
 
-    private String[] quartiles = {"HOR", "VER", "NO"};
+    private String[] quartiles = {"NO"}; //"HOR", "VER",
   //private String[] quartiles = {"HOR", "VER", "NO", "NW", "SO", "SW"};
     public MethodC() throws IOException {
         expSubject = PublishSubject.create();
@@ -453,16 +453,59 @@ public class MethodC extends Method {
                 yPos = yPos - trialInfo.getDistancePix();
             }
         }else if (trialInfo.getQuartile().equals("NO")) {
-            //TRANSLATE TO ORIGIN
-            double x1=xPos-windowRec.getCenterX();
-            double y1=yPos-windowRec.getCenterY();
+            double randomNum = ThreadLocalRandom.current().nextInt(-90, 0-1);
+            double angle=randomNum;
+            System.out.println(Math.toRadians(angle));
+            int startX=xPos;
+            int startY=yPos;
+            int length=trialInfo.getDistancePix();
 
-            //APPLY ROTATION
-            double tempx1=x1*Math.cos(45) - y1*Math.sin(60);
-            double tempy1=x1*Math.sin(45) - y1*Math.sin(60);
+            double endX=startX + Math.cos(Math.toRadians(
+                    angle
+            ))*length;
+            System.out.println(".............");
+            System.out.println("endX: "+endX);
+            double endY = (startY + Math.sin(Math.toRadians(angle)) * length);
+            System.out.println("endY: "+endY);
+            xPos = (int) endX;
+            yPos = (int) endY;
+            System.out.println("xPOS: "+xPos);
+            System.out.println("yPOS: "+yPos);
+            System.out.println(".............");
+           // xPos = xPos + trialInfo.getDistancePix();
 
-            xPos = (int) (tempx1 + windowRec.getCenterX());
-            yPos = (int) (tempy1 + windowRec.getCenterY());
+            /*int px =  xPos + trialInfo.getDistancePix();
+            int py = trialInfo.getTarget().getY();
+            float angle=  -90;
+            int cx=trialInfo.getStart().getX();
+            int cy=trialInfo.getStart().getY();
+
+            float absangl=Math.abs(angle);
+            float s = (float) Math.sin(  Math.toRadians(absangl));
+            float c = (float) Math.cos(Math.toRadians(absangl));
+
+            // translate point back to origin:
+             px -= cx;
+             py -= cy;
+
+            // rotate point
+            float xnew;
+            float ynew;
+            if (angle > 0) {
+                xnew = px * c - py * s;
+                ynew = px * s + py * c;
+            }
+            else {
+                xnew = px * c + py * s;
+                ynew = -px * s + py * c;
+            }
+
+            // translate point back:
+            px = (int) (xnew + cx);
+            py = (int) (ynew + cy);
+
+            xPos = px;
+            yPos = py;*/
 
         }
         //The yPos should be the same as for the start.
