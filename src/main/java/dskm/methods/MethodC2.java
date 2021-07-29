@@ -103,6 +103,7 @@ public class MethodC2 extends Method {
     }
 
     public void generateTrialList() {
+        int count=0;
         for (int i = 0; i < testConstellation.getNrRepetitions(); i++) {
             for (double cursorSize : cursorList) {
                 for (Point2D.Double rad:points) {
@@ -149,13 +150,16 @@ public class MethodC2 extends Method {
                         //For Fitts, we need to duplicate each trial,
                         //so that we have one trial to the right, one
                         //to the right.
-                        if (trial.getRadiusFromTo().x >270 && trial.getRadiusFromTo().y<90) {
+
+                        //(trial.getRadiusFromTo().y>=270 && trial.getRadiusFromTo().y<=360) || (trial.getRadiusFromTo().y>=0 && trial.getRadiusFromTo().y<=90)
+                        if (count<points.length/2) {
                             trial.setMovementDirection(Config.MOVEMENT_DIRECTION_RIGTH);
                         } else  {
                             trial.setMovementDirection(Config.MOVEMENT_DIRECTION_LEFT);
                         }
                         trials.add(trial);
                     }
+                    count++;
                     if (cursorSize == 1.0) {
                         //Fake a CustomCursor for the default cursor!
                         //cursors.add(new CustomCursor(51, this.pixelSizeMM));
@@ -293,7 +297,7 @@ public class MethodC2 extends Method {
                 (trialInfo.getWidthPix() / 2);
 
         top = windowRec.y + windowRec.height - 20 - convertMMtoPIX(trialInfo.getCursorSizeMM() / 2) - (trialInfo.getWidthPix() / 2);
-        System.out.println("windowRec.y: " + windowRec.y);
+       // System.out.println("windowRec.y: " + windowRec.y);
         System.out.println("top: " + top);
         bot = windowRec.y + 20 + convertMMtoPIX(trialInfo.getCursorSizeMM() / 2) + (trialInfo.getWidthPix() / 2);
         System.out.println("bot: " + bot);
@@ -316,16 +320,26 @@ public class MethodC2 extends Method {
                     //the movement direction and distance of the trial.
 
                     if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_DIRECTION_RIGTH)) {
-                        if (xPos + trialInfo.getDistancePix() < max) {
+                        if (xPos + trialInfo.getDistancePix() < max && xPos - trialInfo.getDistancePix() > min) {
                             posOK = true;
                         }
                     } else if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_DIRECTION_LEFT)) {
-                        if (xPos - trialInfo.getDistancePix() > min) {
+                        if (xPos - trialInfo.getDistancePix() > min && xPos + trialInfo.getDistancePix() < max ) {
+                            posOK = true;
+                        }
+                    }else if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_TOP) || trialInfo.getMovementDirection().equals(Config.MOVEMENT_BOT)){
+                        if (xPos + trialInfo.getDistancePix() < max && xPos - trialInfo.getDistancePix() > min) {
                             posOK = true;
                         }
                     }
                 }
+               /* System.out.println("-----------");
+                System.out.println("xPos:"+xPos);
+                System.out.println("xPos+distance"+(xPos + trialInfo.getDistancePix()));
+                System.out.println("xPos-distance"+(xPos - trialInfo.getDistancePix()));
+                System.out.println("posOK:"+posOK);*/
             }
+           System.out.println("xPos:"+xPos);
             //Now find a suitable y-Position for the start.
             min = windowRec.y + Config.TEXT_Y + Config.TEXT_PAN_H + 20 +
                     convertMMtoPIX(trialInfo.getCursorSizeMM() / 2) +
@@ -348,18 +362,29 @@ public class MethodC2 extends Method {
                         new Point(previousTarget.getCenterX(),
                                 previousTarget.getCenterY()));
                 if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_DIRECTION_RIGTH)) {
-                    if (distanceToPrevious > (20 + trialInfo.getCursorSizePix()) && yPos + trialInfo.getDistancePix() > top) {
+                    if (distanceToPrevious > (20 + trialInfo.getCursorSizePix()) && yPos - trialInfo.getDistancePix()-120 > bot && yPos + trialInfo.getDistancePix() < top) {
                         posOK = true;
                     }
                 } else if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_DIRECTION_LEFT)){
+                    if (distanceToPrevious > (20 + trialInfo.getCursorSizePix()) && yPos + trialInfo.getDistancePix() < top && yPos - trialInfo.getDistancePix()-120 > bot) {
+                        posOK = true;
+                    }
+                } else if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_TOP)){
+                    if (distanceToPrevious > (20 + trialInfo.getCursorSizePix()) && yPos + trialInfo.getDistancePix() > top) {
+                        posOK = true;
+                    }
+                }else if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_BOT)){
                     if (distanceToPrevious > (20 + trialInfo.getCursorSizePix()) && yPos - trialInfo.getDistancePix() < bot) {
                         posOK = true;
                     }
-                } else {
-                    if (distanceToPrevious > (20 + trialInfo.getCursorSizePix())) {
-                        posOK = true;
-                    }
                 }
+               /* System.out.println("---------");
+                System.out.println("posOK:"+posOK);
+                System.out.println("distance:"+trialInfo.getDistancePix());
+                System.out.println("yPos - trialInfo.getDistancePix()-120 :"+(yPos - trialInfo.getDistancePix()-120) );
+                System.out.println("bot && yPos + trialInfo.getDistancePix() < top :"+(yPos + trialInfo.getDistancePix()));
+                System.out.println("yPos:"+yPos);
+                System.out.println("xPos:"+xPos);*/
             }
 
 
@@ -373,8 +398,7 @@ public class MethodC2 extends Method {
         //based on the start position.
 
           int[] posXY = addRadiusToLine(trialInfo.getRadiusFromTo().x,trialInfo.getRadiusFromTo().y,xPos,yPos,trialInfo.getDistancePix());
-        System.out.println("----------");
-        System.out.println("RADIUS: ("+trialInfo.getRadiusFromTo().x+" , "+trialInfo.getRadiusFromTo().y+" )");
+       // System.out.println("DIRECTION: "+trialInfo.getMovementDirection());
             xPos = posXY[0];
             yPos = posXY[1];
 
@@ -456,6 +480,11 @@ public class MethodC2 extends Method {
     private int[] addRadiusToLine(double origin, double bound, int xPos, int yPos, int distance){
         int[] retVal=new int[2];
         double randomNum = ThreadLocalRandom.current().nextDouble(origin, bound);
+        System.out.println("----------");
+        System.out.println("RADIUS from-to: ("+origin+" , "+bound+" )");
+        System.out.println("RANDOM RADIUS: " +randomNum);
+        System.out.println("");
+
         double angle = randomNum;
 
         int startX = xPos;

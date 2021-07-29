@@ -16,6 +16,12 @@ public class Config {
     public static String MOVEMENT_DIRECTION_RIGTH = "right";
     public static String MOVEMENT_DIRECTION_LEFT = "left";
 
+    // Method C2 Radius
+    public static String MOVEMENT_TOP="top";
+    public static String MOVEMENT_BOT="bot";
+    public static String MOVEMENT_RIGHT="right";
+    public static String MOVEMENT_LEFT="left";
+
     // Files
     public static String LOG_PATH = "testlogs/";
     public static String LOG_FILE_NAME_EVENTS = "events_";
