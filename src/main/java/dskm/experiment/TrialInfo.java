@@ -3,6 +3,8 @@ package dskm.experiment;
 import dskm.gui.Circle;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
+
 import static java.lang.Math.sqrt;
 /********************************
  *  Created by David Ahlstroem  *
@@ -60,6 +62,7 @@ public class TrialInfo {
     private int  distBetCirclemm;
 
     private String quartile;
+    private Point2D.Double radiusFromTo;
 
     public Circle getStartAsCircle() {
         return startAsCircle;
@@ -85,7 +88,8 @@ public class TrialInfo {
                      double cursorSizeMM,
                      String participantID,
                      String testType,
-                     String movementDirection) {
+                     String movementDirection,
+                     Point2D.Double radiusFromTo) {
         this.quartile = quartile;
         this.methodType =method;
         this.AllCirclesFlag=AllCircleFlag;
@@ -106,6 +110,7 @@ public class TrialInfo {
         this.participantID = participantID;
         this.testType = testType;
         this.movementDirection = movementDirection;
+        this.radiusFromTo=radiusFromTo;
     }
 
     public TrialInfo copyTrialInfo(){
@@ -126,7 +131,8 @@ public class TrialInfo {
                 this.cursorSizeMM,
                 this.participantID,
                 this.testType,
-                this.movementDirection
+                this.movementDirection,
+                this.radiusFromTo
         );
         copy.setBlockNumber(this.getBlockNumber());
         copy.setTrialInBlock(this.getTrialInBlock());
@@ -495,5 +501,13 @@ public class TrialInfo {
 
     public void setQuartile(String quartile) {
         this.quartile = quartile;
+    }
+
+    public Point2D.Double getRadiusFromTo() {
+        return radiusFromTo;
+    }
+
+    public void setRadiusFromTo(Point2D.Double radiusFromTo) {
+        this.radiusFromTo = radiusFromTo;
     }
 }

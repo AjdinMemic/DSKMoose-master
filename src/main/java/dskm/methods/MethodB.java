@@ -212,7 +212,7 @@ public class MethodB extends Method {
                         cursorSize,
                         this.participantID,
                         testConstellation.getTestType(),
-                        "fakeMovementDirection"
+                        "fakeMovementDirection",null
                 );
 
                 trials.add(trial);

@@ -3,10 +3,7 @@ package dskm.experiment;
 import dskm.Constants;
 import dskm.gui.CustomCursor;
 import dskm.gui.MainFrame;
-import dskm.methods.Method;
-import dskm.methods.MethodA;
-import dskm.methods.MethodB;
-import dskm.methods.MethodC;
+import dskm.methods.*;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 
 import java.awt.*;
@@ -61,7 +58,10 @@ public class Experimenter {
         }else if (methodType.equals("MethodC")){
             method = new MethodC();
             System.out.println("Method C");
-        }
+        }else if (methodType.equals("MethodC2")){
+        method = new MethodC2(8); // 2,4,6,8,10...
+        System.out.println("Method C2");
+          }
 
         method.methodSetup();
 

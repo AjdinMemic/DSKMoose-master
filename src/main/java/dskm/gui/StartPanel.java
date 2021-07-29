@@ -52,6 +52,10 @@ public class StartPanel extends JPanel {
         RBmethodB.setMnemonic(KeyEvent.VK_C);
         RBmethodB.setActionCommand("Method C");
 
+        JRadioButton RBmethodC2 = new JRadioButton("Method C2");
+        RBmethodB.setMnemonic(KeyEvent.VK_C);
+        RBmethodB.setActionCommand("Method C2");
+
         //Register a listener for the radio buttons.
         RBmethodA.addActionListener(new ActionListener() {
             @Override
@@ -74,12 +78,20 @@ public class StartPanel extends JPanel {
                 startButton.setEnabled(true);
             }
         });
+        RBmethodC2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                methodType[0] ="MethodC2";
+                startButton.setEnabled(true);
+            }
+        });
 
         //Group the radio buttons.
         ButtonGroup buttonGroup = new ButtonGroup();
         buttonGroup.add(RBmethodA);
         buttonGroup.add(RBmethodB);
         buttonGroup.add(RBmethodC);
+        buttonGroup.add(RBmethodC2);
         // Hint label
         JLabel textLabel = new JLabel("Click to start the experiment");
         textLabel.setAlignmentX(CENTER_ALIGNMENT);
@@ -90,6 +102,7 @@ public class StartPanel extends JPanel {
         this.add(RBmethodA);
         this.add(RBmethodB);
         this.add(RBmethodC);
+        this.add(RBmethodC2);
         this.add(Box.createRigidArea(new Dimension(0, 20)));
         this.add(startButton);
     }
