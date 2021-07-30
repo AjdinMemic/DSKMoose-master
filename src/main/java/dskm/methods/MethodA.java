@@ -127,7 +127,7 @@ public class MethodA extends Method {
                             cursorSize,
                             this.participantID,
                             testConstellation.getTestType(),
-                            "fakeMovementDirection", null,0.0
+                            "fakeMovementDirection", null,0.0,0
                     );
 
                     //For Fitts, we need to duplicate each trial,

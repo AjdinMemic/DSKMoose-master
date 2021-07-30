@@ -61,7 +61,10 @@ public class Experimenter {
         }else if (methodType.equals("MethodC2")){
         method = new MethodC2(8); // 2,4,6,8,10...
         System.out.println("Method C2");
-          }
+          }else if (methodType.equals("MethodD")){
+            method = new MethodD();
+            System.out.println("Method D");
+        }
 
         method.methodSetup();
 

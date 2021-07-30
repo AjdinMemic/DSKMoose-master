@@ -64,6 +64,7 @@ public class TrialInfo {
     private String quartile;
     private Point2D.Double radiusFromTo;
     private double randomRadNum;
+    private int section;
 
     public Circle getStartAsCircle() {
         return startAsCircle;
@@ -91,7 +92,8 @@ public class TrialInfo {
                      String testType,
                      String movementDirection,
                      Point2D.Double radiusFromTo,
-                     double randomRadNum) {
+                     double randomRadNum,
+                     int section) {
         this.quartile = quartile;
         this.methodType =method;
         this.AllCirclesFlag=AllCircleFlag;
@@ -114,6 +116,7 @@ public class TrialInfo {
         this.movementDirection = movementDirection;
         this.radiusFromTo=radiusFromTo;
         this.randomRadNum=randomRadNum;
+        this.section=section;
     }
 
     public TrialInfo copyTrialInfo(){
@@ -136,7 +139,8 @@ public class TrialInfo {
                 this.testType,
                 this.movementDirection,
                 this.radiusFromTo,
-                this.randomRadNum
+                this.randomRadNum,
+                this.section
         );
         copy.setBlockNumber(this.getBlockNumber());
         copy.setTrialInBlock(this.getTrialInBlock());
@@ -327,6 +331,10 @@ public class TrialInfo {
                 cursorSizeMM + ";" +
                 cursorSizePix + ";" +
                 movementDirection + ";" +
+                radiusFromTo.x + ";"+
+                radiusFromTo.y + ";"+
+                randomRadNum   + ";"+
+                section        + ";"+
                 start.getX() + ";" +
                 start.getY() + ";" +
                 start.getCenterX() + ";" +
@@ -410,6 +418,10 @@ public class TrialInfo {
                         "cursorSizeMM" + ";" +
                         "cursorSizePix" + ";" +
                         "movementDirection" + ";" +
+                        "degree lower bound" + ";"+
+                        "degree upper bound" + ";"+
+                        "random degree"   + ";"+
+                        "section"           +";"+
                         "startPosX" + ";" +
                         "startPosY" + ";" +
                         "startCenterX" + ";" +
@@ -431,7 +443,6 @@ public class TrialInfo {
                         "releasePointStartY" + ";" +
                         "EucDistReleaseStartPix" + ";" +
                         "EucDistReleaseStartMM" + ";" +
-
                         "pressPointTargetX" + ";" +
                         "pressPointTargetY" + ";" +
                         "EucDistPressTargetPix" + ";" +

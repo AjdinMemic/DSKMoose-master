@@ -120,7 +120,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
             }
         }
 
-        if (Experimenter.methodType.equals("MethodB") || Experimenter.methodType.equals("MethodA") || Experimenter.methodType.equals("MethodC") || Experimenter.methodType.equals("MethodC2")) {
+        if (Experimenter.methodType.equals("MethodB") || Experimenter.methodType.equals("MethodA") || Experimenter.methodType.equals("MethodC") || Experimenter.methodType.equals("MethodC2")|| Experimenter.methodType.equals("MethodD")) {
 
             //-- Draw circles
             if (currentTrialInfo.getTestType().equals(Config.TEST_TYPE_FITTS)) {
@@ -132,7 +132,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 }
                 String startType = "";
 
-                if (Experimenter.methodType.equals("MethodB") || Experimenter.methodType.equals("MethodA") || method.equals("MethodC") || Experimenter.methodType.equals("MethodC2")) {
+                if (Experimenter.methodType.equals("MethodB") || Experimenter.methodType.equals("MethodA") || method.equals("MethodC") || Experimenter.methodType.equals("MethodC2") || Experimenter.methodType.equals("MethodD")) {
                     startType = Config.START_BUTTON_SHAPE_CIRCLE;
                 }
                 // stCircle2.setRadius(MethodB.radius*2);
@@ -187,7 +187,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
 
     public void setCurrentTrialInfo(TrialInfo currentTrialInfo) {
         this.currentTrialInfo = currentTrialInfo;
-        if (method.equals("MethodA") || method.equals("MethodC") || Experimenter.methodType.equals("MethodC2")) {
+        if (method.equals("MethodA") || method.equals("MethodC") || Experimenter.methodType.equals("MethodC2") || Experimenter.methodType.equals("MethodD")) {
             this.setCircles2(currentTrialInfo.getStart(),
                     currentTrialInfo.getTarget());
         } else if (method.equals("MethodB")) {
@@ -264,7 +264,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
         //System.out.println("mouse pressed: " + e.getX() + ", " + e.getY());
         boolean isInStart;
 
-        if (method.equals("MethodA") || method.equals("MethodC") || Experimenter.methodType.equals("MethodC2")) {
+        if (method.equals("MethodA") || method.equals("MethodC") || Experimenter.methodType.equals("MethodC2") || Experimenter.methodType.equals("MethodD")) {
             isInStart = stCircle2.isInside(e.getX(), e.getY());
         } else {
             isInStart = stCircle2.isInside(e.getX(), e.getY());
@@ -352,7 +352,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
 
     public void mouseReleasedFitts(MouseEvent e) throws IOException {
         boolean isInStart;
-        if (method.equals("MethodA") || method.equals("MethodC") || Experimenter.methodType.equals("MethodC2")) {
+        if (method.equals("MethodA") || method.equals("MethodC") || Experimenter.methodType.equals("MethodC2") || Experimenter.methodType.equals("MethodD")) {
             isInStart = stCircle2.isInside(e.getX(), e.getY());
         } else {
             isInStart = stCircle2.isInside(e.getX(), e.getY());
@@ -372,7 +372,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 mouseSubject.onNext(e);
 
                 // change the color of the start circle
-                if (method.equals("MethodA") || method.equals("MethodC") || Experimenter.methodType.equals("MethodC2")) {
+                if (method.equals("MethodA") || method.equals("MethodC") || Experimenter.methodType.equals("MethodC2") || Experimenter.methodType.equals("MethodD")) {
                     stCircle2.setColor(Config.STACLE_COLOR_CLICKED);
                 } else {
                     stCircle2.setColor(Config.STACLE_COLOR_CLICKED);
