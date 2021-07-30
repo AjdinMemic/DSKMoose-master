@@ -63,6 +63,7 @@ public class TrialInfo {
 
     private String quartile;
     private Point2D.Double radiusFromTo;
+    private double randomRadNum;
 
     public Circle getStartAsCircle() {
         return startAsCircle;
@@ -89,7 +90,8 @@ public class TrialInfo {
                      String participantID,
                      String testType,
                      String movementDirection,
-                     Point2D.Double radiusFromTo) {
+                     Point2D.Double radiusFromTo,
+                     double randomRadNum) {
         this.quartile = quartile;
         this.methodType =method;
         this.AllCirclesFlag=AllCircleFlag;
@@ -111,6 +113,7 @@ public class TrialInfo {
         this.testType = testType;
         this.movementDirection = movementDirection;
         this.radiusFromTo=radiusFromTo;
+        this.randomRadNum=randomRadNum;
     }
 
     public TrialInfo copyTrialInfo(){
@@ -132,7 +135,8 @@ public class TrialInfo {
                 this.participantID,
                 this.testType,
                 this.movementDirection,
-                this.radiusFromTo
+                this.radiusFromTo,
+                this.randomRadNum
         );
         copy.setBlockNumber(this.getBlockNumber());
         copy.setTrialInBlock(this.getTrialInBlock());
@@ -509,5 +513,13 @@ public class TrialInfo {
 
     public void setRadiusFromTo(Point2D.Double radiusFromTo) {
         this.radiusFromTo = radiusFromTo;
+    }
+
+    public double getRandomRadNum() {
+        return randomRadNum;
+    }
+
+    public void setRandomRadNum(double randomRadNum) {
+        this.randomRadNum = randomRadNum;
     }
 }

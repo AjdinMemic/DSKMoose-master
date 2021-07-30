@@ -103,11 +103,16 @@ public class MethodC2 extends Method {
     }
 
     public void generateTrialList() {
-        int count=0;
         for (int i = 0; i < testConstellation.getNrRepetitions(); i++) {
             for (double cursorSize : cursorList) {
                 for (Point2D.Double rad:points) {
                     for (Point.Double p : radDistList) {
+
+                        double lowBound=rad.x;
+                        double uppBound=rad.y;
+
+                        double randomRadNum = ThreadLocalRandom.current().nextDouble(lowBound, uppBound);
+
                         // Generate the trial list
                         int widthPix = convertMMtoPIX(p.x);
                         int distancePix = convertMMtoPIX(p.y);
@@ -144,7 +149,7 @@ public class MethodC2 extends Method {
                                 cursorSize,
                                 this.participantID,
                                 testConstellation.getTestType(),
-                                "fakeMovementDirection",rad
+                                "fakeMovementDirection",rad,randomRadNum
                         );
 
                         //For Fitts, we need to duplicate each trial,
@@ -152,14 +157,25 @@ public class MethodC2 extends Method {
                         //to the right.
 
                         //(trial.getRadiusFromTo().y>=270 && trial.getRadiusFromTo().y<=360) || (trial.getRadiusFromTo().y>=0 && trial.getRadiusFromTo().y<=90)
-                        if (count<points.length/2) {
-                            trial.setMovementDirection(Config.MOVEMENT_DIRECTION_RIGTH);
-                        } else  {
+                        if (randomRadNum>=0 && randomRadNum<=90) {
+                            trial.setMovementDirection(Config.MOVEMENT_BOT_RIGHT);
+                            trial.setQuartile("SO");
+                        } else if (randomRadNum>=90 && randomRadNum<=180)  {
+                            trial.setMovementDirection(Config.MOVEMENT_BOT_LEFT);
+                            trial.setQuartile("SW");
+                        }else if (randomRadNum>=180 && randomRadNum<=270)  {
                             trial.setMovementDirection(Config.MOVEMENT_DIRECTION_LEFT);
+                            trial.setQuartile("NW");
+                        }else if (randomRadNum>=270 && randomRadNum<=360)  {
+                            trial.setMovementDirection(Config.MOVEMENT_DIRECTION_RIGTH);
+                            trial.setQuartile("NO");
+                        }else if(randomRadNum<0){
+                            trial.setMovementDirection(Config.MOVEMENT_BOT_RIGHT);
+                            trial.setQuartile("SO");
                         }
                         trials.add(trial);
                     }
-                    count++;
+
                     if (cursorSize == 1.0) {
                         //Fake a CustomCursor for the default cursor!
                         //cursors.add(new CustomCursor(51, this.pixelSizeMM));
@@ -277,6 +293,9 @@ public class MethodC2 extends Method {
     int verCount = 0;
 
     private Circle determineTargetPositionFitts(TrialInfo trialInfo) {
+        System.out.println("------");
+        System.out.println("MOVEMENT DIRECTION: "+trialInfo.getMovementDirection());
+
         //In case the window title bar is showing
         int windowTitleBarHeight = MainFrame.getFrame().getInsets().top;
         int min = 0;
@@ -308,37 +327,28 @@ public class MethodC2 extends Method {
         //from the xPosition of the previous target, otherwise the
         //new start position might be under the cursor position.
 
-            while (!posOK) {
-                xPos = generateRandomPosition(min, max);
-                int distanceToPrevious = (int) trialInfo.calculateEucDistance("pix",
-                        new Point(xPos, previousTarget.getCenterY()),
-                        new Point(previousTarget.getCenterX(),
-                                previousTarget.getCenterY()));
-                if (distanceToPrevious > (20 + trialInfo.getCursorSizePix())) {
-                    //The xPos for the start is now not in conflict with the
-                    //previous target. Now see if it is acceptable according to
-                    //the movement direction and distance of the trial.
+        while (!posOK) {
+            xPos = generateRandomPosition(min, max);
+            int distanceToPrevious = (int) trialInfo.calculateEucDistance("pix",
+                    new Point(xPos, previousTarget.getCenterY()),
+                    new Point(previousTarget.getCenterX(),
+                            previousTarget.getCenterY()));
+            if (distanceToPrevious > (20 + trialInfo.getCursorSizePix())) {
+                //The xPos for the start is now not in conflict with the
+                //previous target. Now see if it is acceptable according to
+                //the movement direction and distance of the trial.
 
-                    if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_DIRECTION_RIGTH)) {
-                        if (xPos + trialInfo.getDistancePix() < max && xPos - trialInfo.getDistancePix() > min) {
-                            posOK = true;
-                        }
-                    } else if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_DIRECTION_LEFT)) {
-                        if (xPos - trialInfo.getDistancePix() > min && xPos + trialInfo.getDistancePix() < max ) {
-                            posOK = true;
-                        }
-                    }else if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_TOP) || trialInfo.getMovementDirection().equals(Config.MOVEMENT_BOT)){
-                        if (xPos + trialInfo.getDistancePix() < max && xPos - trialInfo.getDistancePix() > min) {
-                            posOK = true;
-                        }
+                if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_DIRECTION_RIGTH) || trialInfo.getMovementDirection().equals(Config.MOVEMENT_BOT_RIGHT)) {
+                    if (xPos + trialInfo.getDistancePix() < max) {
+                        posOK = true;
+                    }
+                } else if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_DIRECTION_LEFT) || trialInfo.getMovementDirection().equals(Config.MOVEMENT_BOT_LEFT)) {
+                    if (xPos - trialInfo.getDistancePix() > min) {
+                        posOK = true;
                     }
                 }
-               /* System.out.println("-----------");
-                System.out.println("xPos:"+xPos);
-                System.out.println("xPos+distance"+(xPos + trialInfo.getDistancePix()));
-                System.out.println("xPos-distance"+(xPos - trialInfo.getDistancePix()));
-                System.out.println("posOK:"+posOK);*/
             }
+        }
            System.out.println("xPos:"+xPos);
             //Now find a suitable y-Position for the start.
             min = windowRec.y + Config.TEXT_Y + Config.TEXT_PAN_H + 20 +
@@ -355,37 +365,26 @@ public class MethodC2 extends Method {
             //Make sure the selected yPos is more than cursor size away
             //from the yPosition of the previous target, otherwise the
             //new target might be under the cursor position.
-            while (!posOK) {
-                yPos = generateRandomPosition(min, max);
-                int distanceToPrevious = (int) trialInfo.calculateEucDistance("pix",
-                        new Point(previousTarget.getCenterX(), yPos),
-                        new Point(previousTarget.getCenterX(),
-                                previousTarget.getCenterY()));
-                if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_DIRECTION_RIGTH)) {
-                    if (distanceToPrevious > (20 + trialInfo.getCursorSizePix()) && yPos - trialInfo.getDistancePix()-120 > bot && yPos + trialInfo.getDistancePix() < top) {
-                        posOK = true;
-                    }
-                } else if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_DIRECTION_LEFT)){
-                    if (distanceToPrevious > (20 + trialInfo.getCursorSizePix()) && yPos + trialInfo.getDistancePix() < top && yPos - trialInfo.getDistancePix()-120 > bot) {
-                        posOK = true;
-                    }
-                } else if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_TOP)){
-                    if (distanceToPrevious > (20 + trialInfo.getCursorSizePix()) && yPos + trialInfo.getDistancePix() > top) {
-                        posOK = true;
-                    }
-                }else if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_BOT)){
-                    if (distanceToPrevious > (20 + trialInfo.getCursorSizePix()) && yPos - trialInfo.getDistancePix() < bot) {
-                        posOK = true;
-                    }
+        while (!posOK) {
+            yPos = generateRandomPosition(min, max);
+            int distanceToPrevious = (int) trialInfo.calculateEucDistance("pix",
+                    new Point(previousTarget.getCenterX(), yPos),
+                    new Point(previousTarget.getCenterX(),
+                            previousTarget.getCenterY()));
+            if (trialInfo.getQuartile().equals("NO") || trialInfo.getQuartile().equals("NW")) {
+                if (distanceToPrevious > (20 + trialInfo.getCursorSizePix()) && yPos + trialInfo.getDistancePix() > top) {
+                    posOK = true;
                 }
-               /* System.out.println("---------");
-                System.out.println("posOK:"+posOK);
-                System.out.println("distance:"+trialInfo.getDistancePix());
-                System.out.println("yPos - trialInfo.getDistancePix()-120 :"+(yPos - trialInfo.getDistancePix()-120) );
-                System.out.println("bot && yPos + trialInfo.getDistancePix() < top :"+(yPos + trialInfo.getDistancePix()));
-                System.out.println("yPos:"+yPos);
-                System.out.println("xPos:"+xPos);*/
+            } else if (trialInfo.getQuartile().equals("SO") || trialInfo.getQuartile().equals("SW")) {
+                if (distanceToPrevious > (20 + trialInfo.getCursorSizePix()) && yPos - trialInfo.getDistancePix()-100 < bot) {
+                    posOK = true;
+                }
+            } else {
+                if (distanceToPrevious > (20 + trialInfo.getCursorSizePix())) {
+                    posOK = true;
+                }
             }
+        }
 
 
         //Now we have a suitable x and y for the start circle.
@@ -397,7 +396,7 @@ public class MethodC2 extends Method {
         //Now we need to calculate the corresponding target position
         //based on the start position.
 
-          int[] posXY = addRadiusToLine(trialInfo.getRadiusFromTo().x,trialInfo.getRadiusFromTo().y,xPos,yPos,trialInfo.getDistancePix());
+          int[] posXY = addRadiusToLine(trialInfo.getRadiusFromTo().x,trialInfo.getRadiusFromTo().y,xPos,yPos,trialInfo.getDistancePix(),trialInfo.getRandomRadNum());
        // System.out.println("DIRECTION: "+trialInfo.getMovementDirection());
             xPos = posXY[0];
             yPos = posXY[1];
@@ -410,6 +409,7 @@ public class MethodC2 extends Method {
     }
 
     private Circle determineTargetPositionCalibration(TrialInfo trialInfo) {
+
         //In case the window title bar is showing
         int windowTitleBarHeight = MainFrame.getFrame().getInsets().top;
         int min = 0;
@@ -477,9 +477,9 @@ public class MethodC2 extends Method {
         return ThreadLocalRandom.current().nextInt(min, max + 1);
     }
 
-    private int[] addRadiusToLine(double origin, double bound, int xPos, int yPos, int distance){
+    private int[] addRadiusToLine(double origin, double bound, int xPos, int yPos, int distance,double randomNumb){
         int[] retVal=new int[2];
-        double randomNum = ThreadLocalRandom.current().nextDouble(origin, bound);
+        double randomNum = randomNumb;
         System.out.println("----------");
         System.out.println("RADIUS from-to: ("+origin+" , "+bound+" )");
         System.out.println("RANDOM RADIUS: " +randomNum);
