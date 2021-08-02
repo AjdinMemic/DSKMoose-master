@@ -310,7 +310,7 @@ public class TrialInfo {
     }
 
     public String toLogString(){
-        if(methodType.equals("Method B")){
+        if(methodType.equals("Circles")){
             this.widthMM=widthMethodB;//widthMethodB;
             this.widthPix=convertMMtoPIX(widthMM);
             this.start=startAsCircle;
