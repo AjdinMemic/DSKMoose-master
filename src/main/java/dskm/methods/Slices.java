@@ -357,6 +357,7 @@ public class Slices extends Method {
         //Make sure the selected yPos is more than cursor size away
         //from the yPosition of the previous target, otherwise the
         //new target might be under the cursor position.
+        System.out.println(trialInfo.getQuartile());
         while (!posOK) {
             yPos = generateRandomPosition(min, max);
             int distanceToPrevious = (int) trialInfo.calculateEucDistance("pix",
@@ -368,11 +369,8 @@ public class Slices extends Method {
                     posOK = true;
                 }
             } else if (trialInfo.getQuartile().equals("SO") || trialInfo.getQuartile().equals("SW")) {
-                if (distanceToPrevious > (20 + trialInfo.getCursorSizePix()) && yPos - trialInfo.getDistancePix() - 100 < bot) {
-                    posOK = true;
-                }
-            } else {
-                if (distanceToPrevious > (20 + trialInfo.getCursorSizePix())) {
+                if (distanceToPrevious > (20 + trialInfo.getCursorSizePix()) && yPos - trialInfo.getDistancePix() < bot) {
+                    System.out.println("yPos " + yPos + " - distance"+trialInfo.getDistancePix()+ "  smaller then "+ bot);
                     posOK = true;
                 }
             }
