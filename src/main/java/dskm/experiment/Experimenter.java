@@ -50,19 +50,19 @@ public class Experimenter {
         System.out.println("Experiment started.");
 
         if (methodType.equals("MethodA")) {
-            method = new MethodA();
+            method = new Horizontal();
             System.out.println("Method A");
         } else if (methodType.equals("MethodB")) {
-            method = new MethodB(9,true); // radius and distBetCircle in mm! // distBetCirle = distance from center of c[N] to center c[N+length/2]
+            method = new Circles(9,true); // radius and distBetCircle in mm! // distBetCirle = distance from center of c[N] to center c[N+length/2]
             System.out.println("Method B");
         }else if (methodType.equals("MethodC")){
-            method = new MethodC();
+            method = new FixedSlices();
             System.out.println("Method C");
         }else if (methodType.equals("MethodC2")){
-        method = new MethodC2(8); // 2,4,6,8,10...
+        method = new Slices(8); // 2,4,6,8,10...
         System.out.println("Method C2");
           }else if (methodType.equals("MethodD")){
-            method = new MethodD();
+            method = new Dropdown();
             System.out.println("Method D");
         }
 

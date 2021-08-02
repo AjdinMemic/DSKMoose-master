@@ -1,12 +1,14 @@
 package dskm.methods;
-//https://www3.ntu.edu.sg/home/ehchua/programming/index.html
 
 import dskm.Config;
 import dskm.Constants;
 import dskm.experiment.Constellation;
 import dskm.experiment.LogChecker;
 import dskm.experiment.TrialInfo;
-import dskm.gui.*;
+import dskm.gui.Circle;
+import dskm.gui.CustomCursor;
+import dskm.gui.DrawingPanel;
+import dskm.gui.MainFrame;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 
 import javax.swing.*;
@@ -19,13 +21,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class MethodC extends Method {
+public class Slices extends Method {
 
     private List<Point.Double> radDistList = new ArrayList<>();
     private int nTrials;
     private int trialNum;
     private int trialNumInTest = 0;
     private Circle previousTarget = new Circle(0, 0, 0);
+    private int n;
+    private static Point2D.Double[] points;
 
     private PublishSubject<String> expSubject;
     private Constellation testConstellation = Constellation.FITTS_CURSORSIZE_1;
@@ -39,14 +43,15 @@ public class MethodC extends Method {
     ;
     ArrayList<CustomCursor> cursors = new ArrayList<CustomCursor>();
 
-    private java.util.List<Double> radList;
-    private java.util.List<Double> distList;
+    private List<Double> radList;
+    private List<Double> distList;
     private List<Double> cursorList;
 
-    private String[] quartiles = {"HOR", "VER", "NO", "NW", "SO", "SW"};
+    private String[] quartiles = {"NO"};
 
-    //private String[] quartiles = {"HOR", "VER", "NO", "NW", "SO", "SW"};
-    public MethodC() throws IOException {
+    public Slices(int n) throws IOException {
+        this.n = n;
+        points = new Point2D.Double[n];
         expSubject = PublishSubject.create();
         int monitorPPI = Toolkit.getDefaultToolkit().getScreenResolution();
 
@@ -64,6 +69,10 @@ public class MethodC extends Method {
     }
 
     public void methodSetup() {
+        this.generatePointRadius(n);
+        for (int i = 0; i < points.length; i++) {
+            System.out.println("p" + (i + 1) + " (" + points[i].x + " , " + points[i].y + " )");
+        }
         this.generateRadiusDistancePairs();
 
         this.generateTrialList();
@@ -93,10 +102,18 @@ public class MethodC extends Method {
     }
 
     public void generateTrialList() {
+        int section = -1;
         for (int i = 0; i < testConstellation.getNrRepetitions(); i++) {
             for (double cursorSize : cursorList) {
-                for (String q : quartiles) {
+                for (Point2D.Double rad : points) {
+                    section++;
                     for (Point.Double p : radDistList) {
+
+                        double lowBound = rad.x;
+                        double uppBound = rad.y;
+
+                        double randomRadNum = ThreadLocalRandom.current().nextDouble(lowBound, uppBound);
+
                         // Generate the trial list
                         int widthPix = convertMMtoPIX(p.x);
                         int distancePix = convertMMtoPIX(p.y);
@@ -121,7 +138,7 @@ public class MethodC extends Method {
                             target = new Circle(0, 0, 0);
                         }
 
-                        TrialInfo trial = new TrialInfo("Method C", q, null, 1, distancePix,
+                        TrialInfo trial = new TrialInfo("Method C2", null, null, 1, distancePix,
                                 1, //block number, will be updated later
                                 1, //trial in block, will be updated later
                                 distancePix, //distance pix
@@ -133,31 +150,30 @@ public class MethodC extends Method {
                                 cursorSize,
                                 this.participantID,
                                 testConstellation.getTestType(),
-                                "fakeMovementDirection", new Point2D.Double(0, 0), 0.0, 0
+                                "fakeMovementDirection", rad, randomRadNum, section
                         );
 
-                        //For Fitts, we need to duplicate each trial,
-                        //so that we have one trial to the right, one
-                        //to the right.
-                        if (trial.getQuartile().equals("NO") || trial.getQuartile().equals("SO")) {
-                            trial.setMovementDirection(Config.MOVEMENT_DIRECTION_RIGTH);
-                        } else if (trial.getQuartile().equals("NW") || trial.getQuartile().equals("SW")) {
+                       //sets watch boundaries to test, example: "SuedOst" we test if the start + targetDistance are not below "bot", and not greater than "max"
+
+                        if (randomRadNum >= 0 && randomRadNum <= 90) {
+                            trial.setMovementDirection(Config.MOVEMENT_BOT_RIGHT);
+                            trial.setQuartile("SO");
+                        } else if (randomRadNum >= 90 && randomRadNum <= 180) {
+                            trial.setMovementDirection(Config.MOVEMENT_BOT_LEFT);
+                            trial.setQuartile("SW");
+                        } else if (randomRadNum >= 180 && randomRadNum <= 270) {
                             trial.setMovementDirection(Config.MOVEMENT_DIRECTION_LEFT);
-                        }
-                        if (trial.getQuartile().equals("HOR") || trial.getQuartile().equals("VER")) {
-                            if (testConstellation.getTestType().equals(Config.TEST_TYPE_FITTS)) {
-                                trial.setMovementDirection(
-                                        Config.MOVEMENT_DIRECTION_RIGTH
-                                );
-                                TrialInfo directionCopy = trial.copyTrialInfo();
-                                directionCopy.setMovementDirection(
-                                        Config.MOVEMENT_DIRECTION_LEFT
-                                );
-                                trials.add(directionCopy);
-                            }
+                            trial.setQuartile("NW");
+                        } else if (randomRadNum >= 270 && randomRadNum <= 360) {
+                            trial.setMovementDirection(Config.MOVEMENT_DIRECTION_RIGTH);
+                            trial.setQuartile("NO");
+                        } else if (randomRadNum < 0) {
+                            trial.setMovementDirection(Config.MOVEMENT_BOT_RIGHT);
+                            trial.setQuartile("SO");
                         }
                         trials.add(trial);
                     }
+
                     if (cursorSize == 1.0) {
                         //Fake a CustomCursor for the default cursor!
                         //cursors.add(new CustomCursor(51, this.pixelSizeMM));
@@ -194,10 +210,6 @@ public class MethodC extends Method {
         return (int) (Math.rint(dim / this.pixelSizeMM));
     }
 
-    private double convertPIXtoMM(int dim) {
-        return Math.rint(dim * this.pixelSizeMM);
-    }
-
     public void createTrial() {
         if (blocks.get(0).size() == 0) {
             //The running block was just finished
@@ -223,7 +235,7 @@ public class MethodC extends Method {
             expSubject.onNext(Constants.MSSG_END_LOG);
             finishTestAndEnd();
         } else {// Create and send the panel to be drawn
-            DrawingPanel exPanel = new DrawingPanel(0, "MethodC", false);
+            DrawingPanel exPanel = new DrawingPanel(0, "MethodC2", false);
             trialNum++;
             TrialInfo trialInfo = blocks.get(0).remove(0);
             for (CustomCursor cc : cursors) {
@@ -271,10 +283,11 @@ public class MethodC extends Method {
      * Create the drawing panel for the trial
      */
     int count = 0;
-    int horCount = 0;
-    int verCount = 0;
 
     private Circle determineTargetPositionFitts(TrialInfo trialInfo) {
+        System.out.println("------");
+        System.out.println("MOVEMENT DIRECTION: " + trialInfo.getMovementDirection());
+
         //In case the window title bar is showing
         int windowTitleBarHeight = MainFrame.getFrame().getInsets().top;
         int min = 0;
@@ -295,7 +308,7 @@ public class MethodC extends Method {
                 (trialInfo.getWidthPix() / 2);
 
         top = windowRec.y + windowRec.height - 20 - convertMMtoPIX(trialInfo.getCursorSizeMM() / 2) - (trialInfo.getWidthPix() / 2);
-        System.out.println("windowRec.y: " + windowRec.y);
+        // System.out.println("windowRec.y: " + windowRec.y);
         System.out.println("top: " + top);
         bot = windowRec.y + 20 + convertMMtoPIX(trialInfo.getCursorSizeMM() / 2) + (trialInfo.getWidthPix() / 2);
         System.out.println("bot: " + bot);
@@ -305,119 +318,66 @@ public class MethodC extends Method {
         //Make sure the selected xPos is more than cursor size away
         //from the xPosition of the previous target, otherwise the
         //new start position might be under the cursor position.
-        if (trialInfo.getQuartile().equals("HOR") || trialInfo.getQuartile().equals("NO") || trialInfo.getQuartile().equals("NW") || trialInfo.getQuartile().equals("SO") || trialInfo.getQuartile().equals("SW")) {
-            while (!posOK) {
-                xPos = generateRandomPosition(min, max);
-                int distanceToPrevious = (int) trialInfo.calculateEucDistance("pix",
-                        new Point(xPos, previousTarget.getCenterY()),
-                        new Point(previousTarget.getCenterX(),
-                                previousTarget.getCenterY()));
-                if (distanceToPrevious > (20 + trialInfo.getCursorSizePix())) {
-                    //The xPos for the start is now not in conflict with the
-                    //previous target. Now see if it is acceptable according to
-                    //the movement direction and distance of the trial.
 
-                    if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_DIRECTION_RIGTH)) {
-                        if (xPos + trialInfo.getDistancePix() < max) {
-                            posOK = true;
-                        }
-                    } else if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_DIRECTION_LEFT)) {
-                        if (xPos - trialInfo.getDistancePix() > min) {
-                            posOK = true;
-                        }
-                    }
-                }
-            }
-            //Now find a suitable y-Position for the start.
-            min = windowRec.y + Config.TEXT_Y + Config.TEXT_PAN_H + 20 +
-                    convertMMtoPIX(trialInfo.getCursorSizeMM() / 2) +
-                    trialInfo.getWidthPix() / 2;
+        while (!posOK) {
+            xPos = generateRandomPosition(min, max);
+            int distanceToPrevious = (int) trialInfo.calculateEucDistance("pix",
+                    new Point(xPos, previousTarget.getCenterY()),
+                    new Point(previousTarget.getCenterX(),
+                            previousTarget.getCenterY()));
+            if (distanceToPrevious > (20 + trialInfo.getCursorSizePix())) {
+                //The xPos for the start is now not in conflict with the
+                //previous target. Now see if it is acceptable according to
+                //the movement direction and distance of the trial.
 
-            max = windowRec.height - windowRec.y - 20 -
-                    windowTitleBarHeight -
-                    convertMMtoPIX(trialInfo.getCursorSizeMM() / 2) -
-                    trialInfo.getWidthPix() / 2;
-
-            posOK = false;
-            yPos = 0;
-            //Make sure the selected yPos is more than cursor size away
-            //from the yPosition of the previous target, otherwise the
-            //new target might be under the cursor position.
-            while (!posOK) {
-                yPos = generateRandomPosition(min, max);
-                int distanceToPrevious = (int) trialInfo.calculateEucDistance("pix",
-                        new Point(previousTarget.getCenterX(), yPos),
-                        new Point(previousTarget.getCenterX(),
-                                previousTarget.getCenterY()));
-                if (trialInfo.getQuartile().equals("NO") || trialInfo.getQuartile().equals("NW")) {
-                    if (distanceToPrevious > (20 + trialInfo.getCursorSizePix()) && yPos + trialInfo.getDistancePix() > top) {
+                if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_DIRECTION_RIGTH) || trialInfo.getMovementDirection().equals(Config.MOVEMENT_BOT_RIGHT)) {
+                    if (xPos + trialInfo.getDistancePix() < max) {
                         posOK = true;
                     }
-                } else if (trialInfo.getQuartile().equals("SO") || trialInfo.getQuartile().equals("SW")) {
-                    if (distanceToPrevious > (20 + trialInfo.getCursorSizePix()) && yPos - trialInfo.getDistancePix() < bot) {
-                        posOK = true;
-                    }
-                } else {
-                    if (distanceToPrevious > (20 + trialInfo.getCursorSizePix())) {
+                } else if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_DIRECTION_LEFT) || trialInfo.getMovementDirection().equals(Config.MOVEMENT_BOT_LEFT)) {
+                    if (xPos - trialInfo.getDistancePix() > min) {
                         posOK = true;
                     }
                 }
             }
         }
-        /*************************************************************************/
-        else if (trialInfo.getQuartile().equals("VER")) {
-            while (!posOK) {
-                yPos = generateRandomPosition(bot, top);
-                int distanceToPrevious = (int) trialInfo.calculateEucDistance("pix",
-                        new Point(yPos, previousTarget.getCenterY()),
-                        new Point(previousTarget.getCenterX(),
-                                previousTarget.getCenterY()));
-                if (distanceToPrevious > (20 + trialInfo.getCursorSizePix())) {
-                    //The xPos for the start is now not in conflict with the
-                    //previous target. Now see if it is acceptable according to
-                    //the movement direction and distance of the trial.
-                    if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_DIRECTION_RIGTH)) {
-                        if (yPos + trialInfo.getDistancePix() < top) {
-                            posOK = true;
-                        }
-                    } else if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_DIRECTION_LEFT)) {
-                        if (yPos - trialInfo.getDistancePix() > bot) {
-                            posOK = true;
-                        }
-                    }
+        System.out.println("xPos:" + xPos);
+        //Now find a suitable y-Position for the start.
+        min = windowRec.y + Config.TEXT_Y + Config.TEXT_PAN_H + 20 +
+                convertMMtoPIX(trialInfo.getCursorSizeMM() / 2) +
+                trialInfo.getWidthPix() / 2;
+
+        max = windowRec.height - windowRec.y - 20 -
+                windowTitleBarHeight -
+                convertMMtoPIX(trialInfo.getCursorSizeMM() / 2) -
+                trialInfo.getWidthPix() / 2;
+
+        posOK = false;
+        yPos = 0;
+        //Make sure the selected yPos is more than cursor size away
+        //from the yPosition of the previous target, otherwise the
+        //new target might be under the cursor position.
+        while (!posOK) {
+            yPos = generateRandomPosition(min, max);
+            int distanceToPrevious = (int) trialInfo.calculateEucDistance("pix",
+                    new Point(previousTarget.getCenterX(), yPos),
+                    new Point(previousTarget.getCenterX(),
+                            previousTarget.getCenterY()));
+            if (trialInfo.getQuartile().equals("NO") || trialInfo.getQuartile().equals("NW")) {
+                if (distanceToPrevious > (20 + trialInfo.getCursorSizePix()) && yPos + trialInfo.getDistancePix() > top) {
+                    posOK = true;
                 }
-                System.out.println("posOK: " + posOK);
-            }
-            System.out.println("yPos: " + yPos);
-
-            //Now find a suitable y-Position for the start.
-            bot = windowRec.y - Config.TEXT_Y + Config.TEXT_PAN_H + 20 +
-                    convertMMtoPIX(trialInfo.getCursorSizeMM() / 2) +
-                    trialInfo.getWidthPix() / 2;
-            System.out.println("bot2: " + bot);
-            top = windowRec.height - windowRec.y - 20 -
-                    windowTitleBarHeight -
-                    convertMMtoPIX(trialInfo.getCursorSizeMM() / 2) -
-                    trialInfo.getWidthPix() / 2;
-            System.out.println("top2: " + top);
-
-            posOK = false;
-            xPos = 0;
-            //Make sure the selected yPos is more than cursor size away
-            //from the yPosition of the previous target, otherwise the
-            //new target might be under the cursor position.
-            while (!posOK) {
-                xPos = generateRandomPosition(bot, top);
-                int distanceToPrevious = (int) trialInfo.calculateEucDistance("pix",
-                        new Point(previousTarget.getCenterX(), xPos),
-                        new Point(previousTarget.getCenterX(),
-                                previousTarget.getCenterY()));
+            } else if (trialInfo.getQuartile().equals("SO") || trialInfo.getQuartile().equals("SW")) {
+                if (distanceToPrevious > (20 + trialInfo.getCursorSizePix()) && yPos - trialInfo.getDistancePix() - 100 < bot) {
+                    posOK = true;
+                }
+            } else {
                 if (distanceToPrevious > (20 + trialInfo.getCursorSizePix())) {
                     posOK = true;
                 }
             }
-            System.out.println("xPos: " + xPos);
         }
+
 
         //Now we have a suitable x and y for the start circle.
         //Set the start for the trial.
@@ -427,59 +387,11 @@ public class MethodC extends Method {
 
         //Now we need to calculate the corresponding target position
         //based on the start position.
-        if (trialInfo.getQuartile().equals("HOR")) {
-            if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_DIRECTION_RIGTH)) {
-                xPos = xPos + trialInfo.getDistancePix();
-            } else if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_DIRECTION_LEFT)) {
-                xPos = xPos - trialInfo.getDistancePix();
-            }
-        } else if (trialInfo.getQuartile().equals("VER")) {
-            if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_DIRECTION_RIGTH)) {
-                yPos = yPos + trialInfo.getDistancePix();
-            } else if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_DIRECTION_LEFT)) {
-                yPos = yPos - trialInfo.getDistancePix();
-            }
-        } else if (trialInfo.getQuartile().equals("NO")) {
-            int[] posXY = addRadiusToLine(-90, -1, xPos, yPos, trialInfo.getDistancePix());
 
-            xPos = posXY[0];
-            yPos = posXY[1];
-
-        } else if (trialInfo.getQuartile().equals("NW")) {
-            int[] posXY = addRadiusToLine(-180, -90, xPos, yPos, trialInfo.getDistancePix());
-
-            xPos = posXY[0];
-            yPos = posXY[1];
-
-        } else if (trialInfo.getQuartile().equals("SO")) {
-            int[] posXY = addRadiusToLine(-360, -270, xPos, yPos, trialInfo.getDistancePix());
-
-            xPos = posXY[0];
-            yPos = posXY[1];
-
-        } else if (trialInfo.getQuartile().equals("SW")) {
-            int[] posXY = addRadiusToLine(-270, -180, xPos, yPos, trialInfo.getDistancePix());
-
-            xPos = posXY[0];
-            yPos = posXY[1];
-        }
-
-        System.out.println("------------------");
-        if (trialInfo.getQuartile().equals("HOR")) {
-            System.out.println("!!! HOR");
-            System.out.println("HOR count:" + ++horCount);
-        } else if (trialInfo.getQuartile().equals("VER")) {
-            System.out.println("!!! VER");
-            System.out.println("VER count:" + ++verCount);
-        } else if (trialInfo.getQuartile().equals("NO")) {
-            System.out.println("!!! NO");
-        } else if (trialInfo.getQuartile().equals("NW")) {
-            System.out.println("!!! NW");
-        } else if (trialInfo.getQuartile().equals("SO")) {
-            System.out.println("!!! SO");
-        } else if (trialInfo.getQuartile().equals("SW")) {
-            System.out.println("!!! SW");
-        }
+        int[] posXY = addRadiusToLine(trialInfo.getRadiusFromTo().x, trialInfo.getRadiusFromTo().y, xPos, yPos, trialInfo.getDistancePix(), trialInfo.getRandomRadNum());
+        // System.out.println("DIRECTION: "+trialInfo.getMovementDirection());
+        xPos = posXY[0];
+        yPos = posXY[1];
 
         //The yPos should be the same as for the start.
         //Accordingly, no need to find a new yPos.
@@ -489,6 +401,7 @@ public class MethodC extends Method {
     }
 
     private Circle determineTargetPositionCalibration(TrialInfo trialInfo) {
+
         //In case the window title bar is showing
         int windowTitleBarHeight = MainFrame.getFrame().getInsets().top;
         int min = 0;
@@ -556,9 +469,14 @@ public class MethodC extends Method {
         return ThreadLocalRandom.current().nextInt(min, max + 1);
     }
 
-    private int[] addRadiusToLine(int origin, int bound, int xPos, int yPos, int distance) {
+    private int[] addRadiusToLine(double origin, double bound, int xPos, int yPos, int distance, double randomNumb) {
         int[] retVal = new int[2];
-        double randomNum = ThreadLocalRandom.current().nextInt(origin, bound);
+        double randomNum = randomNumb;
+        System.out.println("----------");
+        System.out.println("RADIUS from-to: (" + origin + " , " + bound + " )");
+        System.out.println("RANDOM RADIUS: " + randomNum);
+        System.out.println("");
+
         double angle = randomNum;
 
         int startX = xPos;
@@ -575,5 +493,20 @@ public class MethodC extends Method {
         retVal[1] = (int) endY;
 
         return retVal;
+    }
+
+    private void generatePointRadius(int n) {
+        int count = 0;
+        double from = 0;
+        double divideRadius = 360 / n;
+        double subtract = divideRadius / 2;
+        for (int i = 0; i < n; i++) {
+            double to = divideRadius + count;
+
+            points[i] = new Point2D.Double(from - subtract, to - subtract);
+            count += divideRadius;
+            from = to;
+        }
+
     }
 }

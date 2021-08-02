@@ -1,6 +1,5 @@
 package dskm.methods;
 
-import dskm.Config;
 import dskm.Constants;
 import dskm.experiment.Constellation;
 import dskm.experiment.LogChecker;
@@ -16,7 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class MethodB extends Method {
+public class Circles extends Method {
     private final java.util.List<Point.Double> radDistList = new ArrayList<>();
     private int nTrials;
     private int trialNumInTest = 0;
@@ -50,7 +49,7 @@ public class MethodB extends Method {
     public int[] radList = {10, 25, 5};
     public static int[] distList = {125, 250, 62};
 
-    public MethodB(int n, boolean flag) throws IOException {
+    public Circles(int n, boolean flag) throws IOException {
         expSubject = PublishSubject.create();
         int monitorPPI = Toolkit.getDefaultToolkit().getScreenResolution();
         //System.out.println(Toolkit.getDefaultToolkit().getScreenSize());
@@ -58,7 +57,7 @@ public class MethodB extends Method {
         trials = new ArrayList<>();
         blocks = new ArrayList<>();
         this.n = n;
-        MethodB.radius = radius;
+        Circles.radius = radius;
         this.distBetCircle = distBetCircle / 2;
         distBetCirclemm = convertMMtoPIX(this.distBetCircle);
         this.flag = flag;
@@ -330,7 +329,7 @@ public class MethodB extends Method {
     }
 
     public void setRadius(int radius) {
-        MethodB.radius = radius;
+        Circles.radius = radius;
     }
 
     private int convertMMtoPIX(double dim) {

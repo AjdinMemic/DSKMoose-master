@@ -40,23 +40,23 @@ public class StartPanel extends JPanel {
         });
         // Radio buttons
 
-        JRadioButton RBmethodA = new JRadioButton("Method A");
+        JRadioButton RBmethodA = new JRadioButton("Horizontal");
         RBmethodA.setActionCommand("Method A");
         RBmethodA.setSelected(true);
 
-        JRadioButton RBmethodB = new JRadioButton("Method B");
+        JRadioButton RBmethodB = new JRadioButton("Circles");
         RBmethodB.setMnemonic(KeyEvent.VK_C);
         RBmethodB.setActionCommand("Method B");
 
-        JRadioButton RBmethodC = new JRadioButton("Method C");
+        JRadioButton RBmethodC = new JRadioButton("Fixed slices");
         RBmethodB.setMnemonic(KeyEvent.VK_C);
         RBmethodB.setActionCommand("Method C");
 
-        JRadioButton RBmethodC2 = new JRadioButton("Method C2");
+        JRadioButton RBmethodC2 = new JRadioButton("Slices");
         RBmethodB.setMnemonic(KeyEvent.VK_C);
         RBmethodB.setActionCommand("Method C2");
 
-        JRadioButton RBmethodD = new JRadioButton("Method D");
+        JRadioButton RBmethodD = new JRadioButton("Dropdown");
         RBmethodB.setMnemonic(KeyEvent.VK_C);
         RBmethodB.setActionCommand("Method D");
 

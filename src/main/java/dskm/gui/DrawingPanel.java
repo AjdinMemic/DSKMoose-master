@@ -4,7 +4,7 @@ import dskm.Config;
 import dskm.experiment.Experimenter;
 import dskm.experiment.Mologger;
 import dskm.experiment.TrialInfo;
-import dskm.methods.MethodB;
+import dskm.methods.Circles;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 
 import javax.sound.sampled.AudioSystem;
@@ -99,7 +99,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
             if (drawCircles) {
                 int a = MainFrame.getFrame().getWidth() / 2;
                 int b = MainFrame.getFrame().getHeight() / 2;
-                int r = MethodB.distBetCirclemm;
+                int r = Circles.distBetCirclemm;
                 int index=0;
                 int counter=0;
 
@@ -107,7 +107,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                     if(counter==getN()){
                         index++;
                         counter=0;
-                        r=convertMMtoPIX(MethodB.distList[index]/2);
+                        r=convertMMtoPIX(Circles.distList[index]/2);
                     }
                     counter++;
                     double t = 2 * Math.PI * i / getN();
