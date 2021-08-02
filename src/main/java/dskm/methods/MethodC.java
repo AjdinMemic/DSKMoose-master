@@ -1,5 +1,6 @@
 package dskm.methods;
 //https://www3.ntu.edu.sg/home/ehchua/programming/index.html
+
 import dskm.Config;
 import dskm.Constants;
 import dskm.experiment.Constellation;
@@ -10,6 +11,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -131,7 +133,7 @@ public class MethodC extends Method {
                                 cursorSize,
                                 this.participantID,
                                 testConstellation.getTestType(),
-                                "fakeMovementDirection",null,0.0,0
+                                "fakeMovementDirection", new Point2D.Double(0, 0), 0.0, 0
                         );
 
                         //For Fitts, we need to duplicate each trial,
@@ -438,25 +440,25 @@ public class MethodC extends Method {
                 yPos = yPos - trialInfo.getDistancePix();
             }
         } else if (trialInfo.getQuartile().equals("NO")) {
-          int[] posXY = addRadiusToLine(-90,-1,xPos,yPos,trialInfo.getDistancePix());
+            int[] posXY = addRadiusToLine(-90, -1, xPos, yPos, trialInfo.getDistancePix());
 
             xPos = posXY[0];
             yPos = posXY[1];
 
         } else if (trialInfo.getQuartile().equals("NW")) {
-            int[] posXY = addRadiusToLine(-180,-90,xPos,yPos,trialInfo.getDistancePix());
+            int[] posXY = addRadiusToLine(-180, -90, xPos, yPos, trialInfo.getDistancePix());
 
             xPos = posXY[0];
             yPos = posXY[1];
 
         } else if (trialInfo.getQuartile().equals("SO")) {
-            int[] posXY = addRadiusToLine(-360,-270,xPos,yPos,trialInfo.getDistancePix());
+            int[] posXY = addRadiusToLine(-360, -270, xPos, yPos, trialInfo.getDistancePix());
 
             xPos = posXY[0];
             yPos = posXY[1];
 
         } else if (trialInfo.getQuartile().equals("SW")) {
-            int[] posXY = addRadiusToLine(-270,-180,xPos,yPos,trialInfo.getDistancePix());
+            int[] posXY = addRadiusToLine(-270, -180, xPos, yPos, trialInfo.getDistancePix());
 
             xPos = posXY[0];
             yPos = posXY[1];
@@ -554,8 +556,8 @@ public class MethodC extends Method {
         return ThreadLocalRandom.current().nextInt(min, max + 1);
     }
 
-    private int[] addRadiusToLine(int origin, int bound, int xPos, int yPos, int distance){
-        int[] retVal=new int[2];
+    private int[] addRadiusToLine(int origin, int bound, int xPos, int yPos, int distance) {
+        int[] retVal = new int[2];
         double randomNum = ThreadLocalRandom.current().nextInt(origin, bound);
         double angle = randomNum;
 

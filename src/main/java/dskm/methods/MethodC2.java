@@ -49,10 +49,9 @@ public class MethodC2 extends Method {
 
     private String[] quartiles = {"NO"};
 
-    //private String[] quartiles = {"HOR", "VER", "NO", "NW", "SO", "SW"};
     public MethodC2(int n) throws IOException {
-        this.n=n;
-        points=new Point2D.Double[n];
+        this.n = n;
+        points = new Point2D.Double[n];
         expSubject = PublishSubject.create();
         int monitorPPI = Toolkit.getDefaultToolkit().getScreenResolution();
 
@@ -71,8 +70,8 @@ public class MethodC2 extends Method {
 
     public void methodSetup() {
         this.generatePointRadius(n);
-        for(int i=0;i<points.length;i++){
-            System.out.println("p"+(i+1)+" ("+points[i].x+" , "+points[i].y+" )");
+        for (int i = 0; i < points.length; i++) {
+            System.out.println("p" + (i + 1) + " (" + points[i].x + " , " + points[i].y + " )");
         }
         this.generateRadiusDistancePairs();
 
@@ -106,12 +105,12 @@ public class MethodC2 extends Method {
         int section = -1;
         for (int i = 0; i < testConstellation.getNrRepetitions(); i++) {
             for (double cursorSize : cursorList) {
-                for (Point2D.Double rad:points) {
+                for (Point2D.Double rad : points) {
                     section++;
                     for (Point.Double p : radDistList) {
 
-                        double lowBound=rad.x;
-                        double uppBound=rad.y;
+                        double lowBound = rad.x;
+                        double uppBound = rad.y;
 
                         double randomRadNum = ThreadLocalRandom.current().nextDouble(lowBound, uppBound);
 
@@ -151,27 +150,24 @@ public class MethodC2 extends Method {
                                 cursorSize,
                                 this.participantID,
                                 testConstellation.getTestType(),
-                                "fakeMovementDirection",rad,randomRadNum,section
+                                "fakeMovementDirection", rad, randomRadNum, section
                         );
 
-                        //For Fitts, we need to duplicate each trial,
-                        //so that we have one trial to the right, one
-                        //to the right.
+                       //sets watch boundaries to test, example: "SuedOst" we test if the start + targetDistance are not below "bot", and not greater than "max"
 
-                        //(trial.getRadiusFromTo().y>=270 && trial.getRadiusFromTo().y<=360) || (trial.getRadiusFromTo().y>=0 && trial.getRadiusFromTo().y<=90)
-                        if (randomRadNum>=0 && randomRadNum<=90) {
+                        if (randomRadNum >= 0 && randomRadNum <= 90) {
                             trial.setMovementDirection(Config.MOVEMENT_BOT_RIGHT);
                             trial.setQuartile("SO");
-                        } else if (randomRadNum>=90 && randomRadNum<=180)  {
+                        } else if (randomRadNum >= 90 && randomRadNum <= 180) {
                             trial.setMovementDirection(Config.MOVEMENT_BOT_LEFT);
                             trial.setQuartile("SW");
-                        }else if (randomRadNum>=180 && randomRadNum<=270)  {
+                        } else if (randomRadNum >= 180 && randomRadNum <= 270) {
                             trial.setMovementDirection(Config.MOVEMENT_DIRECTION_LEFT);
                             trial.setQuartile("NW");
-                        }else if (randomRadNum>=270 && randomRadNum<=360)  {
+                        } else if (randomRadNum >= 270 && randomRadNum <= 360) {
                             trial.setMovementDirection(Config.MOVEMENT_DIRECTION_RIGTH);
                             trial.setQuartile("NO");
-                        }else if(randomRadNum<0){
+                        } else if (randomRadNum < 0) {
                             trial.setMovementDirection(Config.MOVEMENT_BOT_RIGHT);
                             trial.setQuartile("SO");
                         }
@@ -212,10 +208,6 @@ public class MethodC2 extends Method {
 
     private int convertMMtoPIX(double dim) {
         return (int) (Math.rint(dim / this.pixelSizeMM));
-    }
-
-    private double convertPIXtoMM(int dim) {
-        return Math.rint(dim * this.pixelSizeMM);
     }
 
     public void createTrial() {
@@ -291,12 +283,10 @@ public class MethodC2 extends Method {
      * Create the drawing panel for the trial
      */
     int count = 0;
-    int horCount = 0;
-    int verCount = 0;
 
     private Circle determineTargetPositionFitts(TrialInfo trialInfo) {
         System.out.println("------");
-        System.out.println("MOVEMENT DIRECTION: "+trialInfo.getMovementDirection());
+        System.out.println("MOVEMENT DIRECTION: " + trialInfo.getMovementDirection());
 
         //In case the window title bar is showing
         int windowTitleBarHeight = MainFrame.getFrame().getInsets().top;
@@ -318,7 +308,7 @@ public class MethodC2 extends Method {
                 (trialInfo.getWidthPix() / 2);
 
         top = windowRec.y + windowRec.height - 20 - convertMMtoPIX(trialInfo.getCursorSizeMM() / 2) - (trialInfo.getWidthPix() / 2);
-       // System.out.println("windowRec.y: " + windowRec.y);
+        // System.out.println("windowRec.y: " + windowRec.y);
         System.out.println("top: " + top);
         bot = windowRec.y + 20 + convertMMtoPIX(trialInfo.getCursorSizeMM() / 2) + (trialInfo.getWidthPix() / 2);
         System.out.println("bot: " + bot);
@@ -351,22 +341,22 @@ public class MethodC2 extends Method {
                 }
             }
         }
-           System.out.println("xPos:"+xPos);
-            //Now find a suitable y-Position for the start.
-            min = windowRec.y + Config.TEXT_Y + Config.TEXT_PAN_H + 20 +
-                    convertMMtoPIX(trialInfo.getCursorSizeMM() / 2) +
-                    trialInfo.getWidthPix() / 2;
+        System.out.println("xPos:" + xPos);
+        //Now find a suitable y-Position for the start.
+        min = windowRec.y + Config.TEXT_Y + Config.TEXT_PAN_H + 20 +
+                convertMMtoPIX(trialInfo.getCursorSizeMM() / 2) +
+                trialInfo.getWidthPix() / 2;
 
-            max = windowRec.height - windowRec.y - 20 -
-                    windowTitleBarHeight -
-                    convertMMtoPIX(trialInfo.getCursorSizeMM() / 2) -
-                    trialInfo.getWidthPix() / 2;
+        max = windowRec.height - windowRec.y - 20 -
+                windowTitleBarHeight -
+                convertMMtoPIX(trialInfo.getCursorSizeMM() / 2) -
+                trialInfo.getWidthPix() / 2;
 
-            posOK = false;
-            yPos = 0;
-            //Make sure the selected yPos is more than cursor size away
-            //from the yPosition of the previous target, otherwise the
-            //new target might be under the cursor position.
+        posOK = false;
+        yPos = 0;
+        //Make sure the selected yPos is more than cursor size away
+        //from the yPosition of the previous target, otherwise the
+        //new target might be under the cursor position.
         while (!posOK) {
             yPos = generateRandomPosition(min, max);
             int distanceToPrevious = (int) trialInfo.calculateEucDistance("pix",
@@ -378,7 +368,7 @@ public class MethodC2 extends Method {
                     posOK = true;
                 }
             } else if (trialInfo.getQuartile().equals("SO") || trialInfo.getQuartile().equals("SW")) {
-                if (distanceToPrevious > (20 + trialInfo.getCursorSizePix()) && yPos - trialInfo.getDistancePix()-100 < bot) {
+                if (distanceToPrevious > (20 + trialInfo.getCursorSizePix()) && yPos - trialInfo.getDistancePix() - 100 < bot) {
                     posOK = true;
                 }
             } else {
@@ -398,10 +388,10 @@ public class MethodC2 extends Method {
         //Now we need to calculate the corresponding target position
         //based on the start position.
 
-          int[] posXY = addRadiusToLine(trialInfo.getRadiusFromTo().x,trialInfo.getRadiusFromTo().y,xPos,yPos,trialInfo.getDistancePix(),trialInfo.getRandomRadNum());
-       // System.out.println("DIRECTION: "+trialInfo.getMovementDirection());
-            xPos = posXY[0];
-            yPos = posXY[1];
+        int[] posXY = addRadiusToLine(trialInfo.getRadiusFromTo().x, trialInfo.getRadiusFromTo().y, xPos, yPos, trialInfo.getDistancePix(), trialInfo.getRandomRadNum());
+        // System.out.println("DIRECTION: "+trialInfo.getMovementDirection());
+        xPos = posXY[0];
+        yPos = posXY[1];
 
         //The yPos should be the same as for the start.
         //Accordingly, no need to find a new yPos.
@@ -479,12 +469,12 @@ public class MethodC2 extends Method {
         return ThreadLocalRandom.current().nextInt(min, max + 1);
     }
 
-    private int[] addRadiusToLine(double origin, double bound, int xPos, int yPos, int distance,double randomNumb){
-        int[] retVal=new int[2];
+    private int[] addRadiusToLine(double origin, double bound, int xPos, int yPos, int distance, double randomNumb) {
+        int[] retVal = new int[2];
         double randomNum = randomNumb;
         System.out.println("----------");
-        System.out.println("RADIUS from-to: ("+origin+" , "+bound+" )");
-        System.out.println("RANDOM RADIUS: " +randomNum);
+        System.out.println("RADIUS from-to: (" + origin + " , " + bound + " )");
+        System.out.println("RANDOM RADIUS: " + randomNum);
         System.out.println("");
 
         double angle = randomNum;
@@ -505,16 +495,16 @@ public class MethodC2 extends Method {
         return retVal;
     }
 
-    private void generatePointRadius(int n){
-        int count =0;
-        double from=0;
+    private void generatePointRadius(int n) {
+        int count = 0;
+        double from = 0;
         double divideRadius = 360 / n;
-        double subtract     = divideRadius/2;
-        for (int i=0;i<n;i++) {
-            double to = divideRadius+count;
+        double subtract = divideRadius / 2;
+        for (int i = 0; i < n; i++) {
+            double to = divideRadius + count;
 
-            points[i] = new Point2D.Double(from-subtract, to-subtract);
-            count+=divideRadius;
+            points[i] = new Point2D.Double(from - subtract, to - subtract);
+            count += divideRadius;
             from = to;
         }
 

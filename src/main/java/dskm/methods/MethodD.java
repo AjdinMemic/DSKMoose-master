@@ -48,7 +48,6 @@ public class MethodD extends Method {
 
     private String[] quartiles = {"VER"};
 
-    //private String[] quartiles = {"HOR", "VER", "NO", "NW", "SO", "SW"};
     public MethodD() throws IOException {
         expSubject = PublishSubject.create();
         int monitorPPI = Toolkit.getDefaultToolkit().getScreenResolution();
@@ -136,7 +135,7 @@ public class MethodD extends Method {
                                 cursorSize,
                                 this.participantID,
                                 testConstellation.getTestType(),
-                                "fakeMovementDirection",new Point2D.Double(0,0),0.0,0
+                                "fakeMovementDirection", new Point2D.Double(0, 0), 0.0, 0
                         );
 
                         //For Fitts, we need to duplicate each trial,
@@ -156,7 +155,7 @@ public class MethodD extends Method {
                                 directionCopy.setMovementDirection(
                                         Config.MOVEMENT_DIRECTION_LEFT
                                 );
-                               // trials.add(directionCopy);
+                                // trials.add(directionCopy);
                             }
                         }
                         trials.add(trial);
@@ -195,10 +194,6 @@ public class MethodD extends Method {
 
     private int convertMMtoPIX(double dim) {
         return (int) (Math.rint(dim / this.pixelSizeMM));
-    }
-
-    private double convertPIXtoMM(int dim) {
-        return Math.rint(dim * this.pixelSizeMM);
     }
 
     public void createTrial() {
@@ -244,7 +239,7 @@ public class MethodD extends Method {
                 //position of the target and the position of the start.
                 targetCircle = determineTargetPositionFitts(trialInfo);
             } else {
-                targetCircle = determineTargetPositionCalibration(trialInfo);
+                targetCircle = determineTargetPositionFitts(trialInfo);
             }
 
             //Target position and start position are determined.
@@ -308,68 +303,9 @@ public class MethodD extends Method {
         //Make sure the selected xPos is more than cursor size away
         //from the xPosition of the previous target, otherwise the
         //new start position might be under the cursor position.
-        if (trialInfo.getQuartile().equals("HOR") || trialInfo.getQuartile().equals("NO") || trialInfo.getQuartile().equals("NW") || trialInfo.getQuartile().equals("SO") || trialInfo.getQuartile().equals("SW")) {
-            while (!posOK) {
-                xPos = generateRandomPosition(min, max);
-                int distanceToPrevious = (int) trialInfo.calculateEucDistance("pix",
-                        new Point(xPos, previousTarget.getCenterY()),
-                        new Point(previousTarget.getCenterX(),
-                                previousTarget.getCenterY()));
-                if (distanceToPrevious > (20 + trialInfo.getCursorSizePix())) {
-                    //The xPos for the start is now not in conflict with the
-                    //previous target. Now see if it is acceptable according to
-                    //the movement direction and distance of the trial.
 
-                    if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_DIRECTION_RIGTH)) {
-                        if (xPos + trialInfo.getDistancePix() < max) {
-                            posOK = true;
-                        }
-                    } else if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_DIRECTION_LEFT)) {
-                        if (xPos - trialInfo.getDistancePix() > min) {
-                            posOK = true;
-                        }
-                    }
-                }
-            }
-            //Now find a suitable y-Position for the start.
-            min = windowRec.y + Config.TEXT_Y + Config.TEXT_PAN_H + 20 +
-                    convertMMtoPIX(trialInfo.getCursorSizeMM() / 2) +
-                    trialInfo.getWidthPix() / 2;
-
-            max = windowRec.height - windowRec.y - 20 -
-                    windowTitleBarHeight -
-                    convertMMtoPIX(trialInfo.getCursorSizeMM() / 2) -
-                    trialInfo.getWidthPix() / 2;
-
-            posOK = false;
-            yPos = 0;
-            //Make sure the selected yPos is more than cursor size away
-            //from the yPosition of the previous target, otherwise the
-            //new target might be under the cursor position.
-            while (!posOK) {
-                yPos = generateRandomPosition(min, max);
-                int distanceToPrevious = (int) trialInfo.calculateEucDistance("pix",
-                        new Point(previousTarget.getCenterX(), yPos),
-                        new Point(previousTarget.getCenterX(),
-                                previousTarget.getCenterY()));
-                if (trialInfo.getQuartile().equals("NO") || trialInfo.getQuartile().equals("NW")) {
-                    if (distanceToPrevious > (20 + trialInfo.getCursorSizePix()) && yPos + trialInfo.getDistancePix() > top) {
-                        posOK = true;
-                    }
-                } else if (trialInfo.getQuartile().equals("SO") || trialInfo.getQuartile().equals("SW")) {
-                    if (distanceToPrevious > (20 + trialInfo.getCursorSizePix()) && yPos - trialInfo.getDistancePix() < bot) {
-                        posOK = true;
-                    }
-                } else {
-                    if (distanceToPrevious > (20 + trialInfo.getCursorSizePix())) {
-                        posOK = true;
-                    }
-                }
-            }
-        }
-        /*************************************************************************/
-        else if (trialInfo.getQuartile().equals("VER")) {
-            yPos=trialInfo.getStart().getRadius();
+        if (trialInfo.getQuartile().equals("VER")) {
+            yPos = trialInfo.getStart().getRadius();
             System.out.println("yPos: " + yPos);
 
             //Now find a suitable y-Position for the start.
@@ -409,58 +345,12 @@ public class MethodD extends Method {
 
         //Now we need to calculate the corresponding target position
         //based on the start position.
-        if (trialInfo.getQuartile().equals("HOR")) {
-            if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_DIRECTION_RIGTH)) {
-                xPos = xPos + trialInfo.getDistancePix();
-            } else if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_DIRECTION_LEFT)) {
-                xPos = xPos - trialInfo.getDistancePix();
-            }
-        } else if (trialInfo.getQuartile().equals("VER")) {
+        if (trialInfo.getQuartile().equals("VER")) {
             if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_DIRECTION_RIGTH)) {
                 yPos = yPos + trialInfo.getDistancePix();
             } else if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_DIRECTION_LEFT)) {
                 yPos = yPos - trialInfo.getDistancePix();
             }
-        } else if (trialInfo.getQuartile().equals("NO")) {
-          int[] posXY = addRadiusToLine(-90,-1,xPos,yPos,trialInfo.getDistancePix());
-
-            xPos = posXY[0];
-            yPos = posXY[1];
-
-        } else if (trialInfo.getQuartile().equals("NW")) {
-            int[] posXY = addRadiusToLine(-180,-90,xPos,yPos,trialInfo.getDistancePix());
-
-            xPos = posXY[0];
-            yPos = posXY[1];
-
-        } else if (trialInfo.getQuartile().equals("SO")) {
-            int[] posXY = addRadiusToLine(-360,-270,xPos,yPos,trialInfo.getDistancePix());
-
-            xPos = posXY[0];
-            yPos = posXY[1];
-
-        } else if (trialInfo.getQuartile().equals("SW")) {
-            int[] posXY = addRadiusToLine(-270,-180,xPos,yPos,trialInfo.getDistancePix());
-
-            xPos = posXY[0];
-            yPos = posXY[1];
-        }
-
-        System.out.println("------------------");
-        if (trialInfo.getQuartile().equals("HOR")) {
-            System.out.println("!!! HOR");
-            System.out.println("HOR count:" + ++horCount);
-        } else if (trialInfo.getQuartile().equals("VER")) {
-            System.out.println("!!! VER");
-            System.out.println("VER count:" + ++verCount);
-        } else if (trialInfo.getQuartile().equals("NO")) {
-            System.out.println("!!! NO");
-        } else if (trialInfo.getQuartile().equals("NW")) {
-            System.out.println("!!! NW");
-        } else if (trialInfo.getQuartile().equals("SO")) {
-            System.out.println("!!! SO");
-        } else if (trialInfo.getQuartile().equals("SW")) {
-            System.out.println("!!! SW");
         }
 
         //The yPos should be the same as for the start.
@@ -470,92 +360,8 @@ public class MethodD extends Method {
                 trialInfo.getWidthPix() / 2);
     }
 
-    private Circle determineTargetPositionCalibration(TrialInfo trialInfo) {
-        //In case the window title bar is showing
-        int windowTitleBarHeight = MainFrame.getFrame().getInsets().top;
-        int min = 0;
-        int max = 0;
-        int xPos = 0;
-        int yPos = 0;
-        boolean posOK = false;
-
-        //For the calibration task, we only need to consider the
-        //position of the target.
-        Rectangle windowRec = MainFrame.getFrame().getBounds();
-        min = windowRec.x + 20 +
-                convertMMtoPIX(trialInfo.getCursorSizeMM() / 2) +
-                trialInfo.getWidthPix() / 2;
-
-        max = windowRec.x + windowRec.width - 20 -
-                convertMMtoPIX(trialInfo.getCursorSizeMM() / 2) -
-                trialInfo.getWidthPix() / 2;
-        xPos = 0;
-
-        //Make sure the selected xPos is more than cursor size away
-        //from the xPosition of the previous target, otherwise the
-        //new target might be under the cursor position.
-        while (!posOK) {
-            xPos = generateRandomPosition(min, max);
-            int distanceToPrevious = (int) trialInfo.calculateEucDistance("pix",
-                    new Point(xPos, previousTarget.getCenterY()),
-                    new Point(previousTarget.getCenterX(),
-                            previousTarget.getCenterY()));
-            if (distanceToPrevious > (20 + trialInfo.getCursorSizePix())) {
-                posOK = true;
-            }
-        }
-
-        //Now find a suitable y-Position
-        min = windowRec.y + Config.TEXT_Y + Config.TEXT_PAN_H + 20 +
-                convertMMtoPIX(trialInfo.getCursorSizeMM() / 2) +
-                trialInfo.getWidthPix() / 2;
-        max = windowRec.height - windowRec.y - 20 -
-                windowTitleBarHeight -
-                convertMMtoPIX(trialInfo.getCursorSizeMM() / 2) -
-                trialInfo.getWidthPix() / 2;
-
-        posOK = false;
-        yPos = 0;
-        //Make sure the selected yPos is more than cursor size away
-        //from the yPosition of the previous target, otherwise the
-        //new target might be under the cursor position.
-        while (!posOK) {
-            yPos = generateRandomPosition(min, max);
-            int distanceToPrevious = (int) trialInfo.calculateEucDistance("pix",
-                    new Point(previousTarget.getCenterX(), yPos),
-                    new Point(previousTarget.getCenterX(),
-                            previousTarget.getCenterY()));
-            if (distanceToPrevious > (20 + trialInfo.getCursorSizePix())) {
-                posOK = true;
-            }
-        }
-
-        return new Circle(xPos, yPos,
-                trialInfo.getWidthPix() / 2);
-    }
-
     private int generateRandomPosition(int min, int max) {
         return ThreadLocalRandom.current().nextInt(min, max + 1);
     }
 
-    private int[] addRadiusToLine(int origin, int bound, int xPos, int yPos, int distance){
-        int[] retVal=new int[2];
-        double randomNum = ThreadLocalRandom.current().nextInt(origin, bound);
-        double angle = randomNum;
-
-        int startX = xPos;
-        int startY = yPos;
-        int length = distance;
-
-        double endX = startX + Math.cos(Math.toRadians(
-                angle
-        )) * length;
-
-        double endY = (startY + Math.sin(Math.toRadians(angle)) * length);
-
-        retVal[0] = (int) endX;
-        retVal[1] = (int) endY;
-
-        return retVal;
-    }
 }

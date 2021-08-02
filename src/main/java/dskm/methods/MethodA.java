@@ -10,6 +10,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -70,6 +71,10 @@ public class MethodA extends Method {
         setnTrials(blocks.size() * trials.size()); // Num. of trails = all the combinations (n x n)
     }
 
+
+    /**
+     * n-Trials is equal to radList.length x distList.length x 2 (2 because we "duplicate" each Trial one for the left side and one for the right side)
+     */
     public int getnTrials() {
         return nTrials;
     }
@@ -87,6 +92,9 @@ public class MethodA extends Method {
         }
     }
 
+    /**
+     * fills the trials ArrayList with trials, later used in the "createTrial" method where one random Trial is taken and removed from the trials ArrayList
+     */
     public void generateTrialList() {
         for (int i = 0; i < testConstellation.getNrRepetitions(); i++) {
             for (double cursorSize : cursorList) {
@@ -99,7 +107,7 @@ public class MethodA extends Method {
                     if (testConstellation.getTestType().equals(Config.TEST_TYPE_FITTS)) {
                         start = new Circle(Config.STACLE_X,
                                 Config.STACLE_Y,
-                                Config.STAREC_WIDTH/2);
+                                Config.STAREC_WIDTH / 2);
                         start.setColor(Config.STACLE_COLOR);
                         target = new Circle(Config.STACLE_X + distancePix,
                                 Config.STACLE_Y,
@@ -115,19 +123,19 @@ public class MethodA extends Method {
                         target = new Circle(0, 0, 0);
                     }
 
-                    TrialInfo trial = new TrialInfo("Method A",null,null,1,distancePix,
+                    TrialInfo trial = new TrialInfo("Method A", null, null, 1, distancePix,
                             1, //block number, will be updated later
                             1, //trial in block, will be updated later
                             distancePix, //distance pix
                             widthPix, //width pix
                             this.pixelSizeMM,
-                            new Circle(0,0,0),
+                            new Circle(0, 0, 0),
                             target,
                             start,
                             cursorSize,
                             this.participantID,
                             testConstellation.getTestType(),
-                            "fakeMovementDirection", null,0.0,0
+                            "fakeMovementDirection", new Point2D.Double(0, 0), 0.0, 0
                     );
 
                     //For Fitts, we need to duplicate each trial,
@@ -180,10 +188,6 @@ public class MethodA extends Method {
         return (int) (Math.rint(dim / this.pixelSizeMM));
     }
 
-    private double convertPIXtoMM(int dim) {
-        return Math.rint(dim * this.pixelSizeMM);
-    }
-
     public void createTrial() {
         if (blocks.get(0).size() == 0) {
             //The running block was just finished
@@ -209,7 +213,7 @@ public class MethodA extends Method {
             expSubject.onNext(Constants.MSSG_END_LOG);
             finishTestAndEnd();
         } else {// Create and send the panel to be drawn
-            DrawingPanel exPanel = new DrawingPanel(0,"MethodA",false);
+            DrawingPanel exPanel = new DrawingPanel(0, "MethodA", false);
             trialNum++;
             TrialInfo trialInfo = blocks.get(0).remove(0);
             for (CustomCursor cc : cursors) {
@@ -331,7 +335,7 @@ public class MethodA extends Method {
         //Now we have a suitable x and y for the start circle.
         //Set the start for the trial.
         trialInfo.setStart(new Circle(xPos, yPos,
-                Config.STAREC_WIDTH/2));
+                Config.STAREC_WIDTH / 2));
         //fitta
 
         //Now we need to calculate the corresponding target position

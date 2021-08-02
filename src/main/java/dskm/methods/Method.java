@@ -7,6 +7,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public abstract class Method {
+    /**
+     * This 6 methods are called by all sub-classes in the Experimenter class
+     */
     public abstract void generateRadiusDistancePairs();
 
     public abstract void generateTrialList();
