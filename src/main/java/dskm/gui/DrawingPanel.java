@@ -292,6 +292,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 currentTrialInfo.setPressPointXTarget(e.getX());
                 currentTrialInfo.setPressPointYTarget(e.getY());
 
+                this.currentTrialInfo.setTrialFirstPress(System.currentTimeMillis());
             } else {
                 //A press elsewhere
                 pressInStart = false;
@@ -299,6 +300,8 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 //System.out.println("Press Elsewhere – Running PAY ATTENTION");
                 currentTrialInfo.setPressPointXTarget(e.getX());
                 currentTrialInfo.setPressPointYTarget(e.getY());
+
+                this.currentTrialInfo.setTrialFirstPress(System.currentTimeMillis());
             }
         } else {
             //Only interested in a press inside the start button
