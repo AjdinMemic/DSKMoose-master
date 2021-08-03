@@ -283,7 +283,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 currentTrialInfo.setPressPointYStart(e.getY());
 
                 this.currentTrialInfo.setTrialFirstPress(System.currentTimeMillis());
-
+                this.currentTrialInfo.setTrialSecondClick(System.currentTimeMillis());
             } else if (isInTarget) {
                 //Press in target
                 pressInTarget = true;
@@ -293,6 +293,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 currentTrialInfo.setPressPointYTarget(e.getY());
 
                 this.currentTrialInfo.setTrialFirstPress(System.currentTimeMillis());
+                this.currentTrialInfo.setTrialSecondClick(System.currentTimeMillis());
             } else {
                 //A press elsewhere
                 pressInStart = false;
@@ -302,6 +303,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 currentTrialInfo.setPressPointYTarget(e.getY());
 
                 this.currentTrialInfo.setTrialFirstPress(System.currentTimeMillis());
+                this.currentTrialInfo.setTrialSecondClick(System.currentTimeMillis());
             }
         } else {
             //Only interested in a press inside the start button
@@ -425,6 +427,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 //System.out.println("Release in Target after press in target – END TRIAL IN TARGET");
                 pressInTarget = false;
                 hit = 1;
+                this.currentTrialInfo.setTrialSecondPress(System.currentTimeMillis());
             } else if (pressInTarget && !isInTarget) {
                 //The previous press was in target, this release outside target, log as miss
                 //System.out.println("Release outside Target after press in target – END TRIAL OUTSIDE TARGET");
@@ -438,6 +441,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 }
                 this.currentTrialInfo.setReleasePointXStart(e.getX());
                 this.currentTrialInfo.setReleasePointYStart(e.getY());
+                this.currentTrialInfo.setTrialSecondPress(System.currentTimeMillis());
             } else {
                 //The previous press was outside target, this release also outside target, log as miss
                 //System.out.println("Release outside Target after press outside target – END TRIAL OUTSIDE TARGET");
@@ -450,7 +454,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 }
                 this.currentTrialInfo.setReleasePointXStart(e.getX());
                 this.currentTrialInfo.setReleasePointYStart(e.getY());
-
+                this.currentTrialInfo.setTrialSecondPress(System.currentTimeMillis());
             }
             trialIsRunning = false;
             // Publish the click
@@ -464,6 +468,10 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
             long start =  this.currentTrialInfo.getTrialFirstClick();
             long end =  this.currentTrialInfo.getTrialFirstPress();
             this.currentTrialInfo.setTrialFirstClickPressTime((int) (end-start));
+
+            long start2 = this.currentTrialInfo.getTrialSecondClick();
+            long end2= this.currentTrialInfo.getTrialSecondPress();
+            this.currentTrialInfo.setTrialSecondClickPressTime((int)(end2-start2));
 
             Mologger.get().writeLogToFile(this.currentTrialInfo);
             // Go to the next experiment

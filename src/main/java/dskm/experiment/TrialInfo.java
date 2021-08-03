@@ -58,6 +58,7 @@ public class TrialInfo {
     private long trialSecondClick= 0;
 
     private int trialFirstClickPressTime = 0;
+    private int trialSecondClickPressTime = 0;
 
     private int hit = 0;
     private int trialNumInTest = 0;
@@ -399,6 +400,7 @@ public class TrialInfo {
                 trialFirstClickPressTime + ";"+
                 trialSecondClick+ ";"+
                 trialSecondPress+ ";"+
+                trialSecondClickPressTime+
                 "";
     }
 
@@ -471,8 +473,8 @@ public class TrialInfo {
                         "trialFirstPress" + ";"+
                         "trialFirstClickPressTime" + ";"+
                         "trialSecondClick"+ ";"+
-                        "trialSecondPress"+
-
+                        "trialSecondPress"+";"+
+"trialSecondClickPressTime"+
                         "\n";
         TrialInfo.headerLineIsWritten = true;
         return headerLine;
@@ -586,5 +588,9 @@ public class TrialInfo {
 
     public void setTrialFirstClickPressTime(int trialFirstClickPressTime) {
         this.trialFirstClickPressTime = trialFirstClickPressTime;
+    }
+
+    public void setTrialSecondClickPressTime(int trialSecondClickPressTime) {
+        this.trialSecondClickPressTime = trialSecondClickPressTime;
     }
 }
