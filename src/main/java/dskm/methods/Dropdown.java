@@ -325,7 +325,7 @@ public class Dropdown extends Method {
             //from the yPosition of the previous target, otherwise the
             //new target might be under the cursor position.
             while (!posOK) {
-                xPos = generateRandomPosition(bot, top);
+                xPos = generateRandomPosition(min, max);
                 int distanceToPrevious = (int) trialInfo.calculateEucDistance("pix",
                         new Point(previousTarget.getCenterX(), xPos),
                         new Point(previousTarget.getCenterX(),

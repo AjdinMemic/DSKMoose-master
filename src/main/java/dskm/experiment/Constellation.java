@@ -36,7 +36,7 @@ public enum Constellation {
         this.nrRepetitions = nrRepetitions;
 
         if(this.testType.equals("Fitts")){
-            radList = ImmutableList.of(2.4, 4.8, 7.2, 10.0, 15.0, 20.0, 25.0);
+            radList = ImmutableList.of(2.4, 4.9, 7.2, 10.0, 15.0, 20.0, 25.0);
             distList = ImmutableList.of(50.0, 110.0, 150.0);
             cursorList = ImmutableList.of(this.cursorSizeMM);
         }else{

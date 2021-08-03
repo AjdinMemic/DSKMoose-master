@@ -73,10 +73,6 @@ public class MainFrame extends JFrame {
      */
     public static void main(String[] args) {
 
-        GraphicsEnvironment graphics =
-                GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice device = graphics.getDefaultScreenDevice();
-
         JFrame windowFrame = MainFrame.getFrame();
 //        JPanel mainPanel = mainForm.panel1;
 
@@ -96,7 +92,7 @@ public class MainFrame extends JFrame {
         windowFrame.setVisible(true);
         windowFrame.setResizable(false);
 
-        device.setFullScreenWindow(windowFrame);
+
         // Start the server
         //MooseServer.get().start();
 
