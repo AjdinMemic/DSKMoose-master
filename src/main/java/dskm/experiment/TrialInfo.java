@@ -52,6 +52,13 @@ public class TrialInfo {
     private long trialEndTime = 0;
     private int trialTime = 0;
 
+    private long trialFirstPress = 0;
+    private long trialFirstClick = 0;
+    private long trialSecondPress= 0;
+    private long trialSecondClick= 0;
+
+    private int trialFirstClickPressTime = 0;
+
     private int hit = 0;
     private int trialNumInTest = 0;
 
@@ -386,7 +393,12 @@ public class TrialInfo {
                 hit + ";" +
                 trialStartTime + ";" +
                 trialEndTime + ";" +
-                trialTime +
+                trialTime + ";"+
+                trialFirstClick + ";"+
+                trialFirstPress+ ";"+
+                trialFirstClickPressTime + ";"+
+                trialSecondClick+ ";"+
+                trialSecondPress+ ";"+
                 "";
     }
 
@@ -454,7 +466,13 @@ public class TrialInfo {
                         "hit" + ";" +
                         "trialStartTime" + ";" +
                         "trialEndTime" + ";" +
-                        "trialTime" +
+                        "trialTime" + ";"+
+                        "trialFirstClick" + ";"+
+                        "trialFirstPress" + ";"+
+                        "trialFirstClickPressTime" + ";"+
+                        "trialSecondClick"+ ";"+
+                        "trialSecondPress"+
+
                         "\n";
         TrialInfo.headerLineIsWritten = true;
         return headerLine;
@@ -532,5 +550,41 @@ public class TrialInfo {
 
     public void setRandomRadNum(double randomRadNum) {
         this.randomRadNum = randomRadNum;
+    }
+
+    public void setTrialFirstPress(long trialFirstPress) {
+        this.trialFirstPress = trialFirstPress;
+    }
+
+    public void setTrialFirstClick(long trialFirstClick) {
+        this.trialFirstClick = trialFirstClick;
+    }
+
+    public void setTrialSecondPress(long trialSecondPress) {
+        this.trialSecondPress = trialSecondPress;
+    }
+
+    public void setTrialSecondClick(long trialSecondClick) {
+        this.trialSecondClick = trialSecondClick;
+    }
+
+    public long getTrialFirstPress() {
+        return trialFirstPress;
+    }
+
+    public long getTrialFirstClick() {
+        return trialFirstClick;
+    }
+
+    public long getTrialSecondPress() {
+        return trialSecondPress;
+    }
+
+    public long getTrialSecondClick() {
+        return trialSecondClick;
+    }
+
+    public void setTrialFirstClickPressTime(int trialFirstClickPressTime) {
+        this.trialFirstClickPressTime = trialFirstClickPressTime;
     }
 }

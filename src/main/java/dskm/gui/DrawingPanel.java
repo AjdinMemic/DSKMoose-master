@@ -281,6 +281,9 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 //System.out.println("Press in Start – Running PAY ATTENTION");
                 currentTrialInfo.setPressPointXStart(e.getX());
                 currentTrialInfo.setPressPointYStart(e.getY());
+
+                this.currentTrialInfo.setTrialFirstPress(System.currentTimeMillis());
+
             } else if (isInTarget) {
                 //Press in target
                 pressInTarget = true;
@@ -288,6 +291,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 //System.out.println("Press in Target - Running PAY ATTENTION");
                 currentTrialInfo.setPressPointXTarget(e.getX());
                 currentTrialInfo.setPressPointYTarget(e.getY());
+
             } else {
                 //A press elsewhere
                 pressInStart = false;
@@ -311,12 +315,16 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 pressInStart = false;
                 //System.out.println("Press in Target - Not running IGNORE");
                 Toolkit.getDefaultToolkit().beep();
+                currentTrialInfo.setPressPointXTarget(e.getX());
+                currentTrialInfo.setPressPointYTarget(e.getY());
             } else {
                 //A press elsewhere
                 pressInStart = false;
                 pressInTarget = false;
                 //System.out.println("Press Elsewhere – Not running IGNORE");
                 Toolkit.getDefaultToolkit().beep();
+                currentTrialInfo.setPressPointXTarget(e.getX());
+                currentTrialInfo.setPressPointYTarget(e.getY());
             }
         }
     }
@@ -367,6 +375,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 pressInStart = false;
                 trialIsRunning = true;
                 this.currentTrialInfo.setTrialStartTime(System.currentTimeMillis());
+                this.currentTrialInfo.setTrialFirstClick(System.currentTimeMillis());
                 Mologger.get().log(e);
                 // Publish the event
                 mouseSubject.onNext(e);
@@ -381,6 +390,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 this.currentTrialInfo.setReleasePointXStart(e.getX());
                 this.currentTrialInfo.setReleasePointYStart(e.getY());
                 this.repaint();
+
             } else if (pressInStart && !isInStart) {
                 //A mismatch with the previous press in start
                 //System.out.println("Release outside Start after press in start – IGNORE");
@@ -423,6 +433,8 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 } catch (Exception exc) {
                     exc.printStackTrace(System.out);
                 }
+                this.currentTrialInfo.setReleasePointXStart(e.getX());
+                this.currentTrialInfo.setReleasePointYStart(e.getY());
             } else {
                 //The previous press was outside target, this release also outside target, log as miss
                 //System.out.println("Release outside Target after press outside target – END TRIAL OUTSIDE TARGET");
@@ -433,6 +445,9 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 } catch (Exception exc) {
                     exc.printStackTrace(System.out);
                 }
+                this.currentTrialInfo.setReleasePointXStart(e.getX());
+                this.currentTrialInfo.setReleasePointYStart(e.getY());
+
             }
             trialIsRunning = false;
             // Publish the click
@@ -443,10 +458,13 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
             this.currentTrialInfo.setReleasePointYTarget(e.getY());
             this.currentTrialInfo.setHit(hit);
 
+            long start =  this.currentTrialInfo.getTrialFirstClick();
+            long end =  this.currentTrialInfo.getTrialFirstPress();
+            this.currentTrialInfo.setTrialFirstClickPressTime((int) (end-start));
+
             Mologger.get().writeLogToFile(this.currentTrialInfo);
             // Go to the next experiment
             Experimenter.method.createTrial();
-
         }
     }
 
