@@ -52,13 +52,13 @@ public class TrialInfo {
     private long trialEndTime = 0;
     private int trialTime = 0;
 
-    private long trialFirstPress = 0;
-    private long trialFirstClick = 0;
-    private long trialSecondPress= 0;
-    private long trialSecondClick= 0;
+    private long trialStartPressTime = 0;
+    private long trialStartReleaseTime = 0;
+    private long trialTargetPressTime = 0;
+    private long trialTargetReleaseTime = 0;
 
-    private int trialFirstClickPressTime = 0;
-    private int trialSecondClickPressTime = 0;
+    private int diffStartPressReleaseTime = 0;
+    private int diffTargetPressReleaseTime = 0;
 
     private int hit = 0;
     private int trialNumInTest = 0;
@@ -395,12 +395,12 @@ public class TrialInfo {
                 trialStartTime + ";" +
                 trialEndTime + ";" +
                 trialTime + ";"+
-                trialFirstClick + ";"+
-                trialFirstPress+ ";"+
-                trialFirstClickPressTime + ";"+
-                trialSecondClick+ ";"+
-                trialSecondPress+ ";"+
-                trialSecondClickPressTime+
+                trialStartReleaseTime + ";"+
+                trialStartPressTime + ";"+
+                diffStartPressReleaseTime + ";"+
+                trialTargetReleaseTime + ";"+
+                trialTargetPressTime + ";"+
+                diffTargetPressReleaseTime +
                 "";
     }
 
@@ -469,12 +469,12 @@ public class TrialInfo {
                         "trialStartTime" + ";" +
                         "trialEndTime" + ";" +
                         "trialTime" + ";"+
-                        "trialFirstClick" + ";"+
-                        "trialFirstPress" + ";"+
-                        "trialFirstClickPressTime" + ";"+
-                        "trialSecondClick"+ ";"+
-                        "trialSecondPress"+";"+
-"trialSecondClickPressTime"+
+                        "trialStartPressTime" + ";"+
+                        "trialStartReleaseTime" + ";"+
+                        "diffStartPressReleaseTime" + ";"+
+                        "trialTargetPressTime"+ ";"+
+                        "trialTargetReleaseTime"+";"+
+"diffTargetPressReleaseTime"+
                         "\n";
         TrialInfo.headerLineIsWritten = true;
         return headerLine;
@@ -554,43 +554,43 @@ public class TrialInfo {
         this.randomRadNum = randomRadNum;
     }
 
-    public void setTrialFirstPress(long trialFirstPress) {
-        this.trialFirstPress = trialFirstPress;
+    public void setTrialStartPressTime(long trialStartPressTime) {
+        this.trialStartPressTime = trialStartPressTime;
     }
 
-    public void setTrialFirstClick(long trialFirstClick) {
-        this.trialFirstClick = trialFirstClick;
+    public void setTrialStartReleaseTime(long trialStartReleaseTime) {
+        this.trialStartReleaseTime = trialStartReleaseTime;
     }
 
-    public void setTrialSecondPress(long trialSecondPress) {
-        this.trialSecondPress = trialSecondPress;
+    public void setTrialTargetPressTime(long trialTargetPressTime) {
+        this.trialTargetPressTime = trialTargetPressTime;
     }
 
-    public void setTrialSecondClick(long trialSecondClick) {
-        this.trialSecondClick = trialSecondClick;
+    public void setTrialTargetReleaseTime(long trialTargetReleaseTime) {
+        this.trialTargetReleaseTime = trialTargetReleaseTime;
     }
 
-    public long getTrialFirstPress() {
-        return trialFirstPress;
+    public long getTrialStartPressTime() {
+        return trialStartPressTime;
     }
 
-    public long getTrialFirstClick() {
-        return trialFirstClick;
+    public long getTrialStartReleaseTime() {
+        return trialStartReleaseTime;
     }
 
-    public long getTrialSecondPress() {
-        return trialSecondPress;
+    public long getTrialTargetPressTime() {
+        return trialTargetPressTime;
     }
 
-    public long getTrialSecondClick() {
-        return trialSecondClick;
+    public long getTrialTargetReleaseTime() {
+        return trialTargetReleaseTime;
     }
 
-    public void setTrialFirstClickPressTime(int trialFirstClickPressTime) {
-        this.trialFirstClickPressTime = trialFirstClickPressTime;
+    public void setDiffStartPressReleaseTime(int diffStartPressReleaseTime) {
+        this.diffStartPressReleaseTime = diffStartPressReleaseTime;
     }
 
-    public void setTrialSecondClickPressTime(int trialSecondClickPressTime) {
-        this.trialSecondClickPressTime = trialSecondClickPressTime;
+    public void setDiffTargetPressReleaseTime(int diffTargetPressReleaseTime) {
+        this.diffTargetPressReleaseTime = diffTargetPressReleaseTime;
     }
 }
