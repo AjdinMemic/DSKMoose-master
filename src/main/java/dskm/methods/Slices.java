@@ -369,7 +369,7 @@ public class Slices extends Method {
                     posOK = true;
                 }
             } else if (trialInfo.getQuartile().equals("SO") || trialInfo.getQuartile().equals("SW")) {
-                if (distanceToPrevious > (20 + trialInfo.getCursorSizePix()) && yPos - trialInfo.getDistancePix() < bot) {
+                if (distanceToPrevious > (20 + trialInfo.getCursorSizePix()) && yPos - trialInfo.getDistancePix() - trialInfo.getTarget().getRadius() < bot) {
                     System.out.println("yPos " + yPos + " - distance"+trialInfo.getDistancePix()+ "  smaller then "+ bot);
                     posOK = true;
                 }
