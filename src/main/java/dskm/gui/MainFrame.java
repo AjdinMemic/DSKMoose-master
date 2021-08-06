@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 
 import dskm.connection.*;
 import dskm.experiment.Experimenter;
+import dskm.experiment.Mologger;
 
 
 public class MainFrame extends JFrame {

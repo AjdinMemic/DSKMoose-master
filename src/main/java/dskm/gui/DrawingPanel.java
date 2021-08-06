@@ -1,5 +1,6 @@
 package dskm.gui;
 
+import com.google.common.base.Stopwatch;
 import dskm.Config;
 import dskm.experiment.Experimenter;
 import dskm.experiment.Mologger;
@@ -42,6 +43,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
     TrialInfo currentTrialInfo = null;
     boolean trialIsRunning = false;
     String method = "";
+    static int trianNRLog=1;
 
     // Publishing all the movements
     private static PublishSubject<MouseEvent> mouseSubject;
@@ -55,7 +57,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
     public void setN(int n) {
         this.n = n;
     }
-
+    Stopwatch stopwatch=Stopwatch.createStarted();
     /***
      * Constructor
      */
@@ -235,7 +237,11 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
     @Override
     public void mousePressed(MouseEvent e) {
         if (this.currentTrialInfo.getTestType().equals(Config.TEST_TYPE_FITTS)) {
-            mousePressedFitts(e);
+            try {
+                mousePressedFitts(e);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         } else {
             // calibration
             mousePressedCalib(e);
@@ -260,10 +266,9 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
         }
     }
 
-    private void mousePressedFitts(MouseEvent e) {
+    private void mousePressedFitts(MouseEvent e) throws IOException {
         //System.out.println("mouse pressed: " + e.getX() + ", " + e.getY());
         boolean isInStart;
-
         if (method.equals("MethodA") || method.equals("MethodC") || Experimenter.methodType.equals("MethodC2") || Experimenter.methodType.equals("MethodD")) {
             isInStart = stCircle2.isInside(e.getX(), e.getY());
         } else {
@@ -278,9 +283,12 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 //Press in start
                 pressInStart = true;
                 pressInTarget = false;
+
                 //System.out.println("Press in Start – Running PAY ATTENTION");
                 currentTrialInfo.setPressPointXStart(e.getX());
                 currentTrialInfo.setPressPointYStart(e.getY());
+
+                Mologger.get().log(e,"CLICKED IN START", trianNRLog,stopwatch.toString());
             } else if (isInTarget) {
                 //Press in target
                 pressInTarget = true;
@@ -288,6 +296,9 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 //System.out.println("Press in Target - Running PAY ATTENTION");
                 currentTrialInfo.setPressPointXTarget(e.getX());
                 currentTrialInfo.setPressPointYTarget(e.getY());
+
+                Mologger.get().log(e,"CLICKED IN TARGET", trianNRLog,stopwatch.toString());
+                trianNRLog++;
             } else {
                 //A press elsewhere
                 pressInStart = false;
@@ -295,6 +306,9 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 //System.out.println("Press Elsewhere – Running PAY ATTENTION");
                 currentTrialInfo.setPressPointXTarget(e.getX());
                 currentTrialInfo.setPressPointYTarget(e.getY());
+
+                Mologger.get().log(e,"CLICKED ELSEWHERE", trianNRLog,stopwatch.toString());
+                trianNRLog++;
             }
         } else {
             //Only interested in a press inside the start button
@@ -308,6 +322,9 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
 
                 this.currentTrialInfo.setTrialStartPressTime(System.currentTimeMillis());
                 this.currentTrialInfo.setTrialTargetReleaseTime(System.currentTimeMillis());
+                stopwatch.reset();
+                stopwatch.start();
+                Mologger.get().log(e,"CLICKED IN START", trianNRLog,stopwatch.toString());
             } else if (isInTarget) {
                 //Press in target
                 pressInTarget = true;
@@ -319,6 +336,9 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
 
                 this.currentTrialInfo.setTrialStartPressTime(System.currentTimeMillis());
                 this.currentTrialInfo.setTrialTargetReleaseTime(System.currentTimeMillis());
+
+
+                Mologger.get().log(e,"CLICKED IN TARGET", trianNRLog,stopwatch.toString());
             } else {
                 //A press elsewhere
                 pressInStart = false;
@@ -330,6 +350,8 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
 
                 this.currentTrialInfo.setTrialStartPressTime(System.currentTimeMillis());
                 this.currentTrialInfo.setTrialTargetReleaseTime(System.currentTimeMillis());
+
+                Mologger.get().log(e,"CLICKED ELSEWHERE", trianNRLog,stopwatch.toString());
             }
         }
     }
@@ -381,7 +403,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 trialIsRunning = true;
                 this.currentTrialInfo.setTrialStartTime(System.currentTimeMillis());
                 this.currentTrialInfo.setTrialStartReleaseTime(System.currentTimeMillis());
-                Mologger.get().log(e);
+                Mologger.get().log(e,"RELEASED", trianNRLog,stopwatch.toString());
                 // Publish the event
                 mouseSubject.onNext(e);
 
@@ -459,7 +481,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
             trialIsRunning = false;
             // Publish the click
             mouseSubject.onNext(e);
-            Mologger.get().log(e);
+            Mologger.get().log(e,"RELEASED", trianNRLog,stopwatch.toString());
             this.currentTrialInfo.setTrialEndTime(System.currentTimeMillis());
             this.currentTrialInfo.setReleasePointXTarget(e.getX());
             this.currentTrialInfo.setReleasePointYTarget(e.getY());
@@ -520,7 +542,8 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
         trialIsRunning = false;
         // Publish the click
         mouseSubject.onNext(e);
-        Mologger.get().log(e);
+
+        Mologger.get().log(e," test ", trianNRLog,stopwatch.toString());
         this.currentTrialInfo.setTrialStartTime(System.currentTimeMillis());
         this.currentTrialInfo.setTrialEndTime(System.currentTimeMillis());
         this.currentTrialInfo.setReleasePointXTarget(e.getX());
@@ -553,7 +576,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
             // Publish the movement
 //            mouseSubject.onNext(e);
             try {
-                Mologger.get().log(e);
+                Mologger.get().log(e,"MOVED", trianNRLog,stopwatch.toString());
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }

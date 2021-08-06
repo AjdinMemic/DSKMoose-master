@@ -1,5 +1,6 @@
 package dskm.experiment;
 
+import com.sun.jdi.IntegerValue;
 import dskm.Constants;
 import dskm.Config;
 import dskm.gui.DrawingPanel;
@@ -21,7 +22,7 @@ public class Mologger {
     private List<Molog> logList = new ArrayList<>();
     private List<MouseEvent>[] logDB;
 
-    private PrintWriter logFile;
+    public static PrintWriter logFile;
 
     /***
      * Constructor
@@ -83,6 +84,9 @@ public class Mologger {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        Mologger.logFile.println("MOUSE MOVEMENT;X;Y;trialNumInTest;time;");
+        logFile.flush();
     }
 
     /**
@@ -90,11 +94,24 @@ public class Mologger {
      *
      * @param e MouseEvent
      */
-    public void log(MouseEvent e) {
+
+    public void log(MouseEvent e,String s,int trialNr,String time) {
+
         //System.out.println(e.paramString());
         // Write the info to the file
-        if (logFile != null) logFile.println(e.paramString());
+        //if (logFile != null) logFile.println(e.paramString());
+       // if (logFile != null) logFile.println("0");
+        StringBuilder str = new StringBuilder(80);
+        str.append(s).append(";").append(e.getX()).append(";").append(e.getY()).append(";").append(trialNr).append(";").append(time);
+        if(logFile != null) logFile.println(str.toString());
+        logFile.flush();
     }
+
+   // public void log(String s){
+        /*StringBuilder str = new StringBuilder(400);
+        str.append(s).append(";").append(s).append(";").append(s).append(";");
+        if(logFile != null) logFile.println(str);*/
+ //   }
 
     /***
      * Put the log in the list
