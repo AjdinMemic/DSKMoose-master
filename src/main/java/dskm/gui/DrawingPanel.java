@@ -43,7 +43,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
     TrialInfo currentTrialInfo = null;
     boolean trialIsRunning = false;
     String method = "";
-    static int trianNRLog=1;
+    static int trianNRLog=0;
 
     // Publishing all the movements
     private static PublishSubject<MouseEvent> mouseSubject;
@@ -298,7 +298,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 currentTrialInfo.setPressPointYTarget(e.getY());
 
                 Mologger.get().log(e,"CLICKED IN TARGET", trianNRLog,stopwatch.toString());
-                trianNRLog++;
+
             } else {
                 //A press elsewhere
                 pressInStart = false;
@@ -308,11 +308,12 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 currentTrialInfo.setPressPointYTarget(e.getY());
 
                 Mologger.get().log(e,"CLICKED ELSEWHERE", trianNRLog,stopwatch.toString());
-                trianNRLog++;
+
             }
         } else {
             //Only interested in a press inside the start button
             if (isInStart) {
+                trianNRLog++;
                 //Press in start
                 pressInStart = true;
                 pressInTarget = false;
