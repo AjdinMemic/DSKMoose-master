@@ -85,7 +85,7 @@ public class Mologger {
             e.printStackTrace();
         }
 
-        Mologger.logFile.println("MOUSE MOVEMENT;X;Y;trialNumInTest;time;");
+        Mologger.logFile.println("MOUSE MOVEMENT;X;Y;trialNumInTest;time (StopWatch);mouse button;time (System.currentTimeMillis())");
         logFile.flush();
     }
 
@@ -95,16 +95,46 @@ public class Mologger {
      * @param e MouseEvent
      */
 
-    public void log(MouseEvent e,String s,int trialNr,String time) {
+    static long oldTime=0;
+    static long newTime=0;
 
-        //System.out.println(e.paramString());
-        // Write the info to the file
-        //if (logFile != null) logFile.println(e.paramString());
-       // if (logFile != null) logFile.println("0");
-        StringBuilder str = new StringBuilder(80);
-        str.append(s).append(";").append(e.getX()).append(";").append(e.getY()).append(";").append(trialNr).append(";").append(time);
+    public void log(MouseEvent e,String s,int trialNr,String time) {
+        if(oldTime==0){
+            oldTime=System.currentTimeMillis();
+        }
+        newTime=System.currentTimeMillis();
+        int time2= (int) (newTime-oldTime);
+        oldTime=newTime;
+
+        String button="";
+        int leftAndRight = MouseEvent.BUTTON1_DOWN_MASK | MouseEvent.BUTTON3_DOWN_MASK;
+        int leftAndMiddle= MouseEvent.BUTTON1_DOWN_MASK | MouseEvent.BUTTON2_DOWN_MASK;
+        int rigthAndMiddle= MouseEvent.BUTTON3_DOWN_MASK | MouseEvent.BUTTON2_DOWN_MASK;
+
+            if((e.getModifiersEx() & leftAndRight)==leftAndRight){
+                button="Left + Right";
+            }else if((e.getModifiersEx()&leftAndMiddle)==leftAndMiddle){
+                button="Left + Middle";
+            }else if((e.getModifiersEx()&rigthAndMiddle)==rigthAndMiddle){
+                button="Right + Middle";
+            }else if((e.getModifiersEx()&MouseEvent.BUTTON1_DOWN_MASK)==MouseEvent.BUTTON1_DOWN_MASK){
+                button="Left";
+            }else if((e.getModifiersEx()&MouseEvent.BUTTON2_DOWN_MASK)==MouseEvent.BUTTON2_DOWN_MASK){
+                button="Middle";
+            }else if((e.getModifiersEx()&MouseEvent.BUTTON3_DOWN_MASK)==MouseEvent.BUTTON3_DOWN_MASK){
+                button="Right";
+            }
+
+            if(s.equals("MOVED")){
+                button="/";
+            }
+
+        StringBuilder str = new StringBuilder(200);
+        str.append(s).append(";").append(e.getX()).append(";").append(e.getY()).append(";").append(trialNr).append(";").append(time).append(";").append(button).append(";").append(time2);
         if(logFile != null) logFile.println(str.toString());
         logFile.flush();
+
+
     }
 
    // public void log(String s){

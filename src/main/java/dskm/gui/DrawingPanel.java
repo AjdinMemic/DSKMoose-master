@@ -288,7 +288,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 currentTrialInfo.setPressPointXStart(e.getX());
                 currentTrialInfo.setPressPointYStart(e.getY());
 
-                Mologger.get().log(e,"CLICKED IN START", trianNRLog,stopwatch.toString());
+                Mologger.get().log(e,"PRESSED IN START", trianNRLog,stopwatch.toString());
             } else if (isInTarget) {
                 //Press in target
                 pressInTarget = true;
@@ -297,7 +297,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 currentTrialInfo.setPressPointXTarget(e.getX());
                 currentTrialInfo.setPressPointYTarget(e.getY());
 
-                Mologger.get().log(e,"CLICKED IN TARGET", trianNRLog,stopwatch.toString());
+                Mologger.get().log(e,"PRESSED IN TARGET", trianNRLog,stopwatch.toString());
 
             } else {
                 //A press elsewhere
@@ -307,7 +307,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 currentTrialInfo.setPressPointXTarget(e.getX());
                 currentTrialInfo.setPressPointYTarget(e.getY());
 
-                Mologger.get().log(e,"CLICKED ELSEWHERE", trianNRLog,stopwatch.toString());
+                Mologger.get().log(e,"PRESSED ELSEWHERE", trianNRLog,stopwatch.toString());
 
             }
         } else {
@@ -325,7 +325,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 this.currentTrialInfo.setTrialTargetReleaseTime(System.currentTimeMillis());
                 stopwatch.reset();
                 stopwatch.start();
-                Mologger.get().log(e,"CLICKED IN START", trianNRLog,stopwatch.toString());
+                Mologger.get().log(e,"PRESSED IN START", trianNRLog,stopwatch.toString());
             } else if (isInTarget) {
                 //Press in target
                 pressInTarget = true;
@@ -339,7 +339,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 this.currentTrialInfo.setTrialTargetReleaseTime(System.currentTimeMillis());
 
 
-                Mologger.get().log(e,"CLICKED IN TARGET", trianNRLog,stopwatch.toString());
+                Mologger.get().log(e,"PRESSED IN TARGET", trianNRLog,stopwatch.toString());
             } else {
                 //A press elsewhere
                 pressInStart = false;
@@ -352,7 +352,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 this.currentTrialInfo.setTrialStartPressTime(System.currentTimeMillis());
                 this.currentTrialInfo.setTrialTargetReleaseTime(System.currentTimeMillis());
 
-                Mologger.get().log(e,"CLICKED ELSEWHERE", trianNRLog,stopwatch.toString());
+                Mologger.get().log(e,"PRESSED ELSEWHERE", trianNRLog,stopwatch.toString());
             }
         }
     }
