@@ -85,7 +85,7 @@ public class Mologger {
             e.printStackTrace();
         }
 
-        Mologger.logFile.println("MOUSE MOVEMENT;X;Y;trialNumInTest;time (StopWatch);mouse button;time (System.currentTimeMillis())");
+        Mologger.logFile.println("MOUSE MOVEMENT;X;Y;trialNumInTest;mouse button;time (System.currentTimeMillis());current time long");
         logFile.flush();
     }
 
@@ -98,13 +98,24 @@ public class Mologger {
     static long oldTime=0;
     static long newTime=0;
 
+    static double timeStopWatchStart=0;
+    static double timeStopWatchEnd=0;
+
     public void log(MouseEvent e,String s,int trialNr,String time) {
-        if(oldTime==0){
+        if(timeStopWatchStart==0){
+            timeStopWatchStart=splitStopWatch(time);
+        }
+        timeStopWatchEnd=splitStopWatch(time);
+        double time1=timeStopWatchEnd-timeStopWatchStart;
+        timeStopWatchStart=timeStopWatchEnd;
+
+        if(oldTime==0 || s.equals("PRESSED IN START")){
             oldTime=System.currentTimeMillis();
         }
         newTime=System.currentTimeMillis();
         int time2= (int) (newTime-oldTime);
         oldTime=newTime;
+
 
         String button="";
         int leftAndRight = MouseEvent.BUTTON1_DOWN_MASK | MouseEvent.BUTTON3_DOWN_MASK;
@@ -126,11 +137,14 @@ public class Mologger {
             }
 
             if(s.equals("MOVED")){
-                button="/";
+                button="M";
+            }
+            if(s.equals("RELEASED")){
+            button="R";
             }
 
         StringBuilder str = new StringBuilder(200);
-        str.append(s).append(";").append(e.getX()).append(";").append(e.getY()).append(";").append(trialNr).append(";").append(time).append(";").append(button).append(";").append(time2);
+        str.append(s).append(";").append(e.getX()).append(";").append(e.getY()).append(";").append(trialNr).append(";").append(button).append(";").append(time2).append(";").append(newTime);
         if(logFile != null) logFile.println(str.toString());
         logFile.flush();
 
@@ -188,5 +202,13 @@ public class Mologger {
             ex.printStackTrace();
             System.out.println("Problem in Writing log to the file");
         }
+    }
+
+    public double splitStopWatch(String s){
+        String[] arrSplit = s.split(" ");
+        String numb=arrSplit[0];
+        double retVal=Double.valueOf(numb);
+
+        return retVal;
     }
 }

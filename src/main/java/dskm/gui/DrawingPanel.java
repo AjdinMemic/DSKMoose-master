@@ -57,7 +57,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
     public void setN(int n) {
         this.n = n;
     }
-    Stopwatch stopwatch=Stopwatch.createStarted();
+    Stopwatch stopwatch=Stopwatch.createUnstarted();
     /***
      * Constructor
      */
@@ -287,7 +287,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 //System.out.println("Press in Start – Running PAY ATTENTION");
                 currentTrialInfo.setPressPointXStart(e.getX());
                 currentTrialInfo.setPressPointYStart(e.getY());
-
+                stopwatch.reset();
                 Mologger.get().log(e,"PRESSED IN START", trianNRLog,stopwatch.toString());
             } else if (isInTarget) {
                 //Press in target
@@ -296,7 +296,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 //System.out.println("Press in Target - Running PAY ATTENTION");
                 currentTrialInfo.setPressPointXTarget(e.getX());
                 currentTrialInfo.setPressPointYTarget(e.getY());
-
+                stopwatch.reset();
                 Mologger.get().log(e,"PRESSED IN TARGET", trianNRLog,stopwatch.toString());
 
             } else {
@@ -306,7 +306,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 //System.out.println("Press Elsewhere – Running PAY ATTENTION");
                 currentTrialInfo.setPressPointXTarget(e.getX());
                 currentTrialInfo.setPressPointYTarget(e.getY());
-
+                stopwatch.reset();
                 Mologger.get().log(e,"PRESSED ELSEWHERE", trianNRLog,stopwatch.toString());
 
             }
