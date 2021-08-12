@@ -440,7 +440,7 @@ public class TrialInfo {
                         "startPosY" + ";" +
                         "startCenterX" + ";" +
                         "startCenterY" + ";" +
-                        "startRadius" + ";" +
+                        "startRadius (Only for Circle Method!)" + ";" +
                         "numberOfCircles"+ ";" +
                         "distBetCircleMM"+ ";" +
                         "allCircleFlag"  + ";" +

@@ -34,8 +34,8 @@ public class Experimenter {
         int monitorPPI = Toolkit.getDefaultToolkit().getScreenResolution();
         //System.out.println(Toolkit.getDefaultToolkit().getScreenSize());
         pixelSizeMM = 25.4 / monitorPPI;
-        System.out.println("monitorPPI: "+monitorPPI);
-        System.out.println("pixelSizeMM: "+ pixelSizeMM);
+        System.out.println("monitorPPI: " + monitorPPI);
+        System.out.println("pixelSizeMM: " + pixelSizeMM);
         trials = new ArrayList<TrialInfo>();
         blocks = new ArrayList<ArrayList<TrialInfo>>();
         System.out.println(MainFrame.getFrame().getWidth());
@@ -46,24 +46,27 @@ public class Experimenter {
      * @param methodType
      */
     public void startExperiment(String methodType) throws IOException {
-        this.methodType=methodType;
+        this.methodType = methodType;
         System.out.println("Experiment started.");
 
         if (methodType.equals("MethodA")) {
-            method = new Horizontal();
+            method = new Horizontal(true);
             System.out.println("Method A");
         } else if (methodType.equals("MethodB")) {
-            method = new Circles(9,true); // radius and distBetCircle in mm! // distBetCirle = distance from center of c[N] to center c[N+length/2]
+            method = new Circles(9, true); // radius and distBetCircle in mm! // distBetCirle = distance from center of c[N] to center c[N+length/2]
             System.out.println("Method B");
-        }else if (methodType.equals("MethodC")){
+        } else if (methodType.equals("MethodC")) {
             method = new FixedSlices();
             System.out.println("Method C");
-        }else if (methodType.equals("MethodC2")){
-        method = new Slices(8); // 2,4,6,8,10...
-        System.out.println("Method C2");
-          }else if (methodType.equals("MethodD")){
+        } else if (methodType.equals("MethodC2")) {
+            method = new Slices(8); // 2,4,6,8,10...
+            System.out.println("Method C2");
+        } else if (methodType.equals("MethodD")) {
             method = new Dropdown();
             System.out.println("Method D");
+        } else if (methodType.equals("MethodE")) {
+            method = new SlicesInMiddle(9,true );
+            System.out.println("Method E");
         }
 
         method.methodSetup();

@@ -3,6 +3,9 @@ package dskm.experiment;
 import com.google.common.collect.ImmutableList;
 import dskm.Config;
 
+import java.awt.*;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.List;
 
 public enum Constellation {
@@ -25,7 +28,7 @@ public enum Constellation {
     private List<Double> radList;
     private List<Double> distList;
     private List<Double> cursorList;
-
+    private ArrayList<Point2D.Double> tupels=new ArrayList<>();
     private Constellation(String testType,
                           double cursorSizeMM,
                           int nrBlocks,
@@ -39,6 +42,19 @@ public enum Constellation {
             radList = ImmutableList.of(2.4, 4.9, 7.2, 10.0, 15.0, 20.0, 25.0);
             distList = ImmutableList.of(50.0, 110.0, 150.0);
             cursorList = ImmutableList.of(this.cursorSizeMM);
+
+            tupels.add(new Point2D.Double(2.4,50.0));
+            tupels.add(new Point2D.Double(2.4,110.0));
+            tupels.add(new Point2D.Double(2.4,150.0));
+            tupels.add(new Point2D.Double(4.9,50.0));
+            tupels.add(new Point2D.Double(4.9,110.0));
+            tupels.add(new Point2D.Double(4.9,150.0));
+            tupels.add(new Point2D.Double(7.2,50.0));
+            tupels.add(new Point2D.Double(7.2,110.0));
+            tupels.add(new Point2D.Double(7.2,150.0));
+            tupels.add(new Point2D.Double(10.0,50.0));
+            tupels.add(new Point2D.Double(10.0,110.0));
+            tupels.add(new Point2D.Double(10.0,150.0));
         }else{
             radList = ImmutableList.of(2.4);
             distList = ImmutableList.of(0.0);
@@ -72,5 +88,9 @@ public enum Constellation {
 
     public List<Double> getCursorList() {
         return cursorList;
+    }
+
+    public ArrayList<Point2D.Double> getTupels() {
+        return tupels;
     }
 }

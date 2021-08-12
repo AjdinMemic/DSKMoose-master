@@ -49,16 +49,21 @@ public class StartPanel extends JPanel {
         RBmethodB.setActionCommand("Method B");
 
         JRadioButton RBmethodC = new JRadioButton("Fixed slices");
-        RBmethodB.setMnemonic(KeyEvent.VK_C);
-        RBmethodB.setActionCommand("Method C");
+        RBmethodC.setMnemonic(KeyEvent.VK_C);
+        RBmethodC.setActionCommand("Method C");
 
         JRadioButton RBmethodC2 = new JRadioButton("Slices");
-        RBmethodB.setMnemonic(KeyEvent.VK_C);
-        RBmethodB.setActionCommand("Method C2");
+        RBmethodC2.setMnemonic(KeyEvent.VK_C);
+        RBmethodC2.setActionCommand("Method C2");
 
         JRadioButton RBmethodD = new JRadioButton("Dropdown");
-        RBmethodB.setMnemonic(KeyEvent.VK_C);
-        RBmethodB.setActionCommand("Method D");
+        RBmethodD.setMnemonic(KeyEvent.VK_C);
+        RBmethodD.setActionCommand("Method D");
+
+        JRadioButton RBmethodE = new JRadioButton("SlicesInMiddle");
+        RBmethodE.setMnemonic(KeyEvent.VK_C);
+        RBmethodE.setActionCommand("Method E");
+
 
         //Register a listener for the radio buttons.
         RBmethodA.addActionListener(new ActionListener() {
@@ -96,7 +101,13 @@ public class StartPanel extends JPanel {
                 startButton.setEnabled(true);
             }
         });
-
+        RBmethodE.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                methodType[0] ="MethodE";
+                startButton.setEnabled(true);
+            }
+        });
         //Group the radio buttons.
         ButtonGroup buttonGroup = new ButtonGroup();
         buttonGroup.add(RBmethodA);
@@ -104,6 +115,7 @@ public class StartPanel extends JPanel {
         buttonGroup.add(RBmethodC);
         buttonGroup.add(RBmethodC2);
         buttonGroup.add(RBmethodD);
+        buttonGroup.add(RBmethodE);
         // Hint label
         JLabel textLabel = new JLabel("Click to start the experiment");
         textLabel.setAlignmentX(CENTER_ALIGNMENT);
@@ -116,6 +128,7 @@ public class StartPanel extends JPanel {
         this.add(RBmethodC);
         this.add(RBmethodC2);
         this.add(RBmethodD);
+        this.add(RBmethodE);
         this.add(Box.createRigidArea(new Dimension(0, 20)));
         this.add(startButton);
     }
