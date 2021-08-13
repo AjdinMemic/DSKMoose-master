@@ -432,9 +432,9 @@ public class TrialInfo {
                         "cursorSizeMM" + ";" +
                         "cursorSizePix" + ";" +
                         "movementDirection" + ";" +
-                        "degree lower bound" + ";"+
-                        "degree upper bound" + ";"+
-                        "random degree"   + ";"+
+                        "lower bound value" + ";"+
+                        "upper bound value" + ";"+
+                        "random value"   + ";"+
                         "section"           +";"+
                         "startPosX" + ";" +
                         "startPosY" + ";" +

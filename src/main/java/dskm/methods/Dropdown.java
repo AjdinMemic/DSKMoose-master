@@ -46,19 +46,38 @@ public class Dropdown extends Method {
     private List<Double> distList;
     private List<Double> cursorList;
 
+    private int startCircleRadius;
+    private static Point2D.Double[] points;
+
     private String[] quartiles = {"VER"};
 
+    enum DistanceType {
+        CONSTELLATION,
+        SECTION_RANDOM,
+        SECTION_BOUNDARIES
+    }
+
     public Dropdown() throws IOException {
+        setStartCircleRadius(Config.STAREC_WIDTH / 2);
+        DistanceType distanceType = DistanceType.SECTION_RANDOM;
+        int numberOfSections = 20;
+
         expSubject = PublishSubject.create();
         int monitorPPI = Toolkit.getDefaultToolkit().getScreenResolution();
-
         pixelSizeMM = 25.4 / monitorPPI;
         trials = new ArrayList<TrialInfo>();
         blocks = new ArrayList<ArrayList<TrialInfo>>();
-        radList = testConstellation.getRadList();
-        distList = testConstellation.getDistList();
-        cursorList = testConstellation.getCursorList();
+        radList = new ArrayList<>();
+        radList.add(10.0);
 
+        if (distanceType.equals(DistanceType.CONSTELLATION)) {
+            distList = testConstellation.getDistList();
+        } else if (distanceType.equals(DistanceType.SECTION_RANDOM)) {
+            distList = generateSectionRandomPos(numberOfSections);
+        } else if (distanceType.equals(DistanceType.SECTION_BOUNDARIES)) {
+            distList = generateSectionBoundaries(numberOfSections);
+        }
+        cursorList = testConstellation.getCursorList();
     }
 
     public String getParticipantID() {
@@ -95,6 +114,7 @@ public class Dropdown extends Method {
     }
 
     public void generateTrialList() {
+        int j=0;
         for (int i = 0; i < testConstellation.getNrRepetitions(); i++) {
             for (double cursorSize : cursorList) {
                 for (String q : quartiles) {
@@ -135,7 +155,7 @@ public class Dropdown extends Method {
                                 cursorSize,
                                 this.participantID,
                                 testConstellation.getTestType(),
-                                "fakeMovementDirection", new Point2D.Double(0, 0), 0.0, 0
+                                "fakeMovementDirection", new Point2D.Double(points[j].x, points[j].y), distList.get(j++), j
                         );
 
                         //For Fitts, we need to duplicate each trial,
@@ -290,7 +310,7 @@ public class Dropdown extends Method {
                 (trialInfo.getWidthPix() / 2);
         max = windowRec.x + windowRec.width - 20 -
                 convertMMtoPIX(trialInfo.getCursorSizeMM() / 2) -
-                (trialInfo.getWidthPix() / 2);
+                (trialInfo.getWidthPix() / 2) - 200; //-200 so x doesn't land on the text on the right corner
 
         top = windowRec.y + windowRec.height - 20 - convertMMtoPIX(trialInfo.getCursorSizeMM() / 2) - (trialInfo.getWidthPix() / 2);
         System.out.println("windowRec.y: " + windowRec.y);
@@ -340,7 +360,7 @@ public class Dropdown extends Method {
         //Now we have a suitable x and y for the start circle.
         //Set the start for the trial.
         trialInfo.setStart(new Circle(xPos, yPos,
-                Config.STAREC_WIDTH / 2));
+                getStartCircleRadius()));
         //fitta
 
         //Now we need to calculate the corresponding target position
@@ -364,4 +384,90 @@ public class Dropdown extends Method {
         return ThreadLocalRandom.current().nextInt(min, max + 1);
     }
 
+    public int getStartCircleRadius() {
+        return startCircleRadius;
+    }
+
+    public void setStartCircleRadius(int startCircleRadius) {
+        this.startCircleRadius = startCircleRadius;
+    }
+
+    public ArrayList<Double> generateSectionRandomPos(int numberOfSection) {
+        points=new Point2D.Double[numberOfSection];
+        ArrayList<Double> retVal = new ArrayList();
+        Rectangle windowRec = MainFrame.getFrame().getBounds();
+        int height = (int) convertPIXtoMM(windowRec.height);
+        System.out.println("height:"+ height);
+        int sectionHeight = height / numberOfSection;
+
+        int startBoundery = 0 + getStartCircleRadius(); //startCircleRadius as offset
+        int endBoundery = sectionHeight+getStartCircleRadius();
+
+        for (int i = 0; i < numberOfSection; i++) {
+            points[i] = new Point2D.Double(startBoundery, endBoundery);
+            startBoundery = startBoundery + sectionHeight;
+            endBoundery = endBoundery + sectionHeight;
+        }
+
+        points[points.length-1].y= points[points.length-1].y;
+        for (int i = 0; i < points.length; i++) {
+            System.out.println("p" + (i + 1) + " (" + points[i].x + " , " + points[i].y + " )");
+        }
+
+        for (int i = 0; i < points.length; i++) {
+            double lowBound = points[i].x;
+            System.out.println("______________________");
+            System.out.println("lowerBound:"+lowBound);
+            double uppBound = points[i].y;
+            System.out.println("upperBound:"+uppBound);
+            double randomRadNum = (int) ThreadLocalRandom.current().nextDouble(lowBound, uppBound);
+            if(i==points.length-1){randomRadNum=randomRadNum-getStartCircleRadius();}
+            System.out.println(" ");
+            System.out.println("randomNum:"+randomRadNum);
+            retVal.add(randomRadNum);
+        }
+
+        return retVal;
+    }
+
+    public ArrayList<Double> generateSectionBoundaries(int numberOfSection){
+        points=new Point2D.Double[numberOfSection];
+        ArrayList<Double> retVal = new ArrayList();
+        Rectangle windowRec = MainFrame.getFrame().getBounds();
+        int height = (int) convertPIXtoMM(windowRec.height);
+        System.out.println("height:"+ height);
+        int sectionHeight = height / numberOfSection;
+
+        int startBoundery = 0 + getStartCircleRadius(); //startCircleRadius as offset
+        int endBoundery = sectionHeight+getStartCircleRadius();
+
+        for (int i = 0; i < numberOfSection; i++) {
+            points[i] = new Point2D.Double(startBoundery, endBoundery);
+            startBoundery = startBoundery + sectionHeight;
+            endBoundery = endBoundery + sectionHeight;
+        }
+
+        points[points.length-1].y= points[points.length-1].y;
+        for (int i = 0; i < points.length; i++) {
+            System.out.println("p" + (i + 1) + " (" + points[i].x + " , " + points[i].y + " )");
+        }
+
+        for (int i = 0; i < points.length; i++) {
+            double lowBound = points[i].x;
+            System.out.println("______________________");
+            System.out.println("lowerBound:"+lowBound);
+            double uppBound = points[i].y;
+            System.out.println("upperBound: (not used in this method!)"+uppBound);
+            double randomRadNum = lowBound;
+            if(i==points.length-1){randomRadNum=randomRadNum-getStartCircleRadius();}
+            System.out.println(" ");
+            System.out.println("randomNum: (always euqual to lowerBound!)"+randomRadNum);
+            retVal.add(randomRadNum);
+        }
+
+        return retVal;
+    }
+    private double convertPIXtoMM(int dim) {
+        return Math.rint(dim * this.pixelSizeMM);
+    }
 }
