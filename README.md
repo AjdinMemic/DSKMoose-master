@@ -1,3 +1,4 @@
+https://www.reddit.com/r/programming/comments/8kd7r9/the_most_sophisticated_piece_of_softwarecode_ever/
 https://instadeq.com/blog/posts/japans-fifth-generation-computer-systems-success-or-failure/
 
 # DEVELOP BY
