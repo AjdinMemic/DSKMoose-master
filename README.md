@@ -1,5 +1,12 @@
 https://instadeq.com/blog/posts/japans-fifth-generation-computer-systems-success-or-failure/
 
+# DEVELOP BY
+
+[Ajdin Memic](https://github.com/AjdinMemic) - ajdinmemi@edu.aau.at
+
+<br/>
+
+# LICENSE
 MIT License
 
 Copyright (c) 2021 AAU KLAGENFURT
