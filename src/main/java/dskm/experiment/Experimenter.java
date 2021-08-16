@@ -56,7 +56,7 @@ public class Experimenter {
             method = new Circles(9, true); // radius and distBetCircle in mm! // distBetCirle = distance from center of c[N] to center c[N+length/2]
             System.out.println("Method B");
         } else if (methodType.equals("MethodC")) {
-            method = new FixedSlices();
+            method = new FixedSlices(true);
             System.out.println("Method C");
         } else if (methodType.equals("MethodC2")) {
             method = new Slices(8); // 2,4,6,8,10...

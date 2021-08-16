@@ -38,15 +38,16 @@ public class FixedSlices extends Method {
     double pixelSizeMM;
     ;
     ArrayList<CustomCursor> cursors = new ArrayList<CustomCursor>();
-
+    private ArrayList<Point2D.Double> tupels;
     private java.util.List<Double> radList;
     private java.util.List<Double> distList;
     private List<Double> cursorList;
+    private boolean allCombinations;
 
     private String[] quartiles = {"HOR", "VER", "NO", "NW", "SO", "SW"};
 
     //private String[] quartiles = {"HOR", "VER", "NO", "NW", "SO", "SW"};
-    public FixedSlices() throws IOException {
+    public FixedSlices(boolean allCombinations) throws IOException {
         expSubject = PublishSubject.create();
         int monitorPPI = Toolkit.getDefaultToolkit().getScreenResolution();
 
@@ -56,7 +57,8 @@ public class FixedSlices extends Method {
         radList = testConstellation.getRadList();
         distList = testConstellation.getDistList();
         cursorList = testConstellation.getCursorList();
-
+        tupels = testConstellation.getTupels();
+this.allCombinations=allCombinations;
     }
 
     public String getParticipantID() {
@@ -92,82 +94,15 @@ public class FixedSlices extends Method {
         }
     }
 
+    /**
+     * fills the trials ArrayList with trials, later used in the "createTrial" method where one random Trial is taken and removed from the trials ArrayList
+     */
     public void generateTrialList() {
-        for (int i = 0; i < testConstellation.getNrRepetitions(); i++) {
-            for (double cursorSize : cursorList) {
-                for (String q : quartiles) {
-                    for (Point.Double p : radDistList) {
-                        // Generate the trial list
-                        int widthPix = convertMMtoPIX(p.x);
-                        int distancePix = convertMMtoPIX(p.y);
-                        Circle start = null;
-                        Circle target = null;
-                        if (testConstellation.getTestType().equals(Config.TEST_TYPE_FITTS)) {
-                            start = new Circle(Config.STACLE_X,
-                                    Config.STACLE_Y,
-                                    Config.STAREC_WIDTH / 2);
-                            start.setColor(Config.STACLE_COLOR);
-                            target = new Circle(Config.STACLE_X + distancePix,
-                                    Config.STACLE_Y,
-                                    widthPix / 2);
-                            target.setColor(Config.TARCLE_COLOR);
-                        } else {
-                            //Calibration
-                            //Set start circle to a fake one...
-                            start = new Circle(0,
-                                    0,
-                                    0);
-
-                            target = new Circle(0, 0, 0);
-                        }
-
-                        TrialInfo trial = new TrialInfo("FixedSlices", q, null, 1, distancePix,
-                                1, //block number, will be updated later
-                                1, //trial in block, will be updated later
-                                distancePix, //distance pix
-                                widthPix, //width pix
-                                this.pixelSizeMM,
-                                new Circle(0, 0, 0),
-                                target,
-                                start,
-                                cursorSize,
-                                this.participantID,
-                                testConstellation.getTestType(),
-                                "fakeMovementDirection", new Point2D.Double(0, 0), 0.0, 0
-                        );
-
-                        //For Fitts, we need to duplicate each trial,
-                        //so that we have one trial to the right, one
-                        //to the right.
-                        if (trial.getQuartile().equals("NO") || trial.getQuartile().equals("SO")) {
-                            trial.setMovementDirection(Config.MOVEMENT_DIRECTION_RIGTH);
-                        } else if (trial.getQuartile().equals("NW") || trial.getQuartile().equals("SW")) {
-                            trial.setMovementDirection(Config.MOVEMENT_DIRECTION_LEFT);
-                        }
-                        if (trial.getQuartile().equals("HOR") || trial.getQuartile().equals("VER")) {
-                            if (testConstellation.getTestType().equals(Config.TEST_TYPE_FITTS)) {
-                                trial.setMovementDirection(
-                                        Config.MOVEMENT_DIRECTION_RIGTH
-                                );
-                                TrialInfo directionCopy = trial.copyTrialInfo();
-                                directionCopy.setMovementDirection(
-                                        Config.MOVEMENT_DIRECTION_LEFT
-                                );
-                                trials.add(directionCopy);
-                            }
-                        }
-                        trials.add(trial);
-                    }
-                    if (cursorSize == 1.0) {
-                        //Fake a CustomCursor for the default cursor!
-                        //cursors.add(new CustomCursor(51, this.pixelSizeMM));
-                    } else {
-                        cursors.add(new CustomCursor(cursorSize, this.pixelSizeMM));
-                    }
-                }
-            }
-        }
-    }
+        if(allCombinations){
+            generateTrialListAllCombinations();
+        }else {
+            generateTrialListSetofTupels();
+        }}
 
     public void addBlocks() {
         for (int i = 0; i < testConstellation.getNrBlocks(); i++) {
@@ -575,5 +510,160 @@ public class FixedSlices extends Method {
         retVal[1] = (int) endY;
 
         return retVal;
+    }
+
+    public void generateTrialListAllCombinations(){
+        for (int i = 0; i < testConstellation.getNrRepetitions(); i++) {
+            for (double cursorSize : cursorList) {
+                for (String q : quartiles) {
+                    for (Point.Double p : radDistList) {
+                        // Generate the trial list
+                        int widthPix = convertMMtoPIX(p.x);
+                        int distancePix = convertMMtoPIX(p.y);
+                        Circle start = null;
+                        Circle target = null;
+                        if (testConstellation.getTestType().equals(Config.TEST_TYPE_FITTS)) {
+                            start = new Circle(Config.STACLE_X,
+                                    Config.STACLE_Y,
+                                    Config.STAREC_WIDTH / 2);
+                            start.setColor(Config.STACLE_COLOR);
+                            target = new Circle(Config.STACLE_X + distancePix,
+                                    Config.STACLE_Y,
+                                    widthPix / 2);
+                            target.setColor(Config.TARCLE_COLOR);
+                        } else {
+                            //Calibration
+                            //Set start circle to a fake one...
+                            start = new Circle(0,
+                                    0,
+                                    0);
+
+                            target = new Circle(0, 0, 0);
+                        }
+
+                        TrialInfo trial = new TrialInfo("Horizontal", q, null, 1, distancePix,
+                                1, //block number, will be updated later
+                                1, //trial in block, will be updated later
+                                distancePix, //distance pix
+                                widthPix, //width pix
+                                this.pixelSizeMM,
+                                new Circle(0, 0, 0),
+                                target,
+                                start,
+                                cursorSize,
+                                this.participantID,
+                                testConstellation.getTestType(),
+                                "fakeMovementDirection", new Point2D.Double(0, 0), 0.0, 0
+                        );
+
+                        //For Fitts, we need to duplicate each trial,
+                        //so that we have one trial to the right, one
+                        //to the right.
+                        if (trial.getQuartile().equals("NO") || trial.getQuartile().equals("SO")) {
+                            trial.setMovementDirection(Config.MOVEMENT_DIRECTION_RIGTH);
+                        } else if (trial.getQuartile().equals("NW") || trial.getQuartile().equals("SW")) {
+                            trial.setMovementDirection(Config.MOVEMENT_DIRECTION_LEFT);
+                        }
+                        if (trial.getQuartile().equals("HOR") || trial.getQuartile().equals("VER")) {
+                            if (testConstellation.getTestType().equals(Config.TEST_TYPE_FITTS)) {
+                                trial.setMovementDirection(
+                                        Config.MOVEMENT_DIRECTION_RIGTH
+                                );
+                                TrialInfo directionCopy = trial.copyTrialInfo();
+                                directionCopy.setMovementDirection(
+                                        Config.MOVEMENT_DIRECTION_LEFT
+                                );
+                                trials.add(directionCopy);
+                            }
+                        }
+                        trials.add(trial);
+                    }
+                    if (cursorSize == 1.0) {
+                        //Fake a CustomCursor for the default cursor!
+                        //cursors.add(new CustomCursor(51, this.pixelSizeMM));
+                    } else {
+                        cursors.add(new CustomCursor(cursorSize, this.pixelSizeMM));
+                    }
+                }
+            }
+        }
+    }
+
+    public void generateTrialListSetofTupels(){
+        for (int i = 0; i < testConstellation.getNrRepetitions(); i++) {
+            for (double cursorSize : cursorList) {
+                for (String q : quartiles) {
+                    for (Point.Double p : tupels) {
+                        // Generate the trial list
+                        int widthPix = convertMMtoPIX(p.x);
+                        int distancePix = convertMMtoPIX(p.y);
+                        Circle start = null;
+                        Circle target = null;
+                        if (testConstellation.getTestType().equals(Config.TEST_TYPE_FITTS)) {
+                            start = new Circle(Config.STACLE_X,
+                                    Config.STACLE_Y,
+                                    Config.STAREC_WIDTH / 2);
+                            start.setColor(Config.STACLE_COLOR);
+                            target = new Circle(Config.STACLE_X + distancePix,
+                                    Config.STACLE_Y,
+                                    widthPix / 2);
+                            target.setColor(Config.TARCLE_COLOR);
+                        } else {
+                            //Calibration
+                            //Set start circle to a fake one...
+                            start = new Circle(0,
+                                    0,
+                                    0);
+
+                            target = new Circle(0, 0, 0);
+                        }
+
+                        TrialInfo trial = new TrialInfo("Horizontal", q, null, 1, distancePix,
+                                1, //block number, will be updated later
+                                1, //trial in block, will be updated later
+                                distancePix, //distance pix
+                                widthPix, //width pix
+                                this.pixelSizeMM,
+                                new Circle(0, 0, 0),
+                                target,
+                                start,
+                                cursorSize,
+                                this.participantID,
+                                testConstellation.getTestType(),
+                                "fakeMovementDirection", new Point2D.Double(0, 0), 0.0, 0
+                        );
+
+
+                        //For Fitts, we need to duplicate each trial,
+                        //so that we have one trial to the right, one
+                        //to the right.
+                        if (trial.getQuartile().equals("NO") || trial.getQuartile().equals("SO")) {
+                            trial.setMovementDirection(Config.MOVEMENT_DIRECTION_RIGTH);
+                        } else if (trial.getQuartile().equals("NW") || trial.getQuartile().equals("SW")) {
+                            trial.setMovementDirection(Config.MOVEMENT_DIRECTION_LEFT);
+                        }
+                        if (trial.getQuartile().equals("HOR") || trial.getQuartile().equals("VER")) {
+                            if (testConstellation.getTestType().equals(Config.TEST_TYPE_FITTS)) {
+                                trial.setMovementDirection(
+                                        Config.MOVEMENT_DIRECTION_RIGTH
+                                );
+                                TrialInfo directionCopy = trial.copyTrialInfo();
+                                directionCopy.setMovementDirection(
+                                        Config.MOVEMENT_DIRECTION_LEFT
+                                );
+                                trials.add(directionCopy);
+                            }
+                        }
+                        trials.add(trial);
+                    }
+                    if (cursorSize == 1.0) {
+                        //Fake a CustomCursor for the default cursor!
+                        //cursors.add(new CustomCursor(51, this.pixelSizeMM));
+                    } else {
+                        cursors.add(new CustomCursor(cursorSize, this.pixelSizeMM));
+                    }
+                }
+            }
+        }
     }
 }
