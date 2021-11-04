@@ -226,12 +226,9 @@ public class SlicesInMiddle extends Method {
 
         //Start to determine the start position.
         Rectangle windowRec = MainFrame.getFrame().getBounds();
-        min = windowRec.x + 20 +
-                convertMMtoPIX(trialInfo.getCursorSizeMM() / 2) +
-                (trialInfo.getWidthPix() / 2);
-        max = windowRec.x + windowRec.width - 20 -
-                convertMMtoPIX(trialInfo.getCursorSizeMM() / 2) -
-                (trialInfo.getWidthPix() / 2);
+        min = 100;
+        Point2D.Double point=MainFrame.getMonitorSizes();
+        max = (int) point.x -100;
 
         top = windowRec.y + windowRec.height - 20 - convertMMtoPIX(trialInfo.getCursorSizeMM() / 2) - (trialInfo.getWidthPix() / 2);
         // System.out.println("windowRec.y: " + windowRec.y);

@@ -197,6 +197,7 @@ public class Horizontal extends Method {
                     " of " + nTrials / testConstellation.getNrBlocks());
 
             MainFrame.getFrame().drawPanel(exPanel);
+            System.out.println("exPanel, height:"+exPanel.getHeight()+ "width:"+exPanel.getWidth());
         }
     }
 
@@ -211,18 +212,15 @@ public class Horizontal extends Method {
         int xPos = 0;
         int yPos = 0;
         boolean posOK = false;
+        Point2D.Double point=MainFrame.getMonitorSizes();
 
         //Start to determine the start position.
         Rectangle windowRec = MainFrame.getFrame().getBounds();
-        min = windowRec.x + 20 +
-                convertMMtoPIX(trialInfo.getCursorSizeMM() / 2) +
-                (trialInfo.getWidthPix() / 2);
-
-        max = windowRec.x + windowRec.width - 20 -
-                convertMMtoPIX(trialInfo.getCursorSizeMM() / 2) -
-                (trialInfo.getWidthPix() / 2);
+        min = 100;
+        System.out.println("MIN:"+min);
+        max = (int) point.x -100;
         xPos = 0;
-
+        System.out.println("MAX:"+max);
         //Make sure the selected xPos is more than cursor size away
         //from the xPosition of the previous target, otherwise the
         //new start position might be under the cursor position.
@@ -247,7 +245,7 @@ public class Horizontal extends Method {
                 }
             }
         }
-
+        System.out.println("posX von start:"+xPos);
         //Now find a suitable y-Position for the start.
         min = windowRec.y + Config.TEXT_Y + Config.TEXT_PAN_H + 20 +
                 convertMMtoPIX(trialInfo.getCursorSizeMM() / 2) +
@@ -274,7 +272,7 @@ public class Horizontal extends Method {
                 posOK = true;
             }
         }
-
+        System.out.println("posY von start:"+yPos);
         //Now we have a suitable x and y for the start circle.
         //Set the start for the trial.
         trialInfo.setStart(new Circle(xPos, yPos,
@@ -288,6 +286,7 @@ public class Horizontal extends Method {
         } else if (trialInfo.getMovementDirection().equals(Config.MOVEMENT_DIRECTION_LEFT)) {
             xPos = xPos - trialInfo.getDistancePix();
         }
+        System.out.println("posX von target:"+xPos);
         //The yPos should be the same as for the start.
         //Accordingly, no need to find a new yPos.
 
