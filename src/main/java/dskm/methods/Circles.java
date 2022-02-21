@@ -46,8 +46,8 @@ public class Circles extends Method {
 
     public boolean flag;
 
-    public int[] radList = {10, 25, 5};
-    public static int[] distList = {125, 250, 62};
+    public int[] radList = {10,15,20};
+    public static int[] distList = {50,75,100};
 
     public Circles(int n, boolean flag) throws IOException {
         expSubject = PublishSubject.create();
@@ -128,7 +128,7 @@ public class Circles extends Method {
 
             exPanel.setCurrentTrialInfo(trialInfo);
             exPanel.setBlockInfoToDraw("Block: " + this.blockNumber +
-                    " of " + testConstellation.getNrBlocks());
+                    " of " + (radList.length*distList.length));
             exPanel.setTextToDraw("Trial: " + trialInfo.getTrialInBlock() +
                     " of " + nTrials / testConstellation.getNrBlocks());
 
@@ -254,6 +254,19 @@ public class Circles extends Method {
 
     private Circle determineTargetPositionFitts(TrialInfo trialInfo) {
         if (countOfCirclesClicked == getN()) {
+
+            JLabel label = new JLabel("Block " + this.blockNumber +
+                    " out of " + (radList.length*distList.length) + " is finished!");
+            label.setFont(new Font("Arial", Font.PLAIN, 18));
+            JOptionPane.showMessageDialog(
+                    MainFrame.getFrame(),
+                    label,
+                    "",
+                    JOptionPane.INFORMATION_MESSAGE,
+                    new ImageIcon(new BufferedImage(1, 1,
+                            BufferedImage.TYPE_INT_ARGB)));
+            this.blockNumber++;
+
             i = 0;
             pos = 0;
             countOfCirclesClicked = 0;
