@@ -10,7 +10,7 @@ public abstract class Method {
     /**
      * This 6 methods are called by all sub-classes of Method in the Experimenter class
      */
-    public abstract void generateRadiusDistancePairs();
+    //public abstract void generateRadiusDistancePairs();
 
     public abstract void generateTrialList();
 

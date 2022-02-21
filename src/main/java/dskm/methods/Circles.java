@@ -12,8 +12,7 @@ import java.awt.*;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 
 public class Circles extends Method {
     private final java.util.List<Point.Double> radDistList = new ArrayList<>();
@@ -46,8 +45,11 @@ public class Circles extends Method {
 
     public boolean flag;
 
-    public int[] radList = {10,15,20};
+    public int[] radList = {10,15,5};
     public static int[] distList = {50,75,100};
+
+    static LinkedList<Integer> radListL=new LinkedList<Integer>();
+    static LinkedList <Integer>distListL=new LinkedList<Integer>();
 
     public Circles(int n, boolean flag) throws IOException {
         expSubject = PublishSubject.create();
@@ -67,8 +69,29 @@ public class Circles extends Method {
         return participantID;
     }
 
+    public void fillDistList(){
+        distListL.add(50);
+        distListL.add(75);
+        distListL.add(100);
+    }
+
+    public void fillRadList(){
+        radListL.add(5);
+        radListL.add(10);
+        radListL.add(15);
+    }
+
     public void methodSetup() {
-        this.generateRadiusDistancePairs();
+        fillDistList();
+
+        int len = distListL.size();
+        Random random = new Random();
+        int randomInt = random.nextInt(len);
+        int distance = distListL.get(randomInt);
+
+        distListL.remove(new Integer(distance));
+
+        this.generateRadiusDistancePairs(distance);
 
         this.generateTrialList();
 
@@ -148,7 +171,7 @@ public class Circles extends Method {
     static int genIndex = 0;
     int localIndex = 0;
 
-    public void generateRadiusDistancePairs() {
+    public void generateRadiusDistancePairs(int distance) {
 
         radDistList.clear();
 
@@ -160,7 +183,7 @@ public class Circles extends Method {
         if (localIndex == distList.length) {
             localIndex = 0;
         }
-        int r = convertMMtoPIX(distList[genIndex] / 2);
+        int r = convertMMtoPIX(distance / 2);
         distGlobal = distList[localIndex] / 2;
         distBetCirclemm = r;
         System.out.println("***---***");
@@ -254,7 +277,6 @@ public class Circles extends Method {
 
     private Circle determineTargetPositionFitts(TrialInfo trialInfo) {
         if (countOfCirclesClicked == getN()) {
-
             JLabel label = new JLabel("Block " + this.blockNumber +
                     " out of " + (radList.length*distList.length) + " is finished!");
             label.setFont(new Font("Arial", Font.PLAIN, 18));
@@ -270,7 +292,19 @@ public class Circles extends Method {
             i = 0;
             pos = 0;
             countOfCirclesClicked = 0;
-            generateRadiusDistancePairs();
+
+            if(distListL.size()==0){
+                fillDistList();
+            }
+
+            int len = distListL.size();
+            Random random = new Random();
+            int randomInt = random.nextInt(len);
+            int distance = (int) distListL.get(randomInt);
+            distListL.remove(new Integer(distance));
+
+            generateRadiusDistancePairs(distance);
+
             System.out.println("****-------****");
             countIndex++;
             countDistance++;
