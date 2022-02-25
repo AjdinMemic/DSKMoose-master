@@ -50,7 +50,7 @@ public class Experimenter {
         System.out.println("Experiment started.");
 
         if (methodType.equals("MethodA")) {
-            method = new Horizontal(true);
+            method = new Horizontal(false);
             System.out.println("Method A");
         } else if (methodType.equals("MethodB")) {
             method = new Circles(9, true); // radius and distBetCircle in mm! // distBetCirle = distance from center of c[N] to center c[N+length/2]

@@ -31,7 +31,8 @@ public class Horizontal extends Method {
     private String participantID = LogChecker.retNumbLog();
 
     private int blockNumber = 1;
-    private ArrayList<TrialInfo> trials;
+    private ArrayList<TrialInfo> trialsLeft;
+    private ArrayList<TrialInfo> trialsRight;
     private ArrayList<ArrayList<TrialInfo>> blocks;
 
     double pixelSizeMM;
@@ -49,7 +50,8 @@ public class Horizontal extends Method {
         int monitorPPI = Toolkit.getDefaultToolkit().getScreenResolution();
         //System.out.println(Toolkit.getDefaultToolkit().getScreenSize());
         pixelSizeMM = 25.4 / monitorPPI;
-        trials = new ArrayList<TrialInfo>();
+        trialsLeft = new ArrayList<TrialInfo>();
+        trialsRight= new ArrayList<TrialInfo>();
         blocks = new ArrayList<ArrayList<TrialInfo>>();
         radList = testConstellation.getRadList();
         distList = testConstellation.getDistList();
@@ -71,7 +73,7 @@ public class Horizontal extends Method {
 
         this.blockNrLoop();
 
-        setnTrials(blocks.size() * trials.size()); // Num. of trails = all the combinations (n x n)
+        setnTrials(blocks.size() * trialsLeft.size() * 2); // Num. of trails = all the combinations (n x n)
     }
 
 
@@ -102,7 +104,8 @@ public class Horizontal extends Method {
        if(allCombinations){
            generateTrialListAllCombinations();
        }else {
-           generateTrialListSetofTupels();
+           generateTrialListSetofTupelsLeft();
+           generateTrialListSetofTupelsRight();
        }
     }
 
@@ -115,14 +118,31 @@ public class Horizontal extends Method {
     public void blockNrLoop() {
         int blockNr = 1;
         for (ArrayList<TrialInfo> trialArray : blocks) {
-            Collections.shuffle(trials);
+
+            Collections.shuffle(trialsLeft);
+            Collections.shuffle(trialsRight);
+
             int trialInBlockNr = 1;
-            for (TrialInfo ti : trials) {
-                ti.setBlockNumber(blockNr);
-                ti.setTrialInBlock(trialInBlockNr);
+            int indexLeft = 0;
+            int indexRight = 0;
+
+            for(int i=0;i<trialsRight.size()*2;i++){
+
+                if(i%2==0){
+                trialsLeft.get(indexLeft).setBlockNumber(blockNr);
+                trialsLeft.get(indexLeft).setTrialInBlock(trialInBlockNr);
                 trialInBlockNr++;
-                trialArray.add(ti.copyTrialInfo());
+                trialArray.add(trialsLeft.get(indexLeft).copyTrialInfo());
+                indexLeft++;
             }
+                else {
+                    trialsRight.get(indexRight).setBlockNumber(blockNr);
+                    trialsRight.get(indexRight).setTrialInBlock(trialInBlockNr);
+                trialInBlockNr++;
+                trialArray.add(trialsRight.get(indexRight).copyTrialInfo());
+                indexRight++;
+                }
+             }
             blockNr++;
         }
     }
@@ -417,9 +437,9 @@ public class Horizontal extends Method {
                         directionCopy.setMovementDirection(
                                 Config.MOVEMENT_DIRECTION_LEFT
                         );
-                        trials.add(directionCopy);
+                        trialsLeft.add(directionCopy);
                     }
-                    trials.add(trial);
+                    trialsLeft.add(trial);
                 }
                 if (cursorSize == 1.0) {
                     //Fake a CustomCursor for the default cursor!
@@ -431,7 +451,7 @@ public class Horizontal extends Method {
         }
     }
 
-    public void generateTrialListSetofTupels(){
+    public void generateTrialListSetofTupelsLeft(){
         for (int i = 0; i < testConstellation.getNrRepetitions(); i++) {
             for (double cursorSize : cursorList) {
                 for (Point.Double p : tupels) {
@@ -477,17 +497,74 @@ public class Horizontal extends Method {
                     //For Fitts, we need to duplicate each trial,
                     //so that we have one trial to the right, one
                     //to the right.
-                    if (testConstellation.getTestType().equals(Config.TEST_TYPE_FITTS)) {
                         trial.setMovementDirection(
-                                Config.MOVEMENT_DIRECTION_RIGTH
-                        );
-                        TrialInfo directionCopy = trial.copyTrialInfo();
-                        directionCopy.setMovementDirection(
                                 Config.MOVEMENT_DIRECTION_LEFT
                         );
-                        trials.add(directionCopy);
+
+                    trialsLeft.add(trial);
+                }
+                if (cursorSize == 1.0) {
+                    //Fake a CustomCursor for the default cursor!
+                    //cursors.add(new CustomCursor(51, this.pixelSizeMM));
+                } else {
+                    cursors.add(new CustomCursor(cursorSize, this.pixelSizeMM));
+                }
+            }
+        }
+    }
+
+
+    public void generateTrialListSetofTupelsRight(){
+        for (int i = 0; i < testConstellation.getNrRepetitions(); i++) {
+            for (double cursorSize : cursorList) {
+                for (Point.Double p : tupels) {
+                    // Generate the trial list
+                    int widthPix = convertMMtoPIX(p.x);
+                    int distancePix = convertMMtoPIX(p.y);
+                    Circle start = null;
+                    Circle target = null;
+                    if (testConstellation.getTestType().equals(Config.TEST_TYPE_FITTS)) {
+                        start = new Circle(Config.STACLE_X,
+                                Config.STACLE_Y,
+                                Config.STAREC_WIDTH / 2);
+                        start.setColor(Config.STACLE_COLOR);
+                        target = new Circle(Config.STACLE_X + distancePix,
+                                Config.STACLE_Y,
+                                widthPix / 2);
+                        target.setColor(Config.TARCLE_COLOR);
+                    } else {
+                        //Calibration
+                        //Set start circle to a fake one...
+                        start = new Circle(0,
+                                0,
+                                0);
+
+                        target = new Circle(0, 0, 0);
                     }
-                    trials.add(trial);
+
+                    TrialInfo trial = new TrialInfo("Horizontal", null, null, 1, distancePix,
+                            1, //block number, will be updated later
+                            1, //trial in block, will be updated later
+                            distancePix, //distance pix
+                            widthPix, //width pix
+                            this.pixelSizeMM,
+                            new Circle(0, 0, 0),
+                            target,
+                            start,
+                            cursorSize,
+                            this.participantID,
+                            testConstellation.getTestType(),
+                            "fakeMovementDirection", new Point2D.Double(0, 0), 0.0, 0
+                    );
+
+                    //For Fitts, we need to duplicate each trial,
+                    //so that we have one trial to the right, one
+                    //to the right.
+                    trial.setMovementDirection(
+                            Config.MOVEMENT_DIRECTION_RIGTH
+                    );
+
+                    trialsRight.add(trial);
                 }
                 if (cursorSize == 1.0) {
                     //Fake a CustomCursor for the default cursor!

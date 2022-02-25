@@ -43,18 +43,22 @@ public enum Constellation {
             distList = ImmutableList.of(50.0, 110.0, 150.0);
             cursorList = ImmutableList.of(this.cursorSizeMM);
 
-            tupels.add(new Point2D.Double(2.4,50.0));
-            tupels.add(new Point2D.Double(2.4,110.0));
-            tupels.add(new Point2D.Double(2.4,150.0));
-            tupels.add(new Point2D.Double(4.9,50.0));
-            tupels.add(new Point2D.Double(4.9,110.0));
-            tupels.add(new Point2D.Double(4.9,150.0));
-            tupels.add(new Point2D.Double(7.2,50.0));
-            tupels.add(new Point2D.Double(7.2,110.0));
-            tupels.add(new Point2D.Double(7.2,150.0));
-            tupels.add(new Point2D.Double(10.0,50.0));
-            tupels.add(new Point2D.Double(10.0,110.0));
-            tupels.add(new Point2D.Double(10.0,150.0));
+            for(int i=0;i<4;i++) {
+                tupels.add(new Point2D.Double(10.0, 50.0));
+                tupels.add(new Point2D.Double(15.0, 50.0));
+                tupels.add(new Point2D.Double(5.0, 50.0));
+
+                tupels.add(new Point2D.Double(10.0, 75.0));
+                tupels.add(new Point2D.Double(15.0, 75.0));
+                tupels.add(new Point2D.Double(5.0, 75.0));
+
+                tupels.add(new Point2D.Double(10.0, 100.0));
+                tupels.add(new Point2D.Double(15.0, 100.0));
+                tupels.add(new Point2D.Double(5.0, 100.0));
+            }
+
+
+
         }else{
             radList = ImmutableList.of(2.4);
             distList = ImmutableList.of(0.0);
