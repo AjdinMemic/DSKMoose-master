@@ -43,7 +43,7 @@ public enum Constellation {
             distList = ImmutableList.of(50.0, 110.0, 150.0);
             cursorList = ImmutableList.of(this.cursorSizeMM);
 
-            for(int i=0;i<4;i++) {
+            for(int i=0;i<6;i++) {
                 tupels.add(new Point2D.Double(10.0, 50.0));
                 tupels.add(new Point2D.Double(15.0, 50.0));
                 tupels.add(new Point2D.Double(5.0, 50.0));
@@ -56,7 +56,6 @@ public enum Constellation {
                 tupels.add(new Point2D.Double(15.0, 100.0));
                 tupels.add(new Point2D.Double(5.0, 100.0));
             }
-
 
 
         }else{

@@ -210,39 +210,42 @@ public class Circles extends Method {
 
         int widthPix;
         int distancePix = 0;
+        int numbOfTrials = 0;
 
         for (int k : radList) {
-            setRadius(k);
-            for (int i = 0; i < radDistList.size(); i++) {
-                widthPix = getRadius();
-                System.out.println(1 + i + "." + " widthPix: " + widthPix);
-                int posX = (int) radDistList.get(i).getX();
-                int posY = (int) radDistList.get(i).getY();
-                startAsCircle = new Circle(posX, posY, convertMMtoPIX(getRadius()));
-                int targetIndex = 0;
+            if (numbOfTrials < getN()) {
+                setRadius(k);
+                for (int i = 0; i < radDistList.size(); i++) {
+                    widthPix = getRadius();
+                    System.out.println(1 + i + "." + " widthPix: " + widthPix);
+                    int posX = (int) radDistList.get(i).getX();
+                    int posY = (int) radDistList.get(i).getY();
+                    startAsCircle = new Circle(posX, posY, convertMMtoPIX(getRadius()));
+                    int targetIndex = 0;
 
-                targetIndex++;
-                target = new Circle((int) radDistList.get(targetIndex).getX(), (int) radDistList.get(targetIndex).getY(), convertMMtoPIX(getRadius()));
+                    targetIndex++;
+                    target = new Circle((int) radDistList.get(targetIndex).getX(), (int) radDistList.get(targetIndex).getY(), convertMMtoPIX(getRadius()));
 
-                //Fake a CustomCursor for the default cursor!
-                //cursors.add(new CustomCursor(51, this.pixelSizeMM));
+                    //Fake a CustomCursor for the default cursor!
+                    //cursors.add(new CustomCursor(51, this.pixelSizeMM));
 
-                TrialInfo trial = new TrialInfo("Circles", null, flag, getN(), distBetCirclemm,
-                        1, //block number, will be updated later
-                        1, //trial in block, will be updated later
-                        distancePix, //distance pix
-                        widthPix, //width pix
-                        this.pixelSizeMM,
-                        startAsCircle,
-                        target,
-                        start,
-                        cursorSize,
-                        this.participantID,
-                        testConstellation.getTestType(),
-                        "fakeMovementDirection", new Point2D.Double(0, 0), 0.0, 0
-                );
+                    TrialInfo trial = new TrialInfo("Circles", null, flag, getN(), distBetCirclemm,
+                            1, //block number, will be updated later
+                            1, //trial in block, will be updated later
+                            distancePix, //distance pix
+                            widthPix, //width pix
+                            this.pixelSizeMM,
+                            startAsCircle,
+                            target,
+                            start,
+                            cursorSize,
+                            this.participantID,
+                            testConstellation.getTestType(),
+                            "fakeMovementDirection", new Point2D.Double(0, 0), 0.0, 0
+                    );
 
-                trials.add(trial);
+                    trials.add(trial);
+                }
             }
         }
     }
