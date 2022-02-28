@@ -34,8 +34,9 @@ public class Horizontal extends Method {
     private ArrayList<TrialInfo> trialsLeft;
     private ArrayList<TrialInfo> trialsRight;
     private ArrayList<ArrayList<TrialInfo>> blocks;
-
+    private int countOfCirclesClicked=0;
     double pixelSizeMM;
+    int numbOfCircles=11;
     ;
     ArrayList<CustomCursor> cursors = new ArrayList<CustomCursor>();
 
@@ -158,16 +159,6 @@ public class Horizontal extends Method {
             //Show Block-End Message for all blocks except for the
             //last block, then show Test-End Message.
             if (blocks.size() > 0) {
-                JLabel label = new JLabel("Block " + this.blockNumber +
-                        " out of " + testConstellation.getNrBlocks() + " is finished!");
-                label.setFont(new Font("Arial", Font.PLAIN, 18));
-                JOptionPane.showMessageDialog(
-                        MainFrame.getFrame(),
-                        label,
-                        "",
-                        JOptionPane.INFORMATION_MESSAGE,
-                        new ImageIcon(new BufferedImage(1, 1,
-                                BufferedImage.TYPE_INT_ARGB)));
                 this.blockNumber++;
             }
         }
@@ -225,6 +216,20 @@ public class Horizontal extends Method {
      * Create the drawing panel for the trial
      */
     private Circle determineTargetPositionFitts(TrialInfo trialInfo) {
+        if (countOfCirclesClicked==numbOfCircles) {
+            JLabel label = new JLabel("Block " + this.blockNumber +
+                    " out of " + testConstellation.getNrBlocks() + " is finished!");
+            label.setFont(new Font("Arial", Font.PLAIN, 18));
+            JOptionPane.showMessageDialog(
+                    MainFrame.getFrame(),
+                    label,
+                    "",
+                    JOptionPane.INFORMATION_MESSAGE,
+                    new ImageIcon(new BufferedImage(1, 1,
+                            BufferedImage.TYPE_INT_ARGB)));
+            this.blockNumber++;
+            countOfCirclesClicked=0;
+        }
         //In case the window title bar is showing
         int windowTitleBarHeight = MainFrame.getFrame().getInsets().top;
         int min = 0;
@@ -309,7 +314,7 @@ public class Horizontal extends Method {
         System.out.println("posX von target:"+xPos);
         //The yPos should be the same as for the start.
         //Accordingly, no need to find a new yPos.
-
+        countOfCirclesClicked++;
         return new Circle(xPos, yPos,
                 trialInfo.getWidthPix() / 2);
     }
