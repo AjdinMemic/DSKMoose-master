@@ -6,6 +6,7 @@ import dskm.experiment.LogChecker;
 import dskm.experiment.TrialInfo;
 import dskm.gui.*;
 import io.reactivex.rxjava3.subjects.PublishSubject;
+import org.javatuples.Pair;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,6 +46,11 @@ public class Circles extends Method {
 
     public boolean flag;
 
+    private int firstDistVal;
+
+    Pair<Integer,Integer> pair;
+
+    //keep radList and radListL equal! If not some things could break
     public int[] radList = {10,15,5};
     public static int[] distList = {50,75,100};
 
@@ -54,7 +60,6 @@ public class Circles extends Method {
     public Circles(int n, boolean flag) throws IOException {
         expSubject = PublishSubject.create();
         int monitorPPI = Toolkit.getDefaultToolkit().getScreenResolution();
-        //System.out.println(Toolkit.getDefaultToolkit().getScreenSize());
         pixelSizeMM = 25.4 / monitorPPI;
         trials = new ArrayList<>();
         blocks = new ArrayList<>();
@@ -70,19 +75,20 @@ public class Circles extends Method {
     }
 
     public void fillDistList(){
+        distListL.add(25);
         distListL.add(50);
-        distListL.add(75);
-        distListL.add(100);
+        distListL.add(85);
     }
 
     public void fillRadList(){
         radListL.add(5);
         radListL.add(10);
-        radListL.add(15);
+        radListL.add(20);
     }
 
     public void methodSetup() {
         fillDistList();
+        fillRadList();
 
         int len = distListL.size();
         Random random = new Random();
@@ -90,6 +96,7 @@ public class Circles extends Method {
         int distance = distListL.get(randomInt);
 
         distListL.remove(new Integer(distance));
+        setFirstDistVal(distance);
 
         this.generateRadiusDistancePairs(distance);
 
@@ -100,6 +107,14 @@ public class Circles extends Method {
         this.blockNrLoop();
 
         setnTrials(blocks.size() * trials.size()); // Num. of trails = all the combinations (n x n)
+    }
+
+    private void setFirstDistVal(int distance) {
+        this.firstDistVal=distance;
+    }
+
+    public int getFirstDistVal(){
+        return firstDistVal;
     }
 
     @Override
@@ -212,7 +227,7 @@ public class Circles extends Method {
         int distancePix = 0;
         int numbOfTrials = 0;
 
-        for (int k : radList) {
+        for (int k : radListL) {
             if (numbOfTrials < getN()) {
                 setRadius(k);
                 for (int i = 0; i < radDistList.size(); i++) {
@@ -277,8 +292,25 @@ public class Circles extends Method {
     int getOldY;
     int countIndex = 0;
     int countDistance = 0;
+    int radiusL = 0;
+    int distance=0;
+    static int arrayIndex=0;
+    static int[][] distAndRadArray=new int[9][2];
+    boolean isNotDuplicate=false;
 
     private Circle determineTargetPositionFitts(TrialInfo trialInfo) {
+        if(distance==0){distance=getFirstDistVal();}
+        if(radiusL==0){
+            int len2 = radListL.size();
+            Random random2 = new Random();
+            int randomInt2 = random2.nextInt(len2);
+            radiusL= (int)radListL.get(randomInt2);
+            radListL.remove(new Integer(radiusL));
+
+            distAndRadArray[arrayIndex][0]=distance;
+                    distAndRadArray[arrayIndex++][1]=radiusL;
+        }
+
         if (countOfCirclesClicked == getN()) {
             JLabel label = new JLabel("Block " + this.blockNumber +
                     " out of " + (radList.length*distList.length) + " is finished!");
@@ -300,11 +332,44 @@ public class Circles extends Method {
                 fillDistList();
             }
 
-            int len = distListL.size();
-            Random random = new Random();
-            int randomInt = random.nextInt(len);
-            int distance = (int) distListL.get(randomInt);
-            distListL.remove(new Integer(distance));
+            if(radListL.size()==0){
+                fillRadList();
+            }
+
+            while (isNotDuplicate==false) {
+                if(distListL.size()==0){
+                    fillDistList();
+                }
+
+                int len = distListL.size();
+                Random random = new Random();
+                int randomInt = random.nextInt(len);
+                distance = (int) distListL.get(randomInt);
+                distListL.remove(new Integer(distance));
+
+                distAndRadArray[arrayIndex][0]=distance;
+                System.out.println("DISTANCE:"+distance);
+                if(radListL.size()==0){
+                    fillRadList();
+                }
+
+                int len2 = radListL.size();
+                Random random2 = new Random();
+                int randomInt2 = random2.nextInt(len2);
+                radiusL = (int) radListL.get(randomInt2);
+                radListL.remove(new Integer(radiusL));
+
+                distAndRadArray[arrayIndex][1]=radiusL;
+                System.out.println("RADIUS:"+radiusL);
+                if(containsDuplicate(distance,radiusL)==true){
+                    isNotDuplicate=false;
+                }else{
+                    isNotDuplicate=true;
+                    arrayIndex++;
+                }
+            }
+
+            isNotDuplicate=false;
 
             generateRadiusDistancePairs(distance);
 
@@ -316,8 +381,8 @@ public class Circles extends Method {
             }
         }
 
-        trialInfo.setDistanceMM(distList[countDistance]);
-        trialInfo.setDistancePix(convertMMtoPIX(distList[countDistance]));
+        trialInfo.setDistanceMM(distance);
+        trialInfo.setDistancePix(convertMMtoPIX(distance));
 
         if (countIndex == distList.length) {
             j++;
@@ -328,8 +393,9 @@ public class Circles extends Method {
             j = 0;
         }
 
-        trialInfo.setRealWidthPix(radList[j]);
-        trialInfo.setWidthPix(radList[j] / 2);
+
+        trialInfo.setRealWidthPix(radiusL);
+        trialInfo.setWidthPix(radiusL / 2);
 
         countOfCirclesClicked++;
 
@@ -368,6 +434,19 @@ public class Circles extends Method {
         i++;
         return new Circle((int) radDistList.get(pos).getX(), (int) radDistList.get(pos).getY(), convertMMtoPIX(trialInfo.getWidthPix()));
 
+    }
+
+    private boolean containsDuplicate(int distance, int radiusL) {
+        boolean retVal=false;
+
+        for(int i=0;i<arrayIndex;i++){
+                if(distAndRadArray[i][0]==distance && distAndRadArray[i][1]==radiusL){
+                    retVal=true;
+                }
+            System.out.println("false");
+        }
+
+        return retVal;
     }
 
     public int getN() {
