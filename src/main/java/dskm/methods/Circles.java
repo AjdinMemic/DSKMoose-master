@@ -73,13 +73,16 @@ public class Circles extends Method {
     public void fillDistList(){
         distListL.add(25.0);
         distListL.add(50.0);
-        distListL.add(85.0);
     }
 
     public void fillRadList(){
         radListL.add(5.0);
         radListL.add(10.0);
         radListL.add(20.0);
+
+        radListL.add(6.0);
+        radListL.add(11.0);
+        radListL.add(21.0);
     }
 
     public void methodSetup() {
@@ -290,8 +293,10 @@ public class Circles extends Method {
     double radiusL = 0;
     double distance=0;
     static int arrayIndex=0;
-    static double[][] distAndRadArray=new double[9][2];
+    static double[][] distAndRadArray=new double[12][2];
     boolean isNotDuplicate=false;
+    int circleCount1=0;
+    int circleCount2=1;
 
     private Circle determineTargetPositionFitts(TrialInfo trialInfo) {
         if(distance==0){distance=getFirstDistVal();}
@@ -306,6 +311,8 @@ public class Circles extends Method {
         }
 
         if (countOfCirclesClicked == getN()) {
+            circleCount1=0;
+            circleCount2=1;
             JLabel label = new JLabel("Block " + this.blockNumber +
                     " out of " + (radListL.size()*distListL.size()) + " is finished!");
             label.setFont(new Font("Arial", Font.PLAIN, 18));
@@ -399,27 +406,10 @@ public class Circles extends Method {
             System.out.println("1POS="+pos);
             pos = pos - radDistList.size() / 2 + 2;
         }
-        if (i % 2 == 0) {
 
-            if (pos + radDistList.size() / 2 + 1 <= radDistList.size()) {
-                if (pos + radDistList.size() / 2 + 1 == radDistList.size()) {
-                    System.out.println("radDistList:"+radDistList.size());
-                    System.out.println("1POS="+pos);
-                    pos = pos + radDistList.size() / 2;
-                } else {
-                    System.out.println("radDistList:"+radDistList.size());
-                    System.out.println("1POS="+pos);
-                    pos = pos + radDistList.size() / 2 + 1;
-                }// z.B. i=0 size=9, pos=4
-            } else {
-                System.out.println("radDistList:"+radDistList.size());
-                System.out.println("1POS="+pos);
-                pos = (pos + radDistList.size() / 2) - radDistList.size();
-            }
-        } else {
-            System.out.println("radDistList:"+radDistList.size());
-            System.out.println("1POS="+pos);
-            pos = pos - radDistList.size() / 2;
+        if(i%2==0){pos=5+circleCount1++;}
+        else {
+            pos=circleCount2++;
         }
 
         if (i == 0) {
