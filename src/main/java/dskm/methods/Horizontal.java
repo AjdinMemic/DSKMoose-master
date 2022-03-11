@@ -36,7 +36,7 @@ public class Horizontal extends Method {
     private ArrayList<ArrayList<TrialInfo>> blocks;
     private int countOfCirclesClicked=0;
     double pixelSizeMM;
-    int numbOfCircles=11;
+    int numbOfCircles=8;
     ;
     ArrayList<CustomCursor> cursors = new ArrayList<CustomCursor>();
 
