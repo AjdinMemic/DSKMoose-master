@@ -109,7 +109,7 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                     if(counter==getN()){
                         index++;
                         counter=0;
-                        r=convertMMtoPIX(Circles.distList[index]/2);
+                        r=convertMMtoPIX(Circles.distListL.get(index)/2);
                     }
                     counter++;
                     double t = 2 * Math.PI * i / getN();

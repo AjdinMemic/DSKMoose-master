@@ -55,7 +55,7 @@ public class Circles extends Method {
     public static int[] distList = {50,75,100};
 
     static LinkedList<Integer> radListL=new LinkedList<Integer>();
-    static LinkedList <Integer>distListL=new LinkedList<Integer>();
+    public static LinkedList <Integer>distListL=new LinkedList<Integer>();
 
     public Circles(int n, boolean flag) throws IOException {
         expSubject = PublishSubject.create();
@@ -95,7 +95,6 @@ public class Circles extends Method {
         int randomInt = random.nextInt(len);
         int distance = distListL.get(randomInt);
 
-        distListL.remove(new Integer(distance));
         setFirstDistVal(distance);
 
         this.generateRadiusDistancePairs(distance);
@@ -166,7 +165,7 @@ public class Circles extends Method {
 
             exPanel.setCurrentTrialInfo(trialInfo);
             exPanel.setBlockInfoToDraw("Block: " + this.blockNumber +
-                    " of " + (radList.length*distList.length));
+                    " of " + (radListL.size()*distListL.size()));
             exPanel.setTextToDraw("Trial: " + trialInfo.getTrialInBlock() +
                     " of " + nTrials / testConstellation.getNrBlocks());
 
@@ -192,17 +191,17 @@ public class Circles extends Method {
 
         int a = MainFrame.getFrame().getWidth() / 2;
         int b = MainFrame.getFrame().getHeight() / 2;
-        if (genIndex == distList.length) {
+        if (genIndex == distListL.size()) {
             genIndex = 0;
         }
-        if (localIndex == distList.length) {
+        if (localIndex == distListL.size()) {
             localIndex = 0;
         }
         int r = convertMMtoPIX(distance / 2);
-        distGlobal = distList[localIndex] / 2;
+        distGlobal = distListL.get(localIndex) / 2;
         distBetCirclemm = r;
         System.out.println("***---***");
-        for (int i = 0; i < getN() * distList.length; i++) {
+        for (int i = 0; i < getN() * distListL.size(); i++) {
             double t = 2 * Math.PI * i / getN();
             int x = (int) Math.round(a + r * Math.cos(t));
             int y = (int) Math.round(b + r * Math.sin(t));
@@ -305,7 +304,6 @@ public class Circles extends Method {
             Random random2 = new Random();
             int randomInt2 = random2.nextInt(len2);
             radiusL= (int)radListL.get(randomInt2);
-            radListL.remove(new Integer(radiusL));
 
             distAndRadArray[arrayIndex][0]=distance;
                     distAndRadArray[arrayIndex++][1]=radiusL;
@@ -313,7 +311,7 @@ public class Circles extends Method {
 
         if (countOfCirclesClicked == getN()) {
             JLabel label = new JLabel("Block " + this.blockNumber +
-                    " out of " + (radList.length*distList.length) + " is finished!");
+                    " out of " + (radListL.size()*distListL.size()) + " is finished!");
             label.setFont(new Font("Arial", Font.PLAIN, 18));
             JOptionPane.showMessageDialog(
                     MainFrame.getFrame(),
@@ -345,7 +343,6 @@ public class Circles extends Method {
                 Random random = new Random();
                 int randomInt = random.nextInt(len);
                 distance = (int) distListL.get(randomInt);
-                distListL.remove(new Integer(distance));
 
                 distAndRadArray[arrayIndex][0]=distance;
                 System.out.println("DISTANCE:"+distance);
@@ -357,7 +354,6 @@ public class Circles extends Method {
                 Random random2 = new Random();
                 int randomInt2 = random2.nextInt(len2);
                 radiusL = (int) radListL.get(randomInt2);
-                radListL.remove(new Integer(radiusL));
 
                 distAndRadArray[arrayIndex][1]=radiusL;
                 System.out.println("RADIUS:"+radiusL);
@@ -376,7 +372,7 @@ public class Circles extends Method {
             System.out.println("****-------****");
             countIndex++;
             countDistance++;
-            if (countDistance == distList.length) {
+            if (countDistance == distListL.size()) {
                 countDistance = 0;
             }
         }
@@ -384,12 +380,12 @@ public class Circles extends Method {
         trialInfo.setDistanceMM(distance);
         trialInfo.setDistancePix(convertMMtoPIX(distance));
 
-        if (countIndex == distList.length) {
+        if (countIndex == distListL.size()) {
             j++;
             countIndex = 0;
         }
 
-        if (j == radList.length) {
+        if (j == radListL.size()) {
             j = 0;
         }
 
@@ -403,20 +399,30 @@ public class Circles extends Method {
         System.out.println("Sta bi trebo dobit: " + trialInfo.getWidthPix());
         //System.out.println("i."+i);
         if (pos + radDistList.size() / 2 + 1 == radDistList.size()) {
+            System.out.println("radDistList:"+radDistList.size());
+            System.out.println("1POS="+pos);
             pos = pos - radDistList.size() / 2 + 2;
         }
         if (i % 2 == 0) {
 
             if (pos + radDistList.size() / 2 + 1 <= radDistList.size()) {
                 if (pos + radDistList.size() / 2 + 1 == radDistList.size()) {
+                    System.out.println("radDistList:"+radDistList.size());
+                    System.out.println("1POS="+pos);
                     pos = pos + radDistList.size() / 2;
                 } else {
+                    System.out.println("radDistList:"+radDistList.size());
+                    System.out.println("1POS="+pos);
                     pos = pos + radDistList.size() / 2 + 1;
                 }// z.B. i=0 size=9, pos=4
             } else {
+                System.out.println("radDistList:"+radDistList.size());
+                System.out.println("1POS="+pos);
                 pos = (pos + radDistList.size() / 2) - radDistList.size();
             }
         } else {
+            System.out.println("radDistList:"+radDistList.size());
+            System.out.println("1POS="+pos);
             pos = pos - radDistList.size() / 2;
         }
 
