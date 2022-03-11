@@ -71,18 +71,18 @@ public class Circles extends Method {
     }
 
     public void fillDistList(){
-        distListL.add(25.0);
+        distListL.add(150.0);
         distListL.add(50.0);
     }
 
     public void fillRadList(){
-        radListL.add(5.0);
-        radListL.add(10.0);
-        radListL.add(20.0);
+        radListL.add(2.4);
+        radListL.add(4.8);
+        radListL.add(7.2);
 
-        radListL.add(6.0);
-        radListL.add(11.0);
-        radListL.add(21.0);
+        radListL.add(15.0);
+        radListL.add(20.0);
+        radListL.add(25.0);
     }
 
     public void methodSetup() {

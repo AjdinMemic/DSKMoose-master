@@ -44,17 +44,27 @@ public enum Constellation {
             cursorList = ImmutableList.of(this.cursorSizeMM);
 
             for(int i=0;i<5;i++) {
-                tupels.add(new Point2D.Double(10.0, 50.0));
+                tupels.add(new Point2D.Double(2.4, 50.0));
+                tupels.add(new Point2D.Double(2.4, 150.0));
+
+                tupels.add(new Point2D.Double(4.8, 50.0));
+                tupels.add(new Point2D.Double(4.9, 150.0));
+
+                tupels.add(new Point2D.Double(7.2, 50.0));
+                tupels.add(new Point2D.Double(7.2, 150.0));
+
                 tupels.add(new Point2D.Double(15.0, 50.0));
-                tupels.add(new Point2D.Double(5.0, 50.0));
+                tupels.add(new Point2D.Double(15.0, 150.0));
 
-                tupels.add(new Point2D.Double(10.0, 75.0));
-                tupels.add(new Point2D.Double(15.0, 75.0));
-                tupels.add(new Point2D.Double(5.0, 75.0));
+                tupels.add(new Point2D.Double(20.0, 50.0));
+                tupels.add(new Point2D.Double(20.0, 150.0));
 
-                tupels.add(new Point2D.Double(10.0, 100.0));
-                tupels.add(new Point2D.Double(15.0, 100.0));
-                tupels.add(new Point2D.Double(5.0, 100.0));
+                tupels.add(new Point2D.Double(25.0, 50.0));
+                tupels.add(new Point2D.Double(25.0, 150.0));
+
+
+
+
             }
 
 
