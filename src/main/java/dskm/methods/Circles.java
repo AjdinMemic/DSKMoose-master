@@ -36,26 +36,22 @@ public class Circles extends Method {
 
     private int countOfCirclesClicked = 0;
 
-    public static int radius = 0;
+    public static double radius = 0;
 
     public int distBetCircle;
 
     public static int distBetCirclemm;
 
-    public static int distGlobal;
+    public static double distGlobal;
 
     public boolean flag;
 
-    private int firstDistVal;
+    private double firstDistVal;
 
     Pair<Integer,Integer> pair;
 
-    //keep radList and radListL equal! If not some things could break
-    public int[] radList = {10,15,5};
-    public static int[] distList = {50,75,100};
-
-    static LinkedList<Integer> radListL=new LinkedList<Integer>();
-    public static LinkedList <Integer>distListL=new LinkedList<Integer>();
+    static LinkedList<Double> radListL=new LinkedList<Double>();
+    public static LinkedList <Double>distListL=new LinkedList<>();
 
     public Circles(int n, boolean flag) throws IOException {
         expSubject = PublishSubject.create();
@@ -75,15 +71,15 @@ public class Circles extends Method {
     }
 
     public void fillDistList(){
-        distListL.add(25);
-        distListL.add(50);
-        distListL.add(85);
+        distListL.add(25.0);
+        distListL.add(50.0);
+        distListL.add(85.0);
     }
 
     public void fillRadList(){
-        radListL.add(5);
-        radListL.add(10);
-        radListL.add(20);
+        radListL.add(5.0);
+        radListL.add(10.0);
+        radListL.add(20.0);
     }
 
     public void methodSetup() {
@@ -93,7 +89,7 @@ public class Circles extends Method {
         int len = distListL.size();
         Random random = new Random();
         int randomInt = random.nextInt(len);
-        int distance = distListL.get(randomInt);
+        Double distance = distListL.get(randomInt);
 
         setFirstDistVal(distance);
 
@@ -108,11 +104,11 @@ public class Circles extends Method {
         setnTrials(blocks.size() * trials.size()); // Num. of trails = all the combinations (n x n)
     }
 
-    private void setFirstDistVal(int distance) {
+    private void setFirstDistVal(double distance) {
         this.firstDistVal=distance;
     }
 
-    public int getFirstDistVal(){
+    public double getFirstDistVal(){
         return firstDistVal;
     }
 
@@ -185,7 +181,7 @@ public class Circles extends Method {
     static int genIndex = 0;
     int localIndex = 0;
 
-    public void generateRadiusDistancePairs(int distance) {
+    public void generateRadiusDistancePairs(double distance) {
 
         radDistList.clear();
 
@@ -226,11 +222,11 @@ public class Circles extends Method {
         int distancePix = 0;
         int numbOfTrials = 0;
 
-        for (int k : radListL) {
+        for (double k : radListL) {
             if (numbOfTrials < getN()) {
                 setRadius(k);
                 for (int i = 0; i < radDistList.size(); i++) {
-                    widthPix = getRadius();
+                    widthPix = (int) getRadius();
                     System.out.println(1 + i + "." + " widthPix: " + widthPix);
                     int posX = (int) radDistList.get(i).getX();
                     int posY = (int) radDistList.get(i).getY();
@@ -291,10 +287,10 @@ public class Circles extends Method {
     int getOldY;
     int countIndex = 0;
     int countDistance = 0;
-    int radiusL = 0;
-    int distance=0;
+    double radiusL = 0;
+    double distance=0;
     static int arrayIndex=0;
-    static int[][] distAndRadArray=new int[9][2];
+    static double[][] distAndRadArray=new double[9][2];
     boolean isNotDuplicate=false;
 
     private Circle determineTargetPositionFitts(TrialInfo trialInfo) {
@@ -303,7 +299,7 @@ public class Circles extends Method {
             int len2 = radListL.size();
             Random random2 = new Random();
             int randomInt2 = random2.nextInt(len2);
-            radiusL= (int)radListL.get(randomInt2);
+            radiusL= radListL.get(randomInt2);
 
             distAndRadArray[arrayIndex][0]=distance;
                     distAndRadArray[arrayIndex++][1]=radiusL;
@@ -342,7 +338,7 @@ public class Circles extends Method {
                 int len = distListL.size();
                 Random random = new Random();
                 int randomInt = random.nextInt(len);
-                distance = (int) distListL.get(randomInt);
+                distance = distListL.get(randomInt);
 
                 distAndRadArray[arrayIndex][0]=distance;
                 System.out.println("DISTANCE:"+distance);
@@ -353,7 +349,7 @@ public class Circles extends Method {
                 int len2 = radListL.size();
                 Random random2 = new Random();
                 int randomInt2 = random2.nextInt(len2);
-                radiusL = (int) radListL.get(randomInt2);
+                radiusL = radListL.get(randomInt2);
 
                 distAndRadArray[arrayIndex][1]=radiusL;
                 System.out.println("RADIUS:"+radiusL);
@@ -390,8 +386,8 @@ public class Circles extends Method {
         }
 
 
-        trialInfo.setRealWidthPix(radiusL);
-        trialInfo.setWidthPix(radiusL / 2);
+        trialInfo.setRealWidthPix((int) radiusL);
+        trialInfo.setWidthPix((int) (radiusL / 2));
 
         countOfCirclesClicked++;
 
@@ -442,7 +438,7 @@ public class Circles extends Method {
 
     }
 
-    private boolean containsDuplicate(int distance, int radiusL) {
+    private boolean containsDuplicate(double distance, double radiusL) {
         boolean retVal=false;
 
         for(int i=0;i<arrayIndex;i++){
@@ -459,11 +455,11 @@ public class Circles extends Method {
         return n;
     }
 
-    public int getRadius() {
+    public double getRadius() {
         return radius;
     }
 
-    public void setRadius(int radius) {
+    public void setRadius(double radius) {
         Circles.radius = radius;
     }
 
