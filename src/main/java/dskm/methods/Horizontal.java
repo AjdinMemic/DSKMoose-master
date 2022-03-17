@@ -203,7 +203,7 @@ public class Horizontal extends Method {
 
             exPanel.setCurrentTrialInfo(trialInfo);
             exPanel.setBlockInfoToDraw("Block: " + this.blockNumber +
-                    " of " + testConstellation.getNrBlocks());
+                    " of " + 12);
             exPanel.setTextToDraw("Trial: " + trialInfo.getTrialInBlock() +
                     " of " + nTrials / testConstellation.getNrBlocks());
 
@@ -218,7 +218,7 @@ public class Horizontal extends Method {
     private Circle determineTargetPositionFitts(TrialInfo trialInfo) {
         if (countOfCirclesClicked==numbOfCircles) {
             JLabel label = new JLabel("Block " + this.blockNumber +
-                    " out of " + testConstellation.getNrBlocks() + " is finished!");
+                    " out of " + 12 + " is finished!"); //todo 12 == tupels.size/4
             label.setFont(new Font("Arial", Font.PLAIN, 18));
             JOptionPane.showMessageDialog(
                     MainFrame.getFrame(),

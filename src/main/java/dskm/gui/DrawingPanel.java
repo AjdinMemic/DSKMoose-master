@@ -97,30 +97,6 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                 RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
 
-        if (Experimenter.methodType.equals("MethodB")) {
-            if (drawCircles) {
-                int a = MainFrame.getFrame().getWidth() / 2;
-                int b = MainFrame.getFrame().getHeight() / 2;
-                int r = Circles.distBetCirclemm;
-                int index=0;
-                int counter=0;
-
-                for (int i = 0; i < getN(); i++) {
-                    if(counter==getN()){
-                        index++;
-                        counter=0;
-                        r=convertMMtoPIX(Circles.distListL.get(index)/2);
-                    }
-                    counter++;
-                    double t = 2 * Math.PI * i / getN();
-                    int x = (int) Math.round(a + r * Math.cos(t));
-                    int y = (int) Math.round(b + r * Math.sin(t));
-                    graphics2D.setColor(MAGENTA);
-                    graphics2D.drawOval(x - stCircle2.getRadius(), y  - stCircle2.getRadius(),
-                            stCircle2.getRadius()*2, stCircle2.getRadius()*2);
-                }
-            }
-        }
 
         if (Experimenter.methodType.equals("MethodB") || Experimenter.methodType.equals("MethodA") || Experimenter.methodType.equals("MethodC") || Experimenter.methodType.equals("MethodC2")|| Experimenter.methodType.equals("MethodD") || Experimenter.methodType.equals("MethodE")) {
 
@@ -179,6 +155,32 @@ public class DrawingPanel extends JPanel implements MouseInputListener {
                         tgtCircle.getRadius()*2, tgtCircle.getRadius()*2);
             }
         }
+
+        if (Experimenter.methodType.equals("MethodB")) {
+            if (drawCircles) {
+                int a = MainFrame.getFrame().getWidth() / 2;
+                int b = MainFrame.getFrame().getHeight() / 2;
+                int r = Circles.distBetCirclemm;
+                int index=0;
+                int counter=0;
+
+                for (int i = 0; i < getN(); i++) {
+                    if(counter==getN()){
+                        index++;
+                        counter=0;
+                        r=convertMMtoPIX(Circles.distListL.get(index)/2);
+                    }
+                    counter++;
+                    double t = 2 * Math.PI * i / getN();
+                    int x = (int) Math.round(a + r * Math.cos(t));
+                    int y = (int) Math.round(b + r * Math.sin(t));
+                    graphics2D.setColor(MAGENTA);
+                    graphics2D.drawOval(x - stCircle2.getRadius(), y  - stCircle2.getRadius(),
+                            stCircle2.getRadius()*2, stCircle2.getRadius()*2);
+                }
+            }
+        }
+
 
         //-- Draw text
         graphics2D.setColor(Config.TEXT_COLOR);
